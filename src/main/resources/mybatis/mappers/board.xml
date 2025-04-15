@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gkbm.emp.board">
+
+	<select id="selectBoardList" resultType="boardDTO">
+		select * from p_board
+	</select>
+	
+	<select id="getBoardDetail" resultType="boardDTO"
+		parameterType="boardDTO">
+
+		select * from p_board
+		where board_id = #{boardId}
+		
+	</select>
+	
+	<update id="udpateBoard" parameterType="boardDTO">
+	
+		update p_board
+		set title = #{title},
+		board_content = #{boardContent},
+		notice = #{notice},
+		reserve_date = sysdate
+		where board_id = #{boardId}
+		
+	</update>
+
+	<select id="insertBoard" parameterType="boardDTO">
+
+		insert into p_board
+		(board_id, empno, title, board_content, notice, create_date, reserve_date, views)
+		VALUES (
+		board_id_seq.NEXTVAL,
+		#{empno},
+		#{title},
+		#{boardContent},
+		#{notice},
+		sysdate, null, 0)
+		
+	</select>
+
+	<delete id="deleteBoard" parameterType="boardDTO">
+
+		delete from p_board
+		where board_id = #{boardId}
+
+	</delete>
+
+	<update id="viewsUpdateBoard" parameterType="boardDTO">
+		
+		update p_board
+		set views = (
+			select views+1 from p_board
+			where board_id = #{boardId}
+		)
+		where board_id = #{boardId}
+	
+	</update>
+	
+	
+
+
+
+</mapper>

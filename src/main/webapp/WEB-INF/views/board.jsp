@@ -53,18 +53,40 @@
 
 					<!-- 삭제 버튼 -->
 					<td>
-						<form method="post" action="board" enctype="multipart/form-data">
-							<input type="hidden" name="command" value="delete"> <input
-								type="hidden" name="boardId" value="${dto.boardId}"> <input
-								type="submit" value="삭제"
-								style="border-radius: 4px; background-color: #dc3545; color: white; border: none">
-						</form>
+						<button class="delete" value="${dto.boardId}"
+							style="border-radius: 4px; background-color: #dc3545; color: white; border: none">
+							삭제
+						</button>
 					</td>
 				</tr>
 			</c:forEach>
 		</tbody>
 	</table>
+	<br>
+	<a href="board?action=form">새 글 작성</a>
 
+
+	<script>
+	
+	document.querySelector("#delete").addEventListener("click", function(event){
+		event.preventDefault();
+	
+	
+	fetch('board', {
+		method : 'POST',
+		headers : {
+			'Content-Type' : 'appication/json'
+		},
+		body : JSON.stringify(param)
+	}).then(function(resp){
+		return. resp.json()
+	}).then((data => ){
+		console.log(data)
+	}).catch((err)=>{
+		console.error('ERROR board fetch', err)
+	})
+	
+	</script>
 
 
 </body>

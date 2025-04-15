@@ -5,14 +5,46 @@
 <mapper namespace="gkbm.emp">
 
 	<!-- 최수완 -->
-	
-	
+
+
 	<!-- 이주희 -->
-	
-	
+	<!-- 전체조회하기 -->
+	<select id="selectEmp_2" resultType="kr.or.GKBM.sku.P_skuDTO">
+		select * from p_sku
+	</select>
+
+	<!-- 등록 -->
+	<insert id="addition_2" parameterType="skuDTO">
+		insert into p_sku
+		VALUES (#{sku_id},
+		#{sku_code},
+		#{sku_name},
+		#{sku_size},
+		#{vendor_name},
+		#{price},
+		SYSDATE,
+		#{modify_date},
+		#{sku_category})
+	</insert>
+
+	<!-- 삭제 -->
+	<delete id="delete_2" parameterType="skuDTO">
+
+		delete from p_sku where
+		sku_id = #{sku_id}
+
+	</delete>
+
+	<!-- 내가 원하는것 조회 -->
+	<select id="selectBySkuId_2" parameterType="skuDTO"
+		resultType="skuDTO">
+		SELECT * FROM p_sku WHERE sku_code = #{sku_code}
+	</select>
+
+
 	<!-- 이준규 -->
-	
-	
+
+
 	<!-- 김도희 -->
 
 </mapper>

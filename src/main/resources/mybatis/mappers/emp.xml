@@ -49,13 +49,14 @@
 
 	<select id="selectBoardList" resultType="boardDTO">
 		select * from p_board
+		ORDER BY board_id
 	</select>
 	
 	<select id="getBoardDetail" resultType="boardDTO"
 		parameterType="boardDTO">
 
 		select * from p_board
-		where board_id = #{boardId}
+		where board_id = #{board_id}
 		
 	</select>
 	
@@ -63,10 +64,10 @@
 	
 		update p_board
 		set title = #{title},
-		board_content = #{boardContent},
+		board_content = #{board_content},
 		notice = #{notice},
 		reserve_date = sysdate
-		where board_id = #{boardId}
+		where board_id = #{board_id}
 		
 	</update>
 
@@ -78,7 +79,7 @@
 		board_id_seq.NEXTVAL,
 		#{empno},
 		#{title},
-		#{boardContent},
+		#{board_content},
 		#{notice},
 		sysdate, null, 0)
 		
@@ -87,7 +88,7 @@
 	<delete id="deleteBoard" parameterType="boardDTO">
 
 		delete from p_board
-		where board_id = #{boardId}
+		where board_id = #{board_id}
 
 	</delete>
 
@@ -96,9 +97,9 @@
 		update p_board
 		set views = (
 			select views+1 from p_board
-			where board_id = #{boardId}
+			where board_id = #{board_id}
 		)
-		where board_id = #{boardId}
+		where board_id = #{board_id}
 	
 	</update>
 

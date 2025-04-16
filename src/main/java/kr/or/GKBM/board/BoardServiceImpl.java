@@ -3,32 +3,28 @@ package kr.or.GKBM.board;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class BoardServiceImpl implements BoardService {
 
 	@Autowired
 	BoardDAO boardDAO;
 	
 	@Override
-	public List<BoardDTO> getBoardList() {
-		List list = boardDAO.selectBoardList();
-		return list;
-	}
-
-	@Override
-	public int updateEmp(BoardDTO boardDTO) {
+	public int updateBoard(BoardDTO boardDTO) {
 		int countUpdate = boardDAO.updateBoard(boardDTO);
 		return countUpdate;
 	}
 
 	@Override
-	public int insertEmp(BoardDTO boardDTO) {
+	public int insertBoard(BoardDTO boardDTO) {
 		int countUpdate = boardDAO.insertBoard(boardDTO);
 		return countUpdate;
 	}
 
 	@Override
-	public int deleteEmp(BoardDTO boardDTO) {
+	public int deleteBoard(BoardDTO boardDTO) {
 		int countUpdate = boardDAO.deleteBoard(boardDTO);
 		return countUpdate;
 	}
@@ -44,5 +40,6 @@ public class BoardServiceImpl implements BoardService {
 		int dto = boardDAO.viewsUpdateBoard(boardDTO);
 		return dto;
 	}
+
 
 }

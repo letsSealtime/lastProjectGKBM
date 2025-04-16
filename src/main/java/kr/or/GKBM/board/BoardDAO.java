@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface BoardDAO {
 
-	List<BoardDTO> selectBoardList();
+	List<BoardDTO> selectBoardList(BoardDTO boardDTO);
 	public int insertBoard(BoardDTO boardDTO);
 	public int updateBoard(BoardDTO boardDTO);
 	public int deleteBoard(BoardDTO boardDTO);

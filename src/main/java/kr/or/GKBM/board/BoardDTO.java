@@ -7,13 +7,13 @@ import lombok.Data;
 @Data
 public class BoardDTO {
 
-	private int boardId;
+	private int board_id;
 	private int empno;
 	private String title;
-	private String boardContent;
+	private String board_content;
 	private int notice;
-	private Date createDate;
-	private Date reserveDate;
+	private Date create_date;
+	private Date reserve_date;
 	private int views = 0;
 
 	private int page = 1;

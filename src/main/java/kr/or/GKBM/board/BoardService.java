@@ -1,8 +1,7 @@
 package kr.or.GKBM.board;
 
 import java.util.List;
-
-
+import java.util.Map;
 
 public interface BoardService {
 
@@ -12,5 +11,8 @@ public interface BoardService {
 	public int viewsUpdateBoard(BoardDTO boardDTO);
 	
 	public BoardDTO getBoardDetail(BoardDTO boardDTO);
+	
+	// 페이징
+	public Map<String, Object> getBoardSearchList(BoardDTO boardDTO);
 	
 }

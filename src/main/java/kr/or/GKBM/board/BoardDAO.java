@@ -12,5 +12,8 @@ public interface BoardDAO {
 	public BoardDTO getBoardDetail(BoardDTO boardDTO);
 	public int viewsUpdateBoard(BoardDTO boardDTO);
 	
+	public List<BoardDTO> selectBoardSearchList(BoardDTO boardDTO);
+	int totalList();
+	
 	
 }

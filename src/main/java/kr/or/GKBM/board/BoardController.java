@@ -2,6 +2,7 @@ package kr.or.GKBM.board;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -12,14 +13,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class BoardController {
 
 	@Autowired
 	BoardDAO boardDAO;
+	
+	@Autowired
+	BoardService boardService;
 
 	// 목록 보기
 	@RequestMapping(value = "/board")
@@ -32,6 +38,11 @@ public class BoardController {
 		List<BoardDTO> list = boardDAO.selectBoardList(boardDTO);
 		model.addAttribute("resultList", list);
 
+		Map<String, Object> map = boardService.getBoardSearchList(boardDTO);
+		
+		model.addAttribute("map", map);
+		model.addAttribute("dto", boardDTO);
+		
 		return "board";
 
 	}
@@ -57,27 +68,26 @@ public class BoardController {
 	public String boardModify(@ModelAttribute BoardDTO boardDTO, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		
-		HttpSession session = request.getSession(false);
-		EmpDTO loginUser = EmpDTO session.getAttribute("user",User) 
+		// EmpDTO 추가되면, 로그인 구현해야 한다.
 		
 		boardDTO = boardDAO.getBoardDetail(boardDTO);
-		model.addAttribute("dto", boardDTO);
+		model.addAttribute("boardDTO", boardDTO);
 		return "board_form";
 
 	}
 
 	// 수정
-	@RequestMapping(value = "/board_update", method = { RequestMethod.GET, RequestMethod.POST })
-	public String updateBoard(@ModelAttribute BoardDTO boardDTO, Model model, HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	@RequestMapping(value = "/board_update", method = {RequestMethod.POST})
+	@ResponseBody
+	public int updateBoard(
+			@RequestBody
+			BoardDTO boardDTO) throws ServletException, IOException {
 
-		System.out.println(boardDTO);
 		int update = boardDAO.updateBoard(boardDTO);
 		System.out.println("update 결과" + update);
 
 		// 전체목록으로 리턴
-
-		return "redirect:board";
+		return update;
 	}
 
 	// 삭제
@@ -89,7 +99,6 @@ public class BoardController {
 		System.out.println("delete 결과" + delete);
 
 		// 전체목록으로 리턴
-
 		return "redirect:board";
 	}
 
@@ -98,21 +107,24 @@ public class BoardController {
 	public String boardForm(@ModelAttribute BoardDTO boardDTO, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
-		return "board_from";
+		return "board_form";
 	}
 
-	// 새글
-	@RequestMapping(value = "/board_insert", method = { RequestMethod.GET, RequestMethod.POST })
-	public String insertBoard(@ModelAttribute BoardDTO boardDTO, Model model, HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	// 새 글
+	
+	@RequestMapping(value = "/board_insert", method = {RequestMethod.POST})
+	@ResponseBody
+	public int insertBoard(
+			@RequestBody
+			BoardDTO boardDTO) throws ServletException, IOException {
 
 		int insert = boardDAO.insertBoard(boardDTO);
 		System.out.println("insert 결과" + insert);
 
 		// 전체목록으로 리턴
-
-		return "redirect:board";
+		return insert;
 	}
+	
 
 	// 페이지 메소드
 	// 검색

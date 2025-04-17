@@ -68,7 +68,6 @@
 		notice = #{notice},
 		reserve_date = sysdate
 		where board_id = #{board_id}
-		
 	</update>
 
 	<select id="insertBoard" parameterType="boardDTO">
@@ -82,14 +81,12 @@
 		#{board_content},
 		#{notice},
 		sysdate, null, 0)
-		
 	</select>
 
 	<delete id="deleteBoard" parameterType="boardDTO">
 
 		delete from p_board
 		where board_id = #{board_id}
-
 	</delete>
 
 	<update id="viewsUpdateBoard" parameterType="boardDTO">
@@ -100,8 +97,23 @@
 			where board_id = #{board_id}
 		)
 		where board_id = #{board_id}
-	
 	</update>
+
+	<select id="selectPageBoard" resultType="boardDTO">
+		select rnum, board_id from (
+		    select rownum as rnum, board_id from (
+		        select board_id from p_board
+		        order by board_id
+		   )
+		)
+	<![CDATA[
+		where rnum >= #{indexStart} and rnum <= #{indexEnd}
+	]]>
+	</select>
+	
+	<select id="totalBoardPage" resultType="int">
+	 	select count (*) from p_board
+	</select>
 
 
 </mapper>

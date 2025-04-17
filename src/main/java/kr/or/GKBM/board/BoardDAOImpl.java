@@ -50,6 +50,20 @@ public class BoardDAOImpl implements BoardDAO {
 		return dto;
 	}
 
+	@Override
+	public List<BoardDTO> selectBoardSearchList(BoardDTO boardDTO) {
+		List<BoardDTO> result = sqlSession.selectList("gkbm.emp.selectPageBoard", boardDTO);
+		System.out.println("페이징 결과 : " + result);
+		return result;
+	}
+
+	@Override
+	public int totalList() {
+		int result = sqlSession.selectOne("gkbm.emp.totalBoardPage");
+		System.out.println("count(*) : "+ result);
+		return result;
+	}
+
 
 
 }

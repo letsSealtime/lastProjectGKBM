@@ -190,4 +190,61 @@
 
 	<!-- 김도희 -->
 
+	<select id="selectBoardList" resultType="boardDTO">
+		select * from p_board
+		ORDER BY board_id
+	</select>
+	
+	<select id="getBoardDetail" resultType="boardDTO"
+		parameterType="boardDTO">
+
+		select * from p_board
+		where board_id = #{board_id}
+		
+	</select>
+	
+	<update id="udpateBoard" parameterType="boardDTO">
+	
+		update p_board
+		set title = #{title},
+		board_content = #{board_content},
+		notice = #{notice},
+		reserve_date = sysdate
+		where board_id = #{board_id}
+		
+	</update>
+
+	<select id="insertBoard" parameterType="boardDTO">
+
+		insert into p_board
+		(board_id, empno, title, board_content, notice, create_date, reserve_date, views)
+		VALUES (
+		board_id_seq.NEXTVAL,
+		#{empno},
+		#{title},
+		#{board_content},
+		#{notice},
+		sysdate, null, 0)
+		
+	</select>
+
+	<delete id="deleteBoard" parameterType="boardDTO">
+
+		delete from p_board
+		where board_id = #{board_id}
+
+	</delete>
+
+	<update id="viewsUpdateBoard" parameterType="boardDTO">
+		
+		update p_board
+		set views = (
+			select views+1 from p_board
+			where board_id = #{board_id}
+		)
+		where board_id = #{board_id}
+	
+	</update>
+
+
 </mapper>

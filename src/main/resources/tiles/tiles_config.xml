@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+"-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+"http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+<tiles-definitions>
+	
+	<definition name="baseLayout" template="/WEB-INF/views/layout/layout.jsp">
+	<!-- name : 갖다 쓰는 Id -->
+		<put-attribute name="header" value="/WEB-INF/views/common/header.jsp"/>
+		<put-attribute name="side" value="/WEB-INF/views/common/side.jsp"/>
+		<put-attribute name="footer" value="/WEB-INF/views/common/footer.jsp"/>
+	</definition>
+	<!-- 가져다 쓰는 템플릿 요소들. 들어오는 곳이 아니다. -->
+	
+	<definition name="baseLayout2" template="/WEB-INF/views/layout/layout2.jsp">
+		<put-attribute name="content" value="/WEB-INF/views/main/chizizicc.jsp"/>
+		<put-attribute name="title" value="로그인 페이지"/>
+		<!-- 글씨도 보낼 수 있다. -->
+	</definition>
+	<!-- 통으로 된 레이아웃 예시 -->
+	
+	<definition name="toon" extends="baseLayout">
+		<put-attribute name="content" value="/WEB-INF/views/main/webtoon.jsp"/>
+	</definition>
+	<!-- 컨트롤러가 toon으로 들어와서, extends로 확장한다. -->
+	
+	<definition name="chzz" extends="baseLayout">
+		<put-attribute name="content" value="/WEB-INF/views/main/chizizicc.jsp"/>
+	</definition>
+	
+	<definition name="login" extends="baseLayout2">
+		<put-attribute name="content" value="/WEB-INF/views/main/webtoon.jsp"/>
+	</definition>
+	
+	<definition name="*.tiles" extends="baseLayout">
+		<put-attribute name="content" value="/WEB-INF/views/main/{1}.jsp"/>
+	</definition>
+	<!-- 주소가 모든것.tiles 일 때, *(와일드카드)에 있는 것을 {}에 넣는다. -->
+	
+	<definition name="*/*.tiles" extends="baseLayout">
+		<put-attribute name="content" value="/WEB-INF/views/main/{1}/{2}.jsp"/>
+	</definition>
+	<!-- return main/webtoon.tiles; 이렇게 적으면 1,2에 해당 값. 폴더 바꾸고 싶을 때 -->
+
+</tiles-definitions>

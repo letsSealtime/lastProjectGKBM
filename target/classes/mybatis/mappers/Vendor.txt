@@ -1,0 +1,54 @@
+	<!-- 최수완 -->
+
+	<!-- VENDOR 전체 조회 -->
+	<select id="selectVendorAll_1"
+		resultType="kr.or.GKBM.vendor.VendorDTO">
+
+		SELECT COUNT(*) AS line
+		FROM P_VENDOR
+
+	</select>
+
+	<!-- 페이징 전체 조회 -->
+	<select id="selectVendor_page_1"
+		parameterType="kr.or.GKBM.vendor.VendorDTO"
+		resultType="kr.or.GKBM.vendor.VendorDTO">
+
+		SELECT RNUM, c_c, c_n, c_m, c_p, c_a, c_i, line
+		FROM ( SELECT ROWNUM AS
+		RNUM, c_c, c_n, c_m, c_p, c_a, c_i, line
+		FROM ( SELECT VENDOR_ID AS
+		c_c, VENDOR_NAME AS c_n, MGR AS c_m,
+		VENDOR_PHONE AS c_p, EMAIL AS c_a,
+		SKU_ID AS c_i, COUNT(VENDOR_NAME) AS line
+		FROM
+		P_VENDOR
+		GROUP BY
+		VENDOR_ID, VENDOR_NAME, MGR, VENDOR_PHONE, EMAIL,
+		SKU_ID
+		ORDER BY c_n))
+		WHERE RNUM <![CDATA[ >= ]]>
+		${indexStart} AND RNUM <![CDATA[ <= ]]>
+		${indexEnd}
+
+	</select>
+
+	<!-- 페이징 부분 조회 -->
+	<select id="selectVendor_1"
+		parameterType="kr.or.GKBM.vendor.VendorDTO"
+		resultType="kr.or.GKBM.vendor.VendorDTO">
+
+		SELECT RNUM, c_c, c_n, c_m, c_p, c_a, c_i
+		FROM ( SELECT ROWNUM AS
+		RNUM, c_c, c_n, c_m, c_p, c_a, c_i
+		FROM ( SELECT VENDOR_ID AS
+		c_c, VENDOR_NAME AS c_n, MGR AS c_m,
+		VENDOR_PHONE AS c_p, EMAIL AS c_a,
+		SKU_ID AS c_i
+		FROM
+		P_VENDOR
+		ORDER BY c_n))
+		WHERE RNUM <![CDATA[ >= ]]>
+		${indexStart} AND RNUM <![CDATA[ <= ]]>
+		${indexEnd}
+	</select>

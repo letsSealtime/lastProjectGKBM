@@ -1,40 +1,7 @@
-<!-- 최수완 -->
-
-	<!-- VENDOR 전체 조회 -->
-	<select id="selectVendorAll_1"
-		resultType="kr.or.GKBM.vendor.VendorDTO">
-
-		SELECT COUNT(*) AS line
-		FROM P_VENDOR
-
-	</select>
-
-	<!-- 페이징 전체 조회 -->
-	<select id="selectVendor_All_1"
-		parameterType="kr.or.GKBM.vendor.VendorDTO"
-		resultType="kr.or.GKBM.vendor.VendorDTO">
-
-		SELECT RNUM, c_c, c_n, c_m, c_p, c_a, c_i
-		FROM ( SELECT ROWNUM AS
-		RNUM,
-		c_c, c_n, c_m, c_p, c_a, c_i
-		FROM ( SELECT VENDOR_ID AS
-		c_c, VENDOR_NAME
-		AS c_n, MGR AS c_m,
-		VENDOR_PHONE AS c_p, EMAIL AS c_a,
-		SKU_ID AS c_i
-		FROM P_VENDOR
-		ORDER BY c_n))
-		WHERE RNUM <![CDATA[ >= ]]>
-		${indexStart} AND RNUM <![CDATA[ <= ]]>
-		${indexEnd}
-
-	</select>
-
-	<!-- VENDOR 부분 조회 -->
-	<select id="selectVendorPart_1"
-		parameterType="kr.or.GKBM.vendor.VendorDTO"
-		resultType="kr.or.GKBM.vendor.VendorDTO">
+<!-- BILL 부분 조회 -->
+	<select id="selectBillPart_1"
+		parameterType="kr.or.GKBM.bill.BillDTO"
+		resultType="kr.or.GKBM.bill.BillDTO">
 		SELECT COUNT(*) AS line
 		FROM P_VENDOR
 		<where>
@@ -61,9 +28,9 @@
 	</select>
 
 	<!-- 페이징 부분 조회 -->
-	<select id="selectVendor_Part_1"
-		parameterType="kr.or.GKBM.vendor.VendorDTO"
-		resultType="kr.or.GKBM.vendor.VendorDTO">
+	<select id="selectBill_Part_1"
+		parameterType="kr.or.GKBM.bill.BillDTO"
+		resultType="kr.or.GKBM.bill.BillDTO">
 		SELECT RNUM, c_c, c_n, c_m, c_p, c_a, c_i
 		FROM (
 		SELECT ROWNUM AS RNUM,
@@ -109,8 +76,8 @@
 
 	<!-- 데이터 기입 -->
 
-	<insert id="insertVendor_1"
-		parameterType="kr.or.GKBM.vendor.VendorDTO">
+	<insert id="insertBill_1"
+		parameterType="kr.or.GKBM.bill.BillDTO">
 
 		INSERT INTO P_VENDOR
 		VALUES(SEQ.NEXTVAL, #{c_n}, #{c_m},
@@ -118,8 +85,8 @@
 
 	</insert>
 
-	<delete id="deleteVendor_1"
-		parameterType="kr.or.GKBM.vendor.VendorDTO">
+	<delete id="deleteBill_1"
+		parameterType="kr.or.GKBM.bill.BillDTO">
 
 		DELETE FROM P_VENDOR
 		WHERE VENDOR_ID IN
@@ -130,8 +97,8 @@
 
 	</delete>
 
-	<update id="updateVendor_1"
-		parameterType="kr.or.GKBM.vendor.VendorDTO">
+	<update id="updateBill_1"
+		parameterType="kr.or.GKBM.bill.BillDTO">
 
 		UPDATE P_VENDOR
 		SET VENDOR_NAME = #{c_n},

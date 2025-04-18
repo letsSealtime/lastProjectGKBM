@@ -148,6 +148,149 @@
 		WHERE VENDOR_ID = #{c_c}
 
 	</update>
+	
+	<!-- BILL 전체 조회 -->
+	<select id="selectBillAll_1"
+		resultType="kr.or.GKBM.bill.BillDTO">
+
+		SELECT COUNT(*) AS line
+		FROM P_VENDOR
+
+	</select>
+
+	<!-- 페이징 전체 조회 -->
+	<select id="selectBill_All_1"
+		parameterType="kr.or.GKBM.bill.BillDTO"
+		resultType="kr.or.GKBM.bill.BillDTO">
+
+		SELECT RNUM, c_c, c_n, c_m, c_p, c_a, c_i
+		FROM ( SELECT ROWNUM AS
+		RNUM,
+		c_c, c_n, c_m, c_p, c_a, c_i
+		FROM ( SELECT VENDOR_ID AS
+		c_c, VENDOR_NAME
+		AS c_n, MGR AS c_m,
+		VENDOR_PHONE AS c_p, EMAIL AS c_a,
+		SKU_ID AS c_i
+		FROM P_VENDOR
+		ORDER BY c_n))
+		WHERE RNUM <![CDATA[ >= ]]>
+		${indexStart} AND RNUM <![CDATA[ <= ]]>
+		${indexEnd}
+
+	</select>
+
+	<!-- BILL 부분 조회 -->
+	<select id="selectBillPart_1"
+		parameterType="kr.or.GKBM.bill.BillDTO"
+		resultType="kr.or.GKBM.bill.BillDTO">
+		SELECT COUNT(*) AS line
+		FROM P_VENDOR
+		<where>
+			<if test="c_c != null and c_c != ''">
+				AND VENDOR_ID = #{c_c}
+			</if>
+			<if test="c_n != null and c_n != ''">
+				AND UPPER(VENDOR_NAME) LIKE '%' || UPPER(#{c_n}) || '%'
+			</if>
+			<if test="c_m != null and c_m != ''">
+				AND UPPER(MGR) LIKE '%' || UPPER(#{c_m}) || '%'
+			</if>
+			<if test="c_p != null and c_p != ''">
+				AND VENDOR_PHONE = #{c_p}
+			</if>
+			<if test="c_a != null and c_a != ''">
+				AND UPPER(EMAIL) LIKE '%' || UPPER(#{c_a}) || '%'
+			</if>
+			<if test="c_i != null and c_i != ''">
+				AND SKU_ID = #{c_i}
+			</if>
+		</where>
+
+	</select>
+
+	<!-- 페이징 부분 조회 -->
+	<select id="selectBill_Part_1"
+		parameterType="kr.or.GKBM.bill.BillDTO"
+		resultType="kr.or.GKBM.bill.BillDTO">
+		SELECT RNUM, c_c, c_n, c_m, c_p, c_a, c_i
+		FROM (
+		SELECT ROWNUM AS RNUM,
+		c_c, c_n, c_m, c_p, c_a, c_i
+		FROM (
+		SELECT
+		VENDOR_ID AS c_c,
+		VENDOR_NAME
+		AS c_n,
+		MGR AS c_m,
+		VENDOR_PHONE AS c_p,
+		EMAIL AS c_a,
+		SKU_ID AS c_i
+		FROM
+		P_VENDOR
+		<where>
+			<if test="c_c != null and c_c != ''">
+				AND VENDOR_ID = #{c_c}
+			</if>
+			<if test="c_n != null and c_n != ''">
+				AND UPPER(VENDOR_NAME) LIKE '%' || UPPER(#{c_n}) || '%'
+			</if>
+			<if test="c_m != null and c_m != ''">
+				AND UPPER(MGR) LIKE '%' || UPPER(#{c_m}) || '%'
+			</if>
+			<if test="c_p != null and c_p != ''">
+				AND VENDOR_PHONE = #{c_p}
+			</if>
+			<if test="c_a != null and c_a != ''">
+				AND UPPER(EMAIL) LIKE '%' || UPPER(#{c_a}) || '%'
+			</if>
+			<if test="c_i != null and c_i != ''">
+				AND SKU_ID = #{c_i}
+			</if>
+		</where>
+
+		ORDER BY VENDOR_NAME))
+		WHERE RNUM <![CDATA[ >= ]]>
+		${indexStart}
+		AND RNUM <![CDATA[ <= ]]>
+		${indexEnd}
+	</select>
+
+	<!-- 데이터 기입 -->
+
+	<insert id="insertBill_1"
+		parameterType="kr.or.GKBM.bill.BillDTO">
+
+		INSERT INTO P_VENDOR
+		VALUES(SEQ.NEXTVAL, #{c_n}, #{c_m},
+		#{c_p}, #{c_a}, #{c_i})
+
+	</insert>
+
+	<delete id="deleteBill_1"
+		parameterType="kr.or.GKBM.bill.BillDTO">
+
+		DELETE FROM P_VENDOR
+		WHERE VENDOR_ID IN
+		<foreach item="delete" collection="check" open="(" close=")"
+			separator=",">
+			#{delete}
+		</foreach>
+
+	</delete>
+
+	<update id="updateBill_1"
+		parameterType="kr.or.GKBM.bill.BillDTO">
+
+		UPDATE P_VENDOR
+		SET VENDOR_NAME = #{c_n},
+		MGR = #{c_m},
+		VENDOR_PHONE = #{c_p},
+		EMAIL = #{c_a},
+		SKU_ID = #{c_i}
+		WHERE VENDOR_ID = #{c_c}
+
+	</update>
 
 	<!-- 이주희 -->
 	<!-- 전체조회하기 -->

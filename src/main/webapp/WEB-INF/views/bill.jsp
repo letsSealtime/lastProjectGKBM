@@ -158,11 +158,16 @@ span {
 			// 버튼이 4개 있어 작동되는 버튼 구분을 위한 hidden타입 value 기입
 			hidden.value = "insert";
 			
-			let data = new FormData(document.querySelector("#form"))
-			console.log(data);
-			
-			let query = new URLSearchParams(data);
-			console.log(query);
+			let query = {
+				    c_d: document.getElementById("c_d").value,
+				    c_c: document.getElementById("c_c").value,
+				    c_q: document.getElementById("c_q").value,
+				    c_b: document.getElementById("c_b").value,
+				    c_i: document.getElementById("c_i").value,
+				    c_n: document.getElementById("c_n").value,
+				    c_p: document.getElementById("c_p").value,
+				    c_j: document.getElementById("c_j").value
+			};
 			
 			// for~in으로 data객체의 값을 꺼낼 수 있으나
 			// 저장된 값이 아닌 data에 있는 함수들을 꺼낼 수 있음
@@ -176,10 +181,9 @@ span {
 			} */
 			
 			// js에서 form요소의 공백 및 null 미기입 확인
-			for(let [key, value] of query) {
+			for(let key in query) {
 				console.log(key);
-				console.log(value);
-				if((!value && key === "c_d") || (!value && key === "c_q") || (!value && key === "c_b") || (!value && key === "c_a")) {
+				if((query[c_d]) === "") || (query[c_q]) === "") || (query[c_b]) === "") || (query[c_a]) === "")) {
 					alert("필수 기입값을 모두 기입해주세요.");
 					return;
 				}
@@ -187,8 +191,8 @@ span {
 			
 			let xhr = new XMLHttpRequest();
 			
-			xhr.open("POST", "bill", true);
-			//xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			xhr.open("PUT", "bill");
+			xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
 			xhr.send(query);
 			
 			console.log("중간 확인");
@@ -261,11 +265,20 @@ span {
 			
 			console.log("delet 클릭");
 			
-			let data = new FormData(document.querySelector("#form"))
-			let query = new URLSearchParams(data);
+			let query = {
+				    c_d: document.getElementById("c_d").value,
+				    c_c: document.getElementById("c_c").value,
+				    c_q: document.getElementById("c_q").value,
+				    c_b: document.getElementById("c_b").value,
+				    c_i: document.getElementById("c_i").value,
+				    c_n: document.getElementById("c_n").value,
+				    c_p: document.getElementById("c_p").value,
+				    c_j: document.getElementById("c_j").value
+			};
 			
 			let xhr = new XMLHttpRequest();
-			xhr.open("POST", "bill", true);
+			xhr.open("DELETE", "bill");
+			xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
 			xhr.send(query);
 			
 			xhr.onreadystatechange = () => {
@@ -363,9 +376,16 @@ span {
 					
 					hidden.value = "update";
 					
-					let data = new FormData(document.querySelector("#form"));
-					
-					let query = new URLSearchParams(data);
+					let query = {
+						    c_d: document.getElementById("c_d").value,
+						    c_c: document.getElementById("c_c").value,
+						    c_q: document.getElementById("c_q").value,
+						    c_b: document.getElementById("c_b").value,
+						    c_i: document.getElementById("c_i").value,
+						    c_n: document.getElementById("c_n").value,
+						    c_p: document.getElementById("c_p").value,
+						    c_j: document.getElementById("c_j").value
+					};
 					
 					form.classList.toggle("none");
 					div.remove();
@@ -385,6 +405,7 @@ span {
 					
 					let xhr = new XMLHttpRequest();
 					xhr.open("POST", "bill", true);
+					xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
 					xhr.send(query);
 					
 					xhr.onreadystatechange = () => {

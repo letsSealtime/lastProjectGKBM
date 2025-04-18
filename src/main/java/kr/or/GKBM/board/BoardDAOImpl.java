@@ -14,13 +14,6 @@ public class BoardDAOImpl implements BoardDAO {
 	
 	
 	@Override
-	public List<BoardDTO> selectBoardList(BoardDTO boardDTO) {
-		List<BoardDTO> result = sqlSession.selectList("gkbm.emp.selectBoardList");
-		System.out.println("result : " + result);
-		return result;
-	}
-	
-	@Override
 	public int insertBoard(BoardDTO boardDTO) {
 		int dto = sqlSession.insert("gkbm.emp.insertBoard", boardDTO);
 		return dto;
@@ -51,16 +44,14 @@ public class BoardDAOImpl implements BoardDAO {
 	}
 
 	@Override
-	public List<BoardDTO> selectBoardSearchList(BoardDTO boardDTO) {
-		List<BoardDTO> result = sqlSession.selectList("gkbm.emp.selectPageBoard", boardDTO);
-		System.out.println("페이징 결과 : " + result);
+	public List<BoardDTO> searchPageBoard(BoardDTO boardDTO) {
+		List<BoardDTO> result = sqlSession.selectList("gkbm.emp.searchPageBoard", boardDTO);
 		return result;
 	}
 
 	@Override
 	public int totalList() {
 		int result = sqlSession.selectOne("gkbm.emp.totalBoardPage");
-		System.out.println("count(*) : "+ result);
 		return result;
 	}
 

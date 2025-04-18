@@ -27,7 +27,7 @@ public class BoardController {
 	@Autowired
 	BoardService boardService;
 
-	// 목록 보기
+	// 목록 + 검색
 	@RequestMapping(value = "/board")
 	public String SelectBoardList(@ModelAttribute BoardDTO boardDTO, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
@@ -35,11 +35,7 @@ public class BoardController {
 		request.setCharacterEncoding("utf-8");
 		response.setContentType("text/html; charset=utf-8");
 
-		List<BoardDTO> list = boardDAO.selectBoardList(boardDTO);
-		model.addAttribute("resultList", list);
-
 		Map<String, Object> map = boardService.getBoardSearchList(boardDTO);
-		
 		model.addAttribute("map", map);
 		model.addAttribute("dto", boardDTO);
 		

@@ -16,7 +16,8 @@
 	<!-- 등록 -->
 	<insert id="addition_2" parameterType="skuDTO">
 		insert into p_sku
-		VALUES (#{sku_id},
+		VALUES
+		(#{sku_id},
 		#{sku_code},
 		#{sku_name},
 		#{sku_size},
@@ -47,25 +48,21 @@
 
 	<!-- 김도희 -->
 
-	<select id="selectBoardList" resultType="boardDTO">
-		select * from p_board
-		ORDER BY board_id
-	</select>
-	
 	<select id="getBoardDetail" resultType="boardDTO"
 		parameterType="boardDTO">
 
 		select * from p_board
 		where board_id = #{board_id}
-		
+
 	</select>
-	
+
 	<update id="udpateBoard" parameterType="boardDTO">
-	
+
 		update p_board
 		set title = #{title},
 		board_content = #{board_content},
-		notice = #{notice},
+		notice =
+		#{notice},
 		reserve_date = sysdate
 		where board_id = #{board_id}
 	</update>
@@ -73,7 +70,8 @@
 	<select id="insertBoard" parameterType="boardDTO">
 
 		insert into p_board
-		(board_id, empno, title, board_content, notice, create_date, reserve_date, views)
+		(board_id, empno, title, board_content, notice, create_date,
+		reserve_date, views)
 		VALUES (
 		board_id_seq.NEXTVAL,
 		#{empno},
@@ -86,33 +84,67 @@
 	<delete id="deleteBoard" parameterType="boardDTO">
 
 		delete from p_board
-		where board_id = #{board_id}
+		where
+		board_id = #{board_id}
 	</delete>
 
 	<update id="viewsUpdateBoard" parameterType="boardDTO">
-		
+
 		update p_board
 		set views = (
-			select views+1 from p_board
-			where board_id = #{board_id}
+		select views+1 from p_board
+		where board_id = #{board_id}
 		)
 		where board_id = #{board_id}
 	</update>
 
 	<select id="selectPageBoard" resultType="boardDTO">
-		select rnum, board_id from (
-		    select rownum as rnum, board_id from (
-		        select board_id from p_board
-		        order by board_id
-		   )
+		select *
+		from (select rownum as rnum, inner_table.*
+		from (select * from p_board
+			order by board_id
+			) inner_table
 		)
 	<![CDATA[
 		where rnum >= #{indexStart} and rnum <= #{indexEnd}
 	]]>
 	</select>
-	
+
 	<select id="totalBoardPage" resultType="int">
-	 	select count (*) from p_board
+		select count (*) from p_board
+	</select>
+
+	<select id="searchPageBoard" resultType="boardDTO"
+		parameterType="boardDTO">
+		select *
+		from (select rownum as rnum, inner_table.*
+			from (select * from p_board
+
+		<where>
+			<choose>
+				<when
+					test="type == 'empno' and  (keyword != '' and keyword != null)">
+					and empno = #{empno}
+				</when>
+				<when
+					test="type == 'title' and  (keyword != '' and keyword != null)">
+					and title like '%' || #{title} || '%'
+				</when>
+				<when
+					test="type == 'board_content' and  (keyword != '' and keyword != null)">
+					and board_content like '%' || #{board_content} || '%'
+				</when>
+			</choose>
+
+			<!-- 추후 String으로 수정 시, 해당 sql문 사용 and upper(empno) like upper('%' || #{ename} 
+				|| '%') -->
+		</where>
+		order by board_id asc
+		) inner_table
+		)
+	<![CDATA[
+		where rnum >= #{indexStart} and rnum <= #{indexEnd}
+	]]>
 	</select>
 
 

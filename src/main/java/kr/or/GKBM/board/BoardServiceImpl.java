@@ -43,15 +43,28 @@ public class BoardServiceImpl implements BoardService {
 		return dto;
 	}
 
-//	@Override
-//	public void paging() {
-//		
-//		int idxStart = (viewCount * (page-1)) + 1;
-//		
-//	}
+	
 
 	@Override
 	public Map<String, Object> getBoardSearchList(BoardDTO boardDTO) {
+		if("empno".equals(boardDTO.getType())) {
+			boardDTO.setEmpno( Integer.parseInt(boardDTO.getKeyword()) );
+		
+				} else if(boardDTO.getType() != null && boardDTO.getType().equals("title")) {
+					try {
+						String title = boardDTO.getKeyword();
+						boardDTO.setTitle( title );
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				} else if(boardDTO.getType() != null && boardDTO.getType().equals("board_content")) {
+					try {
+						String board_content = boardDTO.getBoard_content();
+						boardDTO.setBoard_content( board_content );
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
 		
 		int page = boardDTO.getPage();
 		int viewCount = boardDTO.getViewCount();
@@ -63,7 +76,7 @@ public class BoardServiceImpl implements BoardService {
 		boardDTO.setIndexEnd(indexEnd);
 		
 		// 한 페이지의 내용만 있는 리스트
-		List<BoardDTO> list = boardDAO.selectBoardSearchList(boardDTO);
+		List<BoardDTO> list = boardDAO.searchPageBoard(boardDTO);
 				
 		// 전체 글 개수
 		int total = boardDAO.totalList();

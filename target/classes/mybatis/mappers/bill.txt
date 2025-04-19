@@ -3,7 +3,7 @@
 		parameterType="kr.or.GKBM.bill.BillDTO"
 		resultType="kr.or.GKBM.bill.BillDTO">
 		SELECT COUNT(*) AS line
-		FROM P_BILL
+		FROM P_VENDOR
 		<where>
 			<if test="c_c != null and c_c != ''">
 				AND VENDOR_ID = #{c_c}
@@ -45,7 +45,7 @@
 		EMAIL AS c_a,
 		SKU_ID AS c_i
 		FROM
-		P_BILL
+		P_VENDOR
 		<where>
 			<if test="c_c != null and c_c != ''">
 				AND VENDOR_ID = #{c_c}

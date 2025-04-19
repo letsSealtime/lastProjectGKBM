@@ -23,42 +23,44 @@
 		<input type="hidden" id="empno" name="empno" value="${boardDTO.empno}">
 	</c:if>
 
-	<table border="1">
-		<c:if test="${boardDTO.board_id == null or boardDTO.board_id == 0}">
+	<form method="post" action="uploads" enctype="multipart/form-data"
+		accept-charset="utf-8">
+		<table border="1">
+			<c:if test="${boardDTO.board_id == null or boardDTO.board_id == 0}">
+				<tr>
+					<th>사원번호</th>
+					<td><input type="text" id="empno" name="empno"></td>
+				</tr>
+			</c:if>
 			<tr>
-				<th>사원번호</th>
-				<td><input type="text" id="empno" name="empno"></td>
+				<th>제목</th>
+				<td><input type="text" id="title" name="title"
+					value="${boardDTO.title}"></td>
 			</tr>
+			<tr>
+				<th>내용</th>
+				<td><textarea id="board_content" name="board_content">${boardDTO.board_content}</textarea></td>
+			</tr>
+			<tr>
+				<th>공지사항</th>
+				<td><select id="notice" name="notice">
+						<option value="0" ${boardDTO.notice == 0 ? 'selected' : ''}>일반</option>
+						<option value="1" ${boardDTO.notice == 1 ? 'selected' : ''}>공지</option>
+				</select></td>
+			</tr>
+			<tr>
+				<th>파일첨부</th>
+				<td><input type="file" id="files" multiple></td>
+			</tr>
+		</table>
+		<br>
+		<c:if test="${boardDTO.board_id != null and boardDTO.board_id != 0}">
+			<input type="submit" id="update_btn" value="수정하기">
 		</c:if>
-		<tr>
-			<th>제목</th>
-			<td><input type="text" id="title" name="title"
-				value="${boardDTO.title}"></td>
-		</tr>
-		<tr>
-			<th>내용</th>
-			<td><textarea id="board_content" name="board_content">${boardDTO.board_content}</textarea></td>
-		</tr>
-		<tr>
-			<th>공지사항</th>
-			<td><select id="notice" name="notice">
-					<option value="0" ${boardDTO.notice == 0 ? 'selected' : ''}>일반</option>
-					<option value="1" ${boardDTO.notice == 1 ? 'selected' : ''}>공지</option>
-			</select></td>
-		</tr>
-		<tr>
-			<th>파일첨부</th>
-			<td><input type="file" id="files" multiple></td>
-		</tr>
-	</table>
-
-	<br>
-	<c:if test="${boardDTO.board_id != null and boardDTO.board_id != 0}">
-		<input type="submit" id="update_btn" value="수정하기">
-	</c:if>
-	<c:if test="${boardDTO.board_id == null or boardDTO.board_id == 0}">
-		<input type="submit" id="insert_btn" value="작성하기">
-	</c:if>
+		<c:if test="${boardDTO.board_id == null or boardDTO.board_id == 0}">
+			<input type="submit" id="insert_btn" value="작성하기">
+		</c:if>
+	</form>
 	<a href="board">목록으로</a>
 
 	<script>

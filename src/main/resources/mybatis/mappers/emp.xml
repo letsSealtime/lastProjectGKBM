@@ -425,15 +425,15 @@
 	</update>
 
 
-	<!-- 김도희 -->
+	<!--        @@@@@@@@@@@@김도희@@@@@@@@@@@@@           -->
 
 	<select id="getBoardDetail" resultType="boardDTO"
 		parameterType="boardDTO">
 
 		select * from p_board
 		where board_id = #{board_id}
-
 	</select>
+
 
 	<update id="udpateBoard" parameterType="boardDTO">
 
@@ -446,6 +446,7 @@
 		reserve_date = sysdate
 		where board_id = #{board_id}
 	</update>
+
 
 	<select id="insertBoard" parameterType="boardDTO">
 
@@ -461,12 +462,14 @@
 		sysdate, null, 0)
 	</select>
 
+
 	<delete id="deleteBoard" parameterType="boardDTO">
 
 		delete from p_board
 		where
 		board_id = #{board_id}
 	</delete>
+
 
 	<update id="viewsUpdateBoard" parameterType="boardDTO">
 
@@ -478,6 +481,7 @@
 		)
 		where board_id = #{board_id}
 	</update>
+
 
 	<select id="selectPageBoard" resultType="boardDTO">
 		select *
@@ -529,6 +533,30 @@
 		where rnum >= #{indexStart} and rnum <= #{indexEnd}
 	]]>
 	</select>
+	
+	<insert id="uploadBoardFile" parameterType="boardFileDTO">
+		insert into p_board_file
+		(file_id, board_id, file_name, file_path, upload_date)
+		values (
+		board_file_seq.NEXTVAL,
+		#{board_id},
+		#{file_name},
+		#{file_path},
+		sysdate
+		)
+	</insert>
 
+
+	<delete id="deleteFileByFileId" parameterType="boardFileDTO">
+		delete from p_board_file
+		where file_id = #{file_id}
+	</delete>
+	
+	
+	<select id="getFileById" parameterType="Integer" resultType="boardFileDTO">
+		select *
+		from p_board_file 
+		where board_id = #{board_id}
+	</select>
 
 </mapper>

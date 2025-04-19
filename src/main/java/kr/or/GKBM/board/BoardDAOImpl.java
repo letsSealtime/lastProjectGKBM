@@ -14,13 +14,6 @@ public class BoardDAOImpl implements BoardDAO {
 	
 	
 	@Override
-	public List<BoardDTO> selectBoardList(BoardDTO boardDTO) {
-		List<BoardDTO> result = sqlSession.selectList("gkbm.emp.selectBoardList");
-		System.out.println("result : " + result);
-		return result;
-	}
-	
-	@Override
 	public int insertBoard(BoardDTO boardDTO) {
 		int dto = sqlSession.insert("gkbm.emp.insertBoard", boardDTO);
 		return dto;
@@ -48,6 +41,18 @@ public class BoardDAOImpl implements BoardDAO {
 	public int viewsUpdateBoard(BoardDTO boardDTO) {
 		int dto = sqlSession.update("gkbm.emp.viewsUpdateBoard", boardDTO);
 		return dto;
+	}
+
+	@Override
+	public List<BoardDTO> searchPageBoard(BoardDTO boardDTO) {
+		List<BoardDTO> result = sqlSession.selectList("gkbm.emp.searchPageBoard", boardDTO);
+		return result;
+	}
+
+	@Override
+	public int totalList() {
+		int result = sqlSession.selectOne("gkbm.emp.totalBoardPage");
+		return result;
 	}
 
 

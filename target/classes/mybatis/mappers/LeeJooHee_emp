@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gkbm.emp">
+
+	<!-- 천안의 수문장(천안문...?) -->
+
+
+
+	<!-- 노래하는 이주희 -->
+	<!-- 상품정보관리 페이징된 목록 -->
+	<select id="fulltable_2" parameterType="skuDTO"
+		resultType="skuDTO">
+		SELECT * FROM (
+		SELECT p.*, ROW_NUMBER() OVER (ORDER BY sku_id DESC) AS
+		rn
+		FROM p_sku p
+		<where>
+			<if test="sku_code != null and sku_code != ''">
+				AND upper(sku_code) like upper('%' || #{sku_code} || '%')
+			</if>
+
+		</where>
+		)
+		WHERE rn BETWEEN #{startRow} AND #{endRow}
+	</select>
+	<!-- 상품정보관리 조건에 맞는 전체 데이터 수 가져오기 -->
+	<select id="Count_2" parameterType="skuDTO" resultType="int">
+		SELECT COUNT(*) FROM p_sku
+		<where>
+			<if test="sku_code != null and sku_code != ''">
+				AND upper(sku_code) like upper('%' || #{sku_code} || '%')
+			</if>
+
+		</where>
+	</select>
+
+	<!-- 상품정보관리 등록 -->
+	<insert id="addition_2" parameterType="skuDTO">
+		insert into p_sku
+		VALUES
+		(#{sku_id},
+		#{sku_code},
+		#{sku_name},
+		#{sku_size},
+		#{vendor_name},
+		#{price},
+		SYSDATE,
+		#{modify_date},
+		#{sku_category})
+	</insert>
+
+
+	<!-- 상품정보관리 삭제 -->
+	<delete id="delete_2" parameterType="skuDTO">
+
+		delete from p_sku where
+		sku_id = #{sku_id}
+
+	</delete>
+
+
+	<!-- 상품정보관리 수정 -->
+	<update id="udpate_2" parameterType="skuDTO">
+		update p_sku
+		set sku_code =
+		#{sku_code},
+		sku_name = #{sku_name},
+		sku_size = #{sku_size},
+		vendor_name
+		= #{vendor_name},
+		price = #{price},
+		modify_date = SYSDATE,
+		sku_category =
+		#{sku_category}
+		where sku_id = #{sku_id}
+	</update>
+
+	<!-- 원자재입고관리 -->
+	<!-- 전체조회 -->
+	<!-- <select id="fulltable_2_1" resultType="mioDTO" parameterType="mioDTO"> 
+		SELECT pmio.*, ps.sku_code, ps.sku_name, ps.sku_size FROM P_MATERIAL_IN_OUT 
+		pmio LEFT JOIN P_SKU ps ON pmio.sku_id = ps.sku_id WHERE pmio.sku_type = 
+		'In' </select> -->
+	<!-- 원자재입고 페이징된 목록 -->
+	<select id="fulltable_2_1" parameterType="mioDTO"
+		resultType="mioDTO">
+		SELECT * FROM ( SELECT pmio.*, ps.sku_code, ps.sku_name, ps.sku_size,
+		ROW_NUMBER() OVER (ORDER BY pmio.ib_id DESC) AS rn FROM
+		P_MATERIAL_IN_OUT pmio LEFT JOIN P_SKU ps ON pmio.sku_id = ps.sku_id
+		<!-- WHERE pmio.sku_type = 'In' -->
+		<where>
+			pmio.sku_type = 'In'
+			<if test="sku_code != null and sku_code != ''"> AND upper(ps.sku_code) like upper('%' || #{sku_code} ||
+				'%') </if>
+		</where>
+		) WHERE rn BETWEEN #{startRow} AND #{endRow}
+	</select>
+	<!-- 원자재입고관리 전체 데이터 수 조회 -->
+	<select id="Count_2_1" parameterType="mioDTO" resultType="int">
+		SELECT COUNT(*) FROM P_MATERIAL_IN_OUT pmio LEFT JOIN P_SKU ps ON
+		pmio.sku_id = ps.sku_id
+		<!-- WHERE pmio.sku_type = 'In' -->
+		<where>
+			pmio.sku_type = 'In'
+			<if test="sku_code != null and sku_code != ''"> AND upper(ps.sku_code) like upper('%' || #{sku_code} ||
+				'%') </if>
+		</where>
+	</select>
+	<!-- 원자재입고관리 등록 -->
+	<insert id="addition_2_1" parameterType="mioDTO">
+		insert into p_material_in_out VALUES (#{ib_id}, #{material_count},
+		#{material_price}, #{sku_type}, SYSDATE, #{modify_date}, #{remarks},
+		#{sku_id}, #{bill_id})
+	</insert>
+	<!-- 원자재입고관리 삭제 -->
+	<delete id="delete_2_1" parameterType="mioDTO">
+		delete from p_material_in_out where ib_id = #{ib_id}
+	</delete>
+
+
+	<!-- 그냥 병(신)자 -->
+
+
+	<!-- 목숨 간당간당 -->
+
+</mapper>

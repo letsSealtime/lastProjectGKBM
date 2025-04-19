@@ -1,0 +1,51 @@
+<!-- ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ 이준규 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ -->
+
+
+	<!-- 로그인 정보 전체조회 -->
+	
+	<select id="selectEmp_3" resultType="kr.or.GKBM.Login.LoginDTO">
+		select * from p_emp
+	</select>
+	
+	<!-- 설비등록 전체조회 and 검색 -->
+	<select id="selectP_equipreg" resultType="kr.or.GKBM.p_equipreg.equipregDTO" parameterType="map">
+    	SELECT * FROM p_facility
+    		where 
+    		upper(facility_code) like upper('%' || #{facility_code} || '%') 
+    		or 
+    		upper(facility_name) like upper('%' || #{facility_name} || '%')
+	</select>
+
+	
+	<!-- 설비등록 DB에 추가 -->
+	<insert id="insertP_eq" parameterType="kr.or.GKBM.p_equipreg.equipregDTO">
+		insert into p_facility
+		values 
+		(#{facility_code},
+		 #{facility_manager},
+		 #{installation_date},
+		 #{facility_name},
+		 #{facility_location},
+		 #{inspection_cycle},
+		 #{remarks})
+	</insert>
+
+	<!-- 설비등록 삭제 -->
+	<delete id="deleteP_eq3" parameterType="kr.or.GKBM.p_equipreg.equipregDTO">
+		delete from p_facility
+		where 
+		facility_code = #{facility_code}
+	</delete>
+	
+	<!-- 설비등록 수정 -->
+	<update id="updateP_eq3" parameterType="kr.or.GKBM.p_equipreg.equipregDTO">
+		update p_facility
+		set 
+		facility_manager = #{facility_manager}, 
+		installation_date = #{installation_date},
+		facility_name = #{facility_name},    
+		facility_location = #{facility_location},
+		inspection_cycle = #{inspection_cycle}, 
+		remarks = #{remarks}
+		where facility_code = #{facility_code}    
+	</update>

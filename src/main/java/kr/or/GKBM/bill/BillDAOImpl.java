@@ -16,8 +16,8 @@ public class BillDAOImpl implements BillDAO {
 
 		System.out.println("전체 조회 진입");
 
-		List<BillDTO> select = sqlSession.selectList("gkbm.emp.selectbill_All_1", dto);
-		BillDTO line = sqlSession.selectOne("gkbm.emp.selectbillAll_1");
+		List<BillDTO> select = sqlSession.selectList("gkbm.emp.selectBill_All_1", dto);
+		BillDTO line = sqlSession.selectOne("gkbm.emp.selectBillAll_1");
 
 		dto.setLine(line.getLine());
 
@@ -28,8 +28,8 @@ public class BillDAOImpl implements BillDAO {
 	public List<BillDTO> select(BillDTO dto) {
 		System.out.println("부분 조회 진입");
 
-		List<BillDTO> select = sqlSession.selectList("gkbm.emp.selectbill_Part_1", dto);
-		BillDTO line = sqlSession.selectOne("gkbm.emp.selectbillPart_1");
+		List<BillDTO> select = sqlSession.selectList("gkbm.emp.selectBill_Part_1", dto);
+		BillDTO line = sqlSession.selectOne("gkbm.emp.selectBillPart_1");
 		
 		System.out.println(select);
 
@@ -41,7 +41,7 @@ public class BillDAOImpl implements BillDAO {
 	@Override
 	public int insert(BillDTO dto) {
 		
-		int insert = sqlSession.insert("gkbm.emp.insertbill_1", dto);
+		int insert = sqlSession.insert("gkbm.emp.insertBill_1", dto);
 		
 		return insert;
 	}
@@ -49,7 +49,7 @@ public class BillDAOImpl implements BillDAO {
 	@Override
 	public int delete(BillDTO dto) {
 		
-		int delete = sqlSession.delete("gkbm.emp.deletebill_1", dto);
+		int delete = sqlSession.delete("gkbm.emp.deleteBill_1", dto);
 		
 		System.out.println(delete);
 		
@@ -60,7 +60,7 @@ public class BillDAOImpl implements BillDAO {
 	@Override
 	public int update(BillDTO dto) {
 		
-		int update = sqlSession.update("gkbm.emp.updatebill_1", dto);
+		int update = sqlSession.update("gkbm.emp.updateBill_1", dto);
 		
 		System.out.println(update);
 		

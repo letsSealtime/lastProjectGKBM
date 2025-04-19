@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 public class BillDTO {
-	
+
 	// 날짜
 	private String c_d;
 	// 등록번호
@@ -25,10 +25,11 @@ public class BillDTO {
 	private String c_p;
 	// 주소
 	private String c_j;
+	// 상태
+	private String c_a;
 
-	
 	private String hidden;
-	
+
 	private int viewCount = 10;
 	private int page = 1;
 	private int indexStart;
@@ -36,7 +37,7 @@ public class BillDTO {
 	private int line;
 	private int begin;
 	private int end;
-	
+
 	private List check = new ArrayList();
 
 }

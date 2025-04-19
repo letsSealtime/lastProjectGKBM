@@ -183,7 +183,7 @@ span {
 			// js에서 form요소의 공백 및 null 미기입 확인
 			for(let key in query) {
 				console.log(key);
-				if((query[c_d]) === "") || (query[c_q]) === "") || (query[c_b]) === "") || (query[c_a]) === "")) {
+				if((query["c_d"] === "") || (query["c_q"] === "") || (query["c_b"] === "") || (query["c_a"] === "")) {
 					alert("필수 기입값을 모두 기입해주세요.");
 					return;
 				}
@@ -533,8 +533,8 @@ span {
 
 				<!-- 데이터가 추가됩니다 -->
 				<tbody id="table-body">
-					<c:if test="${not empty resultset}">
-						<c:forEach var="list" items="${ resultset }">
+					<c:if test="${not empty select}">
+						<c:forEach var="list" items="${ select }">
 
 							<tr data=${ list.c_c }>
 								<td><input type="checkbox" name="box" value=${ list.c_c }>
@@ -558,18 +558,43 @@ span {
 		</form>
 		<!-- 페이지 넘길때 쓸 버튼들 -->
 		<div class="pagination">
-			<button>&lt;</button>
-			<button>1</button>
-			<button>2</button>
-			<button>3</button>
-			<button>4</button>
-			<button>5</button>
-			<button>6</button>
-			<button>7</button>
-			<button>8</button>
-			<button>9</button>
-			<button>10</button>
-			<button>&gt;</button>
+			<c:set var="pageCount"
+				value="${(line mod viewCount == 0) ? (line div viewCount) : (line div viewCount + 1)}" />
+			<c:set var="prevPage" value="${page - viewCount}" />
+			<c:set var="nextPage" value="${page + viewCount}" />
+
+			<a href="vendor?page=1"><button>&lt;&lt;</button></a> <a
+				href="vendor?page=${prevPage}"><button>&lt;</button></a>
+
+			<c:choose>
+				<c:when test="${ page == pageCount }">
+					<c:forEach var="i" begin="${ page - (viewCount - 1) }"
+						end="${ page }">
+						<c:choose>
+							<c:when test="${ i == page }">
+								<strong><a style="color: red;" href="?page=${i}"><button>${ i }</button></a></strong>
+							</c:when>
+							<c:otherwise>
+								<a href="?page=${i}"><button>${ i }</button></a>
+							</c:otherwise>
+						</c:choose>
+					</c:forEach>
+				</c:when>
+				<c:otherwise>
+					<c:forEach var="i" begin="${ begin }" end="${ end }">
+						<c:choose>
+							<c:when test="${ i == page }">
+								<strong><a style="color: red;" href="?page=${i}"><button>${ i }</button></a></strong>
+							</c:when>
+							<c:otherwise>
+								<a href="?page=${i}"><button>${ i }</button></a>
+							</c:otherwise>
+						</c:choose>
+					</c:forEach>
+				</c:otherwise>
+			</c:choose>
+			<a href="vendor?page=${nextPage}"><button>&gt;</button> </a> <a
+				href="vendor?page=${lastPage}"><button>&gt;&gt;</button> </a>
 		</div>
 	</div>
 </body>

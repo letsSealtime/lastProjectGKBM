@@ -13,8 +13,10 @@
 
 	<!-- mapper에 사용할 타입이 길어서 짧게 별칭 지정 -->
 	<typeAliases>
-		<!-- <typeAlias type="kr.or.GKBM.EmpDTO" alias="empDTO" /> -->
+		<!-- 상품정보관리꺼 -->
 		<typeAlias type="kr.or.GKBM.sku.P_skuDTO" alias="skuDTO" />
+		<!-- 원자재입고관리꺼 -->
+		<typeAlias type="kr.or.GKBM.material_in_out.P_material_in_outDTO" alias="mioDTO" /> 		
 		<typeAlias type="kr.or.GKBM.board.BoardDTO" alias="boardDTO" />
 	</typeAliases>
 

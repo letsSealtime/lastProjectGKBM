@@ -1,0 +1,144 @@
+<!-- Week 상품 조회 -->	
+	<select id="sku_select" resultType="kr.or.GKBM.week.WeekDTO">
+		SELECT SKU_ID AS c_s
+		FROM P_SKU
+	</select>
+	
+	<!-- WEEK 전체 조회 -->
+	<select id="selectWeekAll_1"
+		resultType="kr.or.GKBM.week.WeekDTO">
+
+		SELECT COUNT(*) AS line
+		FROM P_WEEK_PLAN PW
+		LEFT JOIN P_SKU PS ON PW.SKU_ID = PS.SKU_ID
+	</select>
+
+	<!-- 페이징 전체 조회 -->
+	<select id="selectWeek_All_1"
+		parameterType="kr.or.GKBM.week.WeekDTO"
+		resultType="kr.or.GKBM.week.WeekDTO">
+
+		SELECT RNUM, c_i, c_n, c_k, c_c, c_w, c_y
+		FROM ( SELECT ROWNUM AS
+		RNUM,
+		c_i, c_n, c_k, c_c, c_w, c_y
+		FROM ( SELECT PW.WEEK_PLAN_ID AS
+		c_i, PS.SKU_NAME
+		AS c_n, PS.SKU_CODE AS c_k,
+		PW.PLAN_COUNT AS c_c, PW.WEEK AS c_w,
+		PW.PLAN_YEAR AS c_y
+		FROM P_WEEK_PLAN PW
+		LEFT JOIN P_SKU PS ON PW.SKU_ID = PS.SKU_ID
+		ORDER BY PW.WEEK_PLAN_ID))
+		WHERE RNUM <![CDATA[ >= ]]>
+		${indexStart} AND RNUM <![CDATA[ <= ]]>
+		${indexEnd}
+
+	</select>
+
+	<!-- WEEK 부분 조회 -->
+	<select id="selectWeekPart_1"
+		parameterType="kr.or.GKBM.week.WeekDTO"
+		resultType="kr.or.GKBM.week.WeekDTO">
+		SELECT COUNT(*) AS line
+		FROM P_WEEK_PLAN PW
+		LEFT JOIN P_SKU PS ON PW.SKU_ID = PS.SKU_ID
+		<where>
+			<if test="c_i != null and c_i != ''">
+				AND WEEK_PLAN_ID = #{c_i}
+			</if>
+			<if test="c_n != null and c_n != ''">
+				AND UPPER(SKU_NAME) LIKE '%' || UPPER(#{c_n}) || '%'
+			</if>
+			<if test="c_k != null and c_k != ''">
+				AND UPPER(SKU_CODE) LIKE '%' || UPPER(#{c_k}) || '%'
+			</if>
+			<if test="c_c != null and c_c != ''">
+				AND PLAN_COUNT = #{c_c}
+			</if>
+			<if test="c_w != null and c_w != ''">
+				AND UPPER(WEEK) = #{c_w}
+			</if>
+			<if test="c_y != null and c_y != ''">
+				AND PLAN_YEAR = #{c_y}
+			</if>
+		</where>
+
+	</select>
+
+	<!-- 페이징 부분 조회 -->
+	<select id="selectWeek_Part_1"
+		parameterType="kr.or.GKBM.week.WeekDTO"
+		resultType="kr.or.GKBM.week.WeekDTO">
+		SELECT RNUM, c_i, c_n, c_k, c_c, c_w, c_y
+		FROM ( SELECT ROWNUM AS
+		RNUM,
+		c_i, c_n, c_k, c_c, c_w, c_y
+		FROM ( SELECT PW.WEEK_PLAN_ID AS
+		c_i, PS.SKU_NAME
+		AS c_n, PS.SKU_CODE AS c_k,
+		PW.PLAN_COUNT AS c_c, PW.WEEK AS c_w,
+		PW.PLAN_YEAR AS c_y
+		FROM P_WEEK_PLAN PW
+		LEFT JOIN P_SKU PS ON PW.SKU_ID = PS.SKU_ID
+		<where>
+			<if test="c_i != null and c_i != ''">
+				AND WEEK_PLAN_ID = #{c_i}
+			</if>
+			<if test="c_n != null and c_n != ''">
+				AND UPPER(SKU_NAME) LIKE '%' || UPPER(#{c_n}) || '%'
+			</if>
+			<if test="c_k != null and c_k != ''">
+				AND UPPER(SKU_CODE) LIKE '%' || UPPER(#{c_k}) || '%'
+			</if>
+			<if test="c_c != null and c_c != ''">
+				AND PLAN_COUNT = #{c_c}
+			</if>
+			<if test="c_w != null and c_w != ''">
+				AND UPPER(WEEK) = #{c_w}
+			</if>
+			<if test="c_y != null and c_y != ''">
+				AND PLAN_YEAR = #{c_y}
+			</if>
+		</where>
+
+		ORDER BY VENDOR_NAME))
+		WHERE RNUM <![CDATA[ >= ]]>
+		${indexStart}
+		AND RNUM <![CDATA[ <= ]]>
+		${indexEnd}
+	</select>
+	
+	<insert id="insertWeek_1"
+		parameterType="kr.or.GKBM.week.WeekDTO">
+
+		INSERT INTO P_WEEK_PLAN
+		VALUES(SEQ.NEXTVAL, #{c_y}, #{c_w}, #{c_d}, #{c_s}, #{c_c})
+
+	</insert>
+
+	<delete id="deleteWeek_1"
+		parameterType="kr.or.GKBM.week.WeekDTO">
+
+		DELETE FROM P_WEEK_PLAN
+		WHERE WEEK_PLAN_ID IN
+		<foreach item="delete" collection="check" open="(" close=")"
+			separator=",">
+			#{delete}
+		</foreach>
+
+	</delete>
+
+	<update id="updateWeek_1"
+		parameterType="kr.or.GKBM.week.WeekDTO">
+
+		UPDATE P_WEEK_PLAN
+		SET WEEK_PLAN_ID = #{c_i},
+		PLAN_YEAR = #{c_y},
+		WEEK = #{c_w},
+		PLAN_DATE = #{c_d},
+		SKU_ID = #{c_s},
+		PLAN_COUNT = #{c_c}
+		WHERE WEEK_PLAN_ID = #{c_i}
+
+	</update>

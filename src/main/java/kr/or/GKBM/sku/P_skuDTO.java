@@ -19,6 +19,9 @@ public class P_skuDTO {
 	Date modify_date;
 	String sku_category;
 	
+	
+	int startRow;   // 시작      
+	int endRow;		// 끝
 
 	
 }

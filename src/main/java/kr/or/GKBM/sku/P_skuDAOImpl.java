@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 
 
 
+
+
 @Repository
 public class P_skuDAOImpl implements P_skuDAO {
 
@@ -15,14 +17,21 @@ public class P_skuDAOImpl implements P_skuDAO {
 	SqlSession sqlSession;
 	
 	// emp.xml에서 가져온 전체페이지
+	// 목록 조회용
 	@Override
-	public List<P_skuDTO> selectEmpList() {		
+	public List<P_skuDTO> fulltableList(P_skuDTO skuDTO) {		
 		
 		
-		List<P_skuDTO> result = sqlSession.selectList("gkbm.emp.selectEmp_2");		
+		List<P_skuDTO> result = sqlSession.selectList("gkbm.emp.fulltable_2", skuDTO);		
 		System.out.println("result : " + result);
 		return result;
 	}
+	
+	//총 개수 계산용
+	public int Count(P_skuDTO skuDTO) {
+	    return sqlSession.selectOne("gkbm.emp.Count_2", skuDTO);
+	}
+
 
 	// emp.xml에서 가져온 것으로 등록
 		@Override
@@ -38,12 +47,14 @@ public class P_skuDAOImpl implements P_skuDAO {
 			return dto;
 		}
 		
-		//내가 원하는거 조회
+		
+		//emp.xml에서 가져온 수정
 		@Override
-		public List<P_skuDTO> like(P_skuDTO skuDTO) {
-			List<P_skuDTO> dto = sqlSession.selectList("gkbm.emp.selectBySkuId_2", skuDTO);
-			return dto;
+		public int udpate(P_skuDTO skuDTO) {
+			int countUpdate = sqlSession.update("gkbm.emp.udpate_2", skuDTO);
+			return countUpdate;
 		}
-	
+		
+		
 
 }

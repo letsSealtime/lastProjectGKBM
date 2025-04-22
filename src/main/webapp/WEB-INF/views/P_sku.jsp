@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>웹툰연습</title>
+<title>상품정보관리</title>
 <style>
 body {
 	margin: 0;
@@ -176,18 +176,26 @@ span {
 			</div>
 
 			<div class="form-row">
-				<label for="sku_code">상품 코드로 조회</label> <input type="text"
-					name="sku_code" value="${select20.sku_code}">
+				<label for="sku_code">상품 코드로 조회</label> 
+				<input type="text" id="skuCodeInput" name="sku_code">
 			</div>
 
 
 		</div>
 
 		<div>
-			<input type="submit" value="등록" class="buttons"> 
-			<button type="button" class="buttons" onclick="searchBySkuCode()">조회</button>
-			<button type="button" class="buttons" id="editSelectedButton">수정</button>
-			<button type="button" class="buttons" onclick="submitDelete()">삭제</button>
+		<!-- onclick="setFormAction('insert')" -->
+			<!-- 기존 버튼들 -->
+			<input type="submit" value="등록" class="buttons" id="insertBtn"> </br>
+			<button type="button" class="buttons" onclick="searchBySkuCode()" id="searchBtn">조회</button></br>
+			<button type="button" class="buttons" id="editSelectedButton" onclick="handleEdit()">수정</button></br>
+			<button type="button" class="buttons" onclick="submitDelete()" id="deleteBtn">삭제</button></br>
+			
+			<!-- 수정 모드 버튼 -->
+			 <input type="submit" value="수정완료" class="buttons" 
+			id="updateBtn" style="display:none;" onclick="setFormAction('update')"></br>
+			<button type="button" class="buttons" id="cancelUpdateBtn" 
+			style="display:none;" onclick="cancelUpdate()">수정취소</button> 
 
 		</div>
 		
@@ -195,14 +203,14 @@ span {
 	
 	
 
-	
-
+	<!-- 이건 부분조회 -->
+	<!-- /searchBySkuCode -->
 	<form method="get" action="p_sku2">
 		<table border="1">
 			<thead>
 				<tr>
-					<th>No.</th>
 					<th>checkbox</th>
+					<th>No.</th>
 					<th>상품고유번호</th>
 					<th>상품코드</th>
 					<th>상품명</th>
@@ -214,11 +222,11 @@ span {
 					<th>제품분류</th>
 				</tr>
 			</thead>
-			<tbody></tbody>
+			<tbody>
 			<c:forEach var="skuDTO" items="${list}" varStatus="loop">
 				<tr>
-					<td>${loop.count}</td>
 					<td><input type="checkbox" name="empnos" value="${skuDTO.sku_id}"></td>
+					<td>${loop.count}</td>
 					<td>${skuDTO.sku_id}</td>
 					<td>${skuDTO.sku_code}</td>
 					<td>${skuDTO.sku_name}</td>
@@ -242,10 +250,38 @@ span {
 	<form id="deleteForm" method="post" action="p_skuDelete"></form>
 
 	<!-- 여긴 페이지넘기는곳 -->
-	<div>
-		<a href="emp5?page=1">1</a> <a href="emp5?page=2"><strong>2</strong></a>
-		<a href="emp5?page=3">3</a>
-	</div>
+        <div class="pagination">
+    <!-- 왼쪽 방향 버튼 -->
+    <c:if test="${currentPage > 1}">
+        <form method="get" >
+            <input type="hidden" name="currentPage" value="${currentPage - 1}" />
+            <input type="hidden" name="sku_code" value="${skuDTO.sku_code}" />
+            <button type="submit">&lt;</button>
+        </form>
+    </c:if>
+
+    <!-- 페이지 번호 버튼 -->
+    <!-- allpages는 1입니다 -->
+    <c:forEach var="allpages" begin="1" end="${totalPages}">
+        <form method="get" >
+            <input type="hidden" name="currentPage" value="${allpages}" />
+            <input type="hidden" name="sku_code" value="${skuDTO.sku_code}" />
+            <button type="submit"
+                    style="${allpages == currentPage ? 'font-weight:bold; background-color:#eee;' : ''}">
+                ${allpages}
+            </button>
+        </form>
+    </c:forEach>
+
+    <!-- 오른쪽 방향 버튼 -->
+    <c:if test="${currentPage < totalPages}">
+        <form method="get">
+            <input type="hidden" name="currentPage" value="${currentPage + 1}" />
+            <input type="hidden" name="sku_code" value="${skuDTO.sku_code}" />
+            <button type="submit">&gt;</button>
+        </form>
+    </c:if>
+</div>
 
 
 	<script>
@@ -271,7 +307,97 @@ span {
         form.submit();
     }
 	
+	// 조회
+     function searchBySkuCode() {
+    	 const skuCode = document.getElementById("skuCodeInput").value.trim(); // 공백 제거
+
+    	    if (skuCode == "") {
+    	        // 아무것도 입력 안 했을 때 → 전체 조회
+    	        location.href = "p_sku2"; 
+    	    } else {
+    	        // sku_code 값으로 조회
+    	        location.href = "p_sku2?sku_code=" + encodeURIComponent(skuCode); 
+    	    }
+    	 
+    		/*  // 조회 후 입력란을 비우기
+    	    skuCodeInput.value = "";  */
+    	}
 	
+  	 // 수정 버튼 클릭 시 - 체크된 항목의 데이터를 입력란에 채우고 버튼 상태 변경
+     function handleEdit() {
+         const selected = document.querySelectorAll('input[name="empnos"]:checked');
+         if (selected.length !== 1) {
+             alert("수정할 항목을 하나만 선택하세요.");
+             return;
+         }
+
+         // 기존 버튼 숨기기
+         document.getElementById("insertBtn").style.display = "none";
+         document.getElementById("searchBtn").style.display = "none";
+         document.getElementById("editSelectedButton").style.display = "none";
+         document.getElementById("deleteBtn").style.display = "none";
+
+         // 수정완료/취소 버튼 보이기
+         document.getElementById("updateBtn").style.display = "inline-block";
+         document.getElementById("cancelUpdateBtn").style.display = "inline-block";
+
+         // 선택된 항목의 데이터를 입력란에 넣기
+         const checked = selected[0];
+         const row = checked.closest("tr");
+         const cells = row.querySelectorAll("td");
+
+         document.querySelector('input[name="sku_code"]').value = cells[3].textContent.trim();
+         document.querySelector('input[name="sku_name"]').value = cells[4].textContent.trim();
+         document.querySelector('input[name="sku_size"]').value = cells[5].textContent.trim();
+         document.querySelector('input[name="vendor_name"]').value = cells[6].textContent.trim();
+         document.querySelector('input[name="price"]').value = cells[7].textContent.trim();
+         document.querySelector('input[name="sku_category"]').value = cells[10].textContent.trim();
+
+         // 숨겨진 sku_id 필드 처리 (없으면 생성해서 폼에 추가)
+         let hidden = document.querySelector('input[name="sku_id"]');
+         if (!hidden) {
+             hidden = document.createElement("input");
+             hidden.type = "hidden";
+             hidden.name = "sku_id";
+             document.querySelector("form.form").appendChild(hidden);
+         }
+         hidden.value = cells[2].textContent.trim();
+     }
+
+     // 수정취소 버튼 클릭 시 - 입력란 초기화 및 버튼 상태 원래대로
+     function cancelUpdate() {
+         // 기존 버튼 보이기
+         document.getElementById("insertBtn").style.display = "inline-block";
+         document.getElementById("searchBtn").style.display = "inline-block";
+         document.getElementById("editSelectedButton").style.display = "inline-block";
+         document.getElementById("deleteBtn").style.display = "inline-block";
+
+         // 수정완료/취소 버튼 숨기기
+         document.getElementById("updateBtn").style.display = "none";
+         document.getElementById("cancelUpdateBtn").style.display = "none";
+
+         // 입력란 초기화
+         document.querySelector('input[name="sku_code"]').value = "";
+         document.querySelector('input[name="sku_name"]').value = "";
+         document.querySelector('input[name="sku_size"]').value = "";
+         document.querySelector('input[name="vendor_name"]').value = "";
+         document.querySelector('input[name="price"]').value = "";
+         document.querySelector('input[name="sku_category"]').value = "";
+
+         // 숨겨진 sku_id 필드 제거
+         const hidden = document.querySelector('input[name="sku_id"]');
+         if (hidden) {
+             hidden.remove();
+         }
+     }
+
+     // 폼 액션 설정 및 전송 - insert or update 시 사용
+     function setFormAction(action) {
+         const form = document.querySelector("form.form");
+         form.action = "udpateList"; // 예: "insert", "update" 같은 URL로 설정
+         form.submit();
+     }
+ 
    
 </script>
 

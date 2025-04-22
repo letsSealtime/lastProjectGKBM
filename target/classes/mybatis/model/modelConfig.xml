@@ -20,6 +20,8 @@
 		<!-- 게시판 -->
 		<typeAlias type="kr.or.GKBM.board.BoardDTO" alias="boardDTO" />
 		<typeAlias type="kr.or.GKBM.board.BoardFileDTO" alias="boardFileDTO" />
+		<typeAlias type="kr.or.GKBM.board.BoardCommentDTO" alias="commentDTO" />
+		
 	</typeAliases>
 
 

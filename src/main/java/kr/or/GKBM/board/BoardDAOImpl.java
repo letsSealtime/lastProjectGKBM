@@ -27,7 +27,7 @@ public class BoardDAOImpl implements BoardDAO {
 
 	@Override
 	public int deleteBoard(BoardDTO boardDTO) {
-		int dto = sqlSession.delete("gkbm.emp.deleteBoard", boardDTO);
+		int dto = sqlSession.update("gkbm.emp.deleteComment", boardDTO);
 		return dto;
 	}
 

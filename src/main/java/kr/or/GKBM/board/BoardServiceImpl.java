@@ -21,8 +21,8 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public int insertBoard(BoardDTO boardDTO) {
-		int countUpdate = boardDAO.insertBoard(boardDTO);
-		return countUpdate;
+		boardDAO.insertBoard(boardDTO);
+		return boardDTO.getBoard_id();
 	}
 
 	@Override

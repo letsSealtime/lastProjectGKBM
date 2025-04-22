@@ -448,19 +448,22 @@
 	</update>
 
 
-	<select id="insertBoard" parameterType="boardDTO">
-
+	<insert id="insertBoard" parameterType="boardDTO">
+	  	<selectKey keyProperty="board_id" resultType="int" order="BEFORE">
+   		 SELECT board_id_seq.NEXTVAL FROM dual
+  		</selectKey>
+	
 		insert into p_board
 		(board_id, empno, title, board_content, notice, create_date,
 		reserve_date, views)
 		VALUES (
-		board_id_seq.NEXTVAL,
+		#{board_id},
 		#{empno},
 		#{title},
 		#{board_content},
 		#{notice},
 		sysdate, null, 0)
-	</select>
+	</insert>
 
 
 	<delete id="deleteBoard" parameterType="boardDTO">
@@ -558,5 +561,40 @@
 		from p_board_file 
 		where board_id = #{board_id}
 	</select>
+
+	<insert id="insertComment" parameterType="commentDTO">
+		insert into p_comment
+		(comment_id, empno, board_id, content, create_date,
+		parent_id, depth, is_deleted)
+		values(
+			board_comment_seq.NEXTVAL,
+			#{empno},
+			#{board_id},
+			#{content},
+			sysdate,
+			#{parent_id},
+			#{depth},
+			0)
+	</insert>
+	
+	<update id="updateComment" parameterType="commentDTO">
+		update p_comment set content = #{content}
+		where comment_id = #{comment_id}
+	</update>
+	
+	<update id="deleteComment" parameterType="commentDTO">
+		update p_comment set is_deleted = 1
+		where comment_id = #{comment_id}
+	</update>
+	
+	<select id="checkCommentchildren" parameterType="commentDTO">
+		select count(*) from p_comment
+		where parent_id = #{comment_id}
+	</select>
+	
+	<select id="selectComment" parameterType="Integer" resultType="commentDTO">
+	
+	</select>
+
 
 </mapper>

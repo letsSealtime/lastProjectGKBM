@@ -17,14 +17,16 @@
 			value="${boardDTO.board_id != null and boardDTO.board_id != 0 ? '게시글 수정' : '새 글 작성'}" />
 	</h2>
 
-	<c:if test="${boardDTO.board_id != null and boardDTO.board_id != 0}">
-		<input type="hidden" id="board_id" name="board_id"
-			value="${boardDTO.board_id}">
-		<input type="hidden" id="empno" name="empno" value="${boardDTO.empno}">
-	</c:if>
 
-	<form method="post" action="uploads" enctype="multipart/form-data"
-		accept-charset="utf-8">
+	<form id="fileForm" method="post" action="uploads"
+		enctype="multipart/form-data" accept-charset="utf-8">
+		<c:if test="${boardDTO.board_id != null and boardDTO.board_id != 0}">
+			<input type="hidden" id="board_id" name="board_id"
+				value="${boardDTO.board_id}">
+			<input type="hidden" id="empno" name="empno"
+				value="${boardDTO.empno}">
+		</c:if>
+
 		<table border="1">
 			<c:if test="${boardDTO.board_id == null or boardDTO.board_id == 0}">
 				<tr>
@@ -50,7 +52,14 @@
 			</tr>
 			<tr>
 				<th>파일첨부</th>
-				<td><input type="file" id="files" multiple></td>
+				<td><c:forEach var="file" items="${fileList}">
+						<label> <input type="checkbox" name="deleteFileIds"
+							value="${file.file_id}"> 삭제
+						</label>
+						<a href="fileDownload?file_name=${file.file_name}">
+							${file.file_name}</a>
+						<br>
+					</c:forEach> <input type="file" id="files" name="files" multiple></td>
 			</tr>
 		</table>
 		<br>
@@ -64,6 +73,19 @@
 	<a href="board">목록으로</a>
 
 	<script>
+	window.addEventListener('DOMContentLoaded', function(){
+		
+		const form = document.querySelector("form");
+		const boardId = document.querySelector("#board_id");
+		
+		if(boardId && boardId.value && boardId.value !== "0"){
+			form.action = "uploads/update";
+		} else {
+			form.action = "uploads";
+		}
+	});
+	
+	
 	function checkParam(param) {
 		if (param.title.trim().length === 0) {
 			alert("제목 입력은 필수입니다");
@@ -103,7 +125,8 @@
 				.then((resp) => resp.json())
 				.then((data) => {
 					if (data == 1) {
-						location.href = "board";
+						const fileForm = document.querySelector("#fileForm");
+						fileForm.submit();
 					} else {
 						alert("게시글 수정에 실패했습니다");
 					}
@@ -135,16 +158,24 @@
 				body: JSON.stringify(param)
 			})
 				.then((resp) => resp.json())
-				.then((data) => {
-					if (data == 1) {
-						location.href = "board";
+				.then((board_id) => {
+					if (board_id > 0) {
+						const fileForm = document.querySelector("#fileForm");
+						
+				          const hidden = document.createElement("input");
+				          hidden.type = "hidden";
+				          hidden.name = "board_id";
+				          hidden.value = board_id;
+				          fileForm.appendChild(hidden);
+						
+						fileForm.submit();
 					} else {
 						alert("게시글 작성에 실패했습니다");
 					}
 				})
 				.catch((err) => {
 					console.error("ERROR board fetch", err);
-				});
+				});f
 		});
 	}
 </script>

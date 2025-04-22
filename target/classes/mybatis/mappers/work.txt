@@ -1,0 +1,41 @@
+<!-- Work 상품 조회 -->	
+	
+	<select id="code_select" resultType="kr.or.GKBM.work.WorkDTO">
+		SELECT PLAN_YEAR AS c_y,
+		WEEK AS c_w
+		FROM P_WEEK_PLAN
+		GROUP BY PLAN_YEAR, WEEK
+	</select>
+	
+	<select id="detail_select" parameterType="kr.or.GKBM.work.WorkDTO" 
+		resultType="kr.or.GKBM.work.WorkDTO">
+		select pW.work_order_id, pW.modify_date, pp.week_plan_id as c_pn, 
+		ps.sku_name as c_n, PS.SKU_CODE as c_c, pp.plan_count as c_cc, pW.quantity, 
+		pW.bom_id as c_b, pp.plan_year as c_y, pp.week as c_w, SPW.QSUM as c_s
+		from P_WEEK_PLAN PP
+		join P_SKU PS ON PP.SKU_ID = PS.SKU_ID
+		left join P_BOM PB ON PS.SKU_ID = PB.SKU_ID
+		left join P_WORK_ORDER PW ON PP.WEEK_PLAN_ID = PW.WEEK_PLAN_ID
+		LEFT JOIN (SELECT SUM(QUANTITY) AS QSUM, WEEK_PLAN_ID FROM P_WORK_ORDER GROUP BY WEEK_PLAN_ID) SPW ON PP.WEEK_PLAN_ID = SPW.WEEK_PLAN_ID
+		<where>
+			<if test="c_y != null and c_y != ''">
+				AND PP.plan_year = #{c_y}
+			</if>
+			<if test="c_w != null and c_w != ''">
+				AND PP.WEEK = #{c_w}
+			</if>
+			<if test="c_n != null and c_n != ''">
+				AND ps.sku_name = #{c_n}
+			</if>
+			<if test="c_pn != null and c_pn != ''">
+				AND pp.week_plan_id = #{c_pn}
+			</if>
+		</where>
+	</select>
+	
+	<insert id="insertWork" parameterType="kr.or.GKBM.work.WorkDTO">
+
+		INSERT INTO P_WORK_ORDER (WORK_ORDER_ID, WEEK_PLAN_ID, MODIFY_DATE, QUANTITY, BOM_ID)
+		VALUES(SEQ.NEXTVAL, #{c_pn}, SYSDATE, #{c_d}, #{c_b})
+
+	</insert>

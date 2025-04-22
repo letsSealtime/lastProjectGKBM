@@ -168,62 +168,6 @@ select option:hover {
 	window.addEventListener("DOMContentLoaded", init)
 
 	function init() {
-		
-		let data = {
-				
-				load: "load"
-				
-		}
-		
-		let load = new URLSearchParams(data).toString();
-		
-		let xhr = new XMLHttpRequest();
-		
-		xhr.open("POST", "weekplan", true);
-		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-		xhr.send(load);
-		
-		xhr.onload = function () {
-	        console.log("Response:", xhr.responseText);
-	        
-	        let json = JSON.parse(xhr.responseText);
-	        
-	        console.log(json);
-	        
-	        let select = document.createElement("select");
-	        select.setAttribute("name", "c_s");
-	        select.setAttribute("id", "c_s");
-	        
-	        let count = 1;
-	        	        
-	        json.forEach((value) => {
-	        	if (value && count == 1) {
-		        	let option = document.createElement("option");
-		        	option.setAttribute("value", "");
-		        	option.innerText = "";
-		        	select.append(option);	        		
-		        	
-		        	count++;       	
-	        	} 
-	        	
-	        	if(value && count > 1) {
-
-	        		let option = document.createElement("option");
-		        	option.setAttribute("value", value.p_id);
-		        	option.setAttribute("data", value.p_code);
-		        	option.innerText = value.p_code;
-	        		
-		        	select.append(option);
-	        	} else {
-	        		return;
-	        	}
-	        	
-	        })
-	        
-	        let form = document.querySelector(".select")
-	        form.append(select);
-	        
-	    };
 
 		const hidden = document.querySelector("#hidden");
 		
@@ -234,11 +178,13 @@ select option:hover {
 			// 버튼이 4개 있어 작동되는 버튼 구분을 위한 hidden타입 value 기입
 			hidden.value = "insert";
 			
-			let data = new FormData(document.querySelector("#form"))
-			console.log(data);
-			
-			let query = new URLSearchParams(data);
-			console.log(query);
+			let data = {
+			        c_i: document.querySelector("#c_i").value,
+			        c_y: document.querySelector("#c_y").value,
+			        c_w: document.querySelector("#c_w").value,
+			        c_c: document.querySelector("#c_c").value,
+			        c_s: document.querySelector("#c_s").value
+			};
 			
 			// for~in으로 data객체의 값을 꺼낼 수 있으나
 			// 저장된 값이 아닌 data에 있는 함수들을 꺼낼 수 있음
@@ -252,20 +198,21 @@ select option:hover {
 			} */
 			
 			// js에서 form요소의 공백 및 null 미기입 확인
-			for(let [key, value] of query) {
-				console.log(key);
-				console.log(value);
-				if((!value && key === "c_c") || (!value && key === "c_s")) {
-					alert("필수 기입값을 모두 기입해주세요.");
-					return;
-				}
-			};
+		for(let key in data) {
+			console.log(key);
+			if(!data.c_c || !data.c_s) {
+				alert("필수 기입값을 모두 기입해주세요.");
+				return;
+			}
+		};
 			
 			let xhr = new XMLHttpRequest();
 			
-			xhr.open("POST", "weekplan", true);
-			//xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-			xhr.send(query);
+			xhr.open("PUT", "week");
+			xhr.setRequestHeader("Content-type", "application/json");
+			document.querySelector("#c_c").innerText = ""
+	        document.querySelector("#c_s").innerText = ""
+			xhr.send(JSON.stringify(data));
 			
 			console.log("중간 확인");
 			xhr.onreadystatechange = () => {
@@ -277,6 +224,9 @@ select option:hover {
 						console.log(xhr.responseText);
 						//console.log(json);
 						document.getElementById('check').innerText = json.error;
+						
+						const searchButton = document.querySelector("#search");
+						searchButton.click();
 							
 						console.log(hidden.value);
 							
@@ -338,12 +288,26 @@ select option:hover {
 			
 			console.log("delet 클릭");
 			
-			let data = new FormData(document.querySelector("#form"))
-			let query = new URLSearchParams(data);
+			let check = []
+			let checkbox = document.querySelectorAll(".check")
+			
+			console.log(checkbox.length)
+			
+			for(i = 0; checkbox.length > i; i++) {
+				let value = checkbox[i]
+				if(value.checked) {
+					check.push(value.value);
+				}
+			}
+			
+			let query = {
+					"check": check
+			}
 			
 			let xhr = new XMLHttpRequest();
-			xhr.open("POST", "weekplan", true);
-			xhr.send(query);
+			xhr.open("DELETE", "week");
+			xhr.setRequestHeader("Content-type", "application/json");
+			xhr.send(JSON.stringify(query));
 			
 			xhr.onreadystatechange = () => {
 				if(xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
@@ -355,6 +319,9 @@ select option:hover {
 						console.log(xhr.responseText);
 							
 						console.log(hidden.value);
+						
+						const searchButton = document.querySelector("#search");
+						searchButton.click();
 							
 					} catch(e) {
 						console.log(hidden.value);
@@ -436,9 +403,10 @@ select option:hover {
 					
 					hidden.value = "update";
 					
-					let data = new FormData(document.querySelector("#form"));
-					
-					let query = new URLSearchParams(data);
+					let data = {
+						c_c: document.querySelector("#c_c").value,
+					    c_s: document.querySelector("#c_s").value
+					};
 					
 					form.classList.toggle("none");
 					div.remove();
@@ -452,8 +420,9 @@ select option:hover {
 					c_i.removeAttribute("readonly")
 					
 					let xhr = new XMLHttpRequest();
-					xhr.open("POST", "weekplan", true);
-					xhr.send(query);
+					xhr.open("POST", "week");
+					xhr.setRequestHeader("Content-type", "application/json");
+					xhr.send(JSON.stringify(data));
 					
 					xhr.onreadystatechange = () => {
 						if(xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
@@ -491,7 +460,7 @@ select option:hover {
 
 		<!-- 입력할곳 및 등록, 조회, 수정, 삭제버튼 -->
 		<span>* 모두 기입</span>
-		<form id="form" method="get" action="weekplan">
+		<form id="form" method="get" action="week">
 			<div class="form">
 				<div class="form-row">
 					<div class="form-column">
@@ -503,8 +472,16 @@ select option:hover {
 							type="number" id="c_c" name="c_c">
 					</div>
 					<div class="form-column select">
-						상품코드<span>*</span>
+						상품코드<span>*</span> <select id="c_s" name="c_s">
+							<option></option>
+							<c:if test="${not empty list}">
+								<c:forEach var="list" items="${ list }">
 
+									<option data=${ list.c_s } value=${ list.c_s }>${ list.c_s }</option>
+
+								</c:forEach>
+							</c:if>
+						</select>
 					</div>
 					<div class="form-column select">
 						년도
@@ -570,19 +547,19 @@ select option:hover {
 
 				<!-- 데이터가 추가됩니다 -->
 				<tbody id="table-body">
-					<c:if test="${not empty resultset}">
-						<c:forEach var="list" items="${ resultset }">
+					<c:if test="${not empty select}">
+						<c:forEach var="list" items="${ select }">
 
-							<tr data=${ list.p_id }>
-								<td><input type="checkbox" name="box" value=${ list.p_id }>
-								</td>
-								<td>${ list.p_id }</td>
-								<td>${ list.p_name }</td>
-								<td>${ list.p_code }</td>
-								<td>${ list.p_c }</td>
-								<td>${ list.p_y }</td>
-								<td>${ list.p_w }</td>
-								<td style="display: none;">${ list.p_i }</td>
+							<tr data=${ list.c_i }>
+								<td><input class="check" type="checkbox" name="box"
+									value=${ list.c_i }></td>
+								<td>${ list.c_i }</td>
+								<td>${ list.c_n }</td>
+								<td>${ list.c_k }</td>
+								<td>${ list.c_c }</td>
+								<td>${ list.c_y }</td>
+								<td>${ list.c_w }</td>
+								<td style="display: none;">${ list.c_i }</td>
 							</tr>
 
 						</c:forEach>
@@ -593,18 +570,43 @@ select option:hover {
 		</form>
 		<!-- 페이지 넘길때 쓸 버튼들 -->
 		<div class="pagination">
-			<button>&lt;</button>
-			<button>1</button>
-			<button>2</button>
-			<button>3</button>
-			<button>4</button>
-			<button>5</button>
-			<button>6</button>
-			<button>7</button>
-			<button>8</button>
-			<button>9</button>
-			<button>10</button>
-			<button>&gt;</button>
+			<c:set var="pageCount"
+				value="${(line mod viewCount == 0) ? (line div viewCount) : (line div viewCount + 1)}" />
+			<c:set var="prevPage" value="${page - viewCount}" />
+			<c:set var="nextPage" value="${page + viewCount}" />
+
+			<a href="vendor?page=1"><button>&lt;&lt;</button></a> <a
+				href="vendor?page=${prevPage}"><button>&lt;</button></a>
+
+			<c:choose>
+				<c:when test="${ page == pageCount }">
+					<c:forEach var="i" begin="${ page - (viewCount - 1) }"
+						end="${ page }">
+						<c:choose>
+							<c:when test="${ i == page }">
+								<strong><a style="color: red;" href="?page=${i}"><button>${ i }</button></a></strong>
+							</c:when>
+							<c:otherwise>
+								<a href="?page=${i}"><button>${ i }</button></a>
+							</c:otherwise>
+						</c:choose>
+					</c:forEach>
+				</c:when>
+				<c:otherwise>
+					<c:forEach var="i" begin="${ begin }" end="${ end }">
+						<c:choose>
+							<c:when test="${ i == page }">
+								<strong><a style="color: red;" href="?page=${i}"><button>${ i }</button></a></strong>
+							</c:when>
+							<c:otherwise>
+								<a href="?page=${i}"><button>${ i }</button></a>
+							</c:otherwise>
+						</c:choose>
+					</c:forEach>
+				</c:otherwise>
+			</c:choose>
+			<a href="vendor?page=${nextPage}"><button>&gt;</button> </a> <a
+				href="vendor?page=${lastPage}"><button>&gt;&gt;</button> </a>
 		</div>
 	</div>
 </body>

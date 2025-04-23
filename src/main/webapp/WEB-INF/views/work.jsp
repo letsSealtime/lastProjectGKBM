@@ -170,9 +170,9 @@ select option, input[type='number'], input[type=text]:hover {
 
 	function init() {
 
-		let name = document.querySelector("#c_n");
-		let year = document.querySelector("#c_y");
-		let week = document.querySelector("#c_w");
+		let name = document.getElementById("c_n");
+		let year = document.getElementById("c_y");
+		let week = document.getElementById("c_w");
 
 		let year_selected = false;
 		let week_selected = false;
@@ -275,7 +275,7 @@ select option, input[type='number'], input[type=text]:hover {
 		});
 
 		// 생산계획번호 선택 시
-		let id = document.querySelector("#c_pn");
+		let id = document.getElementById("c_pn");
 		id.addEventListener("change", (event) => {
 			let plan_id = document.querySelector("#c_p");
 			let bom_id = document.querySelector("#c_b");
@@ -323,7 +323,7 @@ select option, input[type='number'], input[type=text]:hover {
 						const insert = document.querySelector("#insert");
 						let count = value.c_cc - self.value;
 
-						if (self.value > count) {
+						if (self.value > plan_sum.value) {
 							remain.value = count;
 							insert.classList.add("none");
 						} else {

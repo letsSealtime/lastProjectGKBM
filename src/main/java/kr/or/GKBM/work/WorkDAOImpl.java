@@ -21,9 +21,9 @@ public class WorkDAOImpl implements WorkDAO {
 	}
 	
 	@Override
-	public List<WorkDTO> detail_select() {
+	public List<WorkDTO> detail_select(WorkDTO dto) {
 		
-		List<WorkDTO> detail_select = sqlSession.selectList("gkbm.emp.detail_select");
+		List<WorkDTO> detail_select = sqlSession.selectList("gkbm.emp.detail_select", dto);
 
 		return detail_select;	
 	}

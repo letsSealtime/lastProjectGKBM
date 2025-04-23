@@ -39,7 +39,7 @@ public class WorkController {
 
 		System.out.println("work 세부조건 조회");
 
-		List<WorkDTO> select = WorkServiceImpl.detail_select();
+		List<WorkDTO> select = WorkServiceImpl.detail_select(dto);
 		
 		System.out.println(select);
 

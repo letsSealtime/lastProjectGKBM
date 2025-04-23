@@ -12,4 +12,6 @@ public interface WorkDAO {
 
 	List<WorkDTO> delete(WorkDTO dto);
 
+	List<WorkDTO> detail_select(WorkDTO dto);
+
 }

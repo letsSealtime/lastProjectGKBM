@@ -302,7 +302,6 @@
 	<update id="updateBill_1"
 		parameterType="kr.or.GKBM.bill.BillDTO">
 
-<<<<<<< HEAD
 		UPDATE P_BILL
 		SET BILL_DATE = #{c_d},
 		BILL_COUNT = #{c_q},
@@ -310,7 +309,7 @@
 		VENDOR_ID = #{c_i},
 		STATUS = #{c_a}
 		WHERE BILL._ID = #{c_c}
-=======
+
 		UPDATE P_VENDOR
 		SET VENDOR_NAME = #{c_n},
 		MGR = #{c_m},
@@ -319,7 +318,6 @@
 		SKU_ID = #{c_i}
 		WHERE VENDOR_ID =
 		#{c_c}
->>>>>>> e8c417dcfcd8e3dbfd297185e9449396d83b23e7
 
 	</update>
 	
@@ -481,7 +479,7 @@
 		resultType="kr.or.GKBM.work.WorkDTO">
 		select pW.work_order_id, pW.modify_date, pp.week_plan_id as c_pn, 
 		ps.sku_name as c_n, PS.SKU_CODE as c_c, pp.plan_count as c_cc, pW.quantity, 
-		pW.bom_id as c_b, pp.plan_year as c_y, pp.week as c_w, SPW.QSUM as c_s
+		PB.bom_id as c_b, pp.plan_year as c_y, pp.week as c_w, SPW.QSUM as c_s
 		from P_WEEK_PLAN PP
 		join P_SKU PS ON PP.SKU_ID = PS.SKU_ID
 		left join P_BOM PB ON PS.SKU_ID = PB.SKU_ID
@@ -501,6 +499,18 @@
 				AND pp.week_plan_id = #{c_pn}
 			</if>
 		</where>
+		GROUP BY
+		pW.work_order_id,
+    	pW.modify_date,
+    	pp.week_plan_id,
+    	ps.sku_name,
+    	ps.sku_code,
+    	pp.plan_count,
+    	pW.quantity,
+    	pB.bom_id,
+    	pp.plan_year,
+    	pp.week,
+    	SPW.QSUM
 	</select>
 	
 	<insert id="insertWork" parameterType="kr.or.GKBM.work.WorkDTO">
@@ -510,7 +520,9 @@
 
 	</insert>
 
-
+	<!-- Defect 조회 -->	
+	
+	
 	
 
 	<!-- 이주희 -->

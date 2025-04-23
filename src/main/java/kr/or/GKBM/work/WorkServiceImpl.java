@@ -20,9 +20,9 @@ public class WorkServiceImpl implements WorkService {
 	}
 	
 	@Override
-	public List<WorkDTO> detail_select() {
+	public List<WorkDTO> detail_select(WorkDTO dto) {
 		
-		List<WorkDTO> detail_select = dao.detail_select();
+		List<WorkDTO> detail_select = dao.detail_select(dto);
 
 		return detail_select;
 	}

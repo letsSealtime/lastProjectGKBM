@@ -6,4 +6,6 @@ public interface DefectService {
 
 	List<DefectDTO> code_select(DefectDTO dto);
 
+	int insert(DefectDTO dto);
+
 }

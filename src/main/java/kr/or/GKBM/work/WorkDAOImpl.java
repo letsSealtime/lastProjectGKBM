@@ -1,6 +1,8 @@
 package kr.or.GKBM.work;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +15,17 @@ public class WorkDAOImpl implements WorkDAO {
 	SqlSession sqlSession;
 	
 	@Override
-	public List<WorkDTO> code_select() {
+	public Map code_select() {
+		
+		Map map = new HashMap();
 		
 		List<WorkDTO> code_select = sqlSession.selectList("gkbm.emp.code_select");
+		List<WorkDTO> select = sqlSession.selectList("gkbm.emp.select");
+		
+		map.put("code_select", code_select);
+		map.put("select", select);
 
-		return code_select;		
+		return map;		
 	}
 	
 	@Override
@@ -29,19 +37,14 @@ public class WorkDAOImpl implements WorkDAO {
 	}
 	
 	@Override
-	public List<WorkDTO> insert(WorkDTO dto) {
+	public int insert(WorkDTO dto) {
 		
-		List<WorkDTO> insert = sqlSession.selectList("gkbm.emp.insertWork", dto);
+		int insert = sqlSession.update("gkbm.emp.insertWork", dto);
+		
+		System.out.println("work insert행: " + insert);
 
 		return insert;	
 	}
-	
-	@Override
-	public List<WorkDTO> delete(WorkDTO dto) {
-		
-		List<WorkDTO> delete = sqlSession.selectList("gkbm.emp.deleteWork", dto);
 
-		return delete;	
-	}
 
 }

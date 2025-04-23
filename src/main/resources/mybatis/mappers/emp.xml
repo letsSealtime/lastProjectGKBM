@@ -477,9 +477,9 @@
 	
 	<select id="detail_select" parameterType="kr.or.GKBM.work.WorkDTO" 
 		resultType="kr.or.GKBM.work.WorkDTO">
-		select pW.work_order_id, pW.modify_date, pp.week_plan_id as c_pn, 
-		ps.sku_name as c_n, PS.SKU_CODE as c_c, pp.plan_count as c_cc, pW.quantity, 
-		PB.bom_id as c_b, pp.plan_year as c_y, pp.week as c_w, SPW.QSUM as c_s
+		select pW.work_order_id as wi, pW.modify_date, pp.week_plan_id as c_pn, 
+		ps.sku_name as c_n, PS.SKU_CODE as c_c, pp.plan_count as c_cc, pW.quantity as q, 
+		PB.bom_id as c_b, pp.plan_year as c_y, pp.week as c_w, SPW.QSUM as c_s 
 		from P_WEEK_PLAN PP
 		join P_SKU PS ON PP.SKU_ID = PS.SKU_ID
 		left join P_BOM PB ON PS.SKU_ID = PB.SKU_ID
@@ -513,6 +513,32 @@
     	SPW.QSUM
 	</select>
 	
+	<select id="select" parameterType="kr.or.GKBM.work.WorkDTO" 
+		resultType="kr.or.GKBM.work.WorkDTO">
+		select pW.work_order_id as wi, pW.modify_date, pp.week_plan_id as c_pn, 
+		ps.sku_name as c_n, PS.SKU_CODE as c_c, pp.plan_count as c_cc, pW.quantity as q, 
+		PB.bom_id as c_b, pp.plan_year as c_y, pp.week as c_w, SPW.QSUM as c_s, PW.COMPL
+		from P_WEEK_PLAN PP
+		join P_SKU PS ON PP.SKU_ID = PS.SKU_ID
+		left join P_BOM PB ON PS.SKU_ID = PB.SKU_ID
+		left join P_WORK_ORDER PW ON PP.WEEK_PLAN_ID = PW.WEEK_PLAN_ID
+		LEFT JOIN (SELECT SUM(QUANTITY) AS QSUM, WEEK_PLAN_ID FROM P_WORK_ORDER GROUP BY WEEK_PLAN_ID) SPW ON PP.WEEK_PLAN_ID = SPW.WEEK_PLAN_ID
+		WHERE pW.work_order_id IS NOT NULL
+		GROUP BY
+		pW.work_order_id,
+    	pW.modify_date,
+    	pp.week_plan_id,
+    	ps.sku_name,
+    	ps.sku_code,
+    	pp.plan_count,
+    	pW.quantity,
+    	pB.bom_id,
+    	pp.plan_year,
+    	pp.week,
+    	SPW.QSUM,
+    	PW.COMPL
+	</select>
+	
 	<insert id="insertWork" parameterType="kr.or.GKBM.work.WorkDTO">
 
 		INSERT INTO P_WORK_ORDER (WORK_ORDER_ID, WEEK_PLAN_ID, MODIFY_DATE, QUANTITY, BOM_ID)
@@ -520,8 +546,25 @@
 
 	</insert>
 
-	<!-- Defect 조회 -->	
+	<!-- Defect 삽입 -->	
 	
+	<insert id="insertDefect" parameterType="kr.or.GKBM.defect.DefectDTO">
+
+		INSERT INTO P_DEFECT
+		VALUES(SYSDATE, #{un}, #{wi}, SEQ.NEXTVAL)
+
+	</insert>
+	
+	<!-- WORK ID 수정 -->	
+	
+	<update id="defectUpdate"
+		parameterType="kr.or.GKBM.defect.DefectDTO">
+
+		UPDATE P_WORK_ORDER
+		SET COMPL = 'Y'
+		WHERE WORK_ORDER_ID = #{wi}
+
+	</update>
 	
 	
 

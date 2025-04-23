@@ -1,16 +1,13 @@
 package kr.or.GKBM.work;
 
 import java.util.List;
+import java.util.Map;
 
 public interface WorkService {
 
-	List<WorkDTO> code_select();
+	Map code_select();
 
-	List<WorkDTO> detail_select();
-
-	List<WorkDTO> insert(WorkDTO dto);
-
-	List<WorkDTO> delete(WorkDTO dto);
+	int insert(WorkDTO dto);
 
 	List<WorkDTO> detail_select(WorkDTO dto);
 

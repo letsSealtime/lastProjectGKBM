@@ -20,5 +20,14 @@ public class DefectServiceImpl implements DefectService {
 
 		return code_select;		
 	}
+	
+	@Override
+	public int insert(DefectDTO dto) {
+		int insert = dao.insert(dto);
+
+		return insert;
+	}
+	
+	
 
 }

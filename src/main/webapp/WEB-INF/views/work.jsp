@@ -323,13 +323,13 @@ select option, input[type='number'], input[type=text]:hover {
 						const insert = document.querySelector("#insert");
 						let count = value.c_cc - self.value;
 
-						if (self.value > plan_sum.value) {
-							remain.value = count;
-							insert.classList.add("none");
-						} else {
-							remain.value = count;
-							insert.classList.remove("none");
-						}
+						 if (self.value > 0 && self.value <= value.c_cc) {
+						 	remain.value = count;
+						 	insert.classList.remove("none"); // 버튼 보이게
+						 } else {
+						 	remain.value = count;
+						 	insert.classList.add("none"); // 버튼 숨기기
+						  }
 					});
 				});
 			};
@@ -400,18 +400,15 @@ select option, input[type='number'], input[type=text]:hover {
 				let value = btn_.closest("tr").querySelector(".un").value;
 				let id = btn_.closest("tr").querySelector("#wi").value;
 
-				hidden.value = "defect";
-
-				let data = new FormData();
-				data.append("value", value);
-				data.append("hidden", "defect");
-				data.append("id", id);
-
-				let query = new URLSearchParams(data);
+				let data = {
+						un: document.querySelector(".un").value,
+						wi: document.querySelector("#wi").value
+				};
 
 				let xhr = new XMLHttpRequest();
-				xhr.open("POST", "work", true);
-				xhr.send(query);
+				xhr.open("PUT", "defect");
+				xhr.setRequestHeader("Content-Type", "application/json");
+				xhr.send(JSON.stringify(data));
 
 				xhr.onreadystatechange = () => {
 					if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
@@ -549,18 +546,18 @@ select option, input[type='number'], input[type=text]:hover {
 
 				<!-- 데이터가 추가됩니다 -->
 				<tbody id="table-body">
-					<c:if test="${not empty resultset}">
-						<c:forEach var="list" items="${ resultset }">
+					<c:if test="${not empty select_1}">
+						<c:forEach var="list" items="${ select_1 }">
 
-							<tr data=${ list.work_id }>
+							<tr data=${ list.wi }>
 								<td><input type="checkbox" id="wi" name="box"
-									value=${ list.work_id }></td>
-								<td>${ list.date }</td>
-								<td>${ list.plan_id }</td>
-								<td>${ list.sku_name }</td>
-								<td>${ list.sku_code }</td>
-								<td>${ list.plan_count }</td>
-								<td>${ list.qnt }</td>
+									value=${ list.wi }></td>
+								<td>${ list.modify_date }</td>
+								<td>${ list.wi }</td>
+								<td>${ list.c_n }</td>
+								<td>${ list.c_c }</td>
+								<td>${ list.c_cc }</td>
+								<td>${ list.q }</td>
 								<td><input type="number" class="un" name="un" value=""></td>
 								<c:choose>
 									<c:when test="${list.coml eq 'Y'}">
@@ -568,7 +565,7 @@ select option, input[type='number'], input[type=text]:hover {
 									</c:when>
 									<c:otherwise>
 										<td><button type="button" class="btn" name="btn"
-												value="${ list.work_id }">기입</button></td>
+												value="${ list.wi }">기입</button></td>
 									</c:otherwise>
 								</c:choose>
 								<td>${ list.coml }</td>

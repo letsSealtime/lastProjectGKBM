@@ -20,6 +20,10 @@ public class DefectDTO {
 	private String c_m;
 
 	private String hidden;
+	// 작업ID
+	private String wi;
+	// 불량 수량
+	private String un;
 
 	private int viewCount = 10;
 	private int page = 1;

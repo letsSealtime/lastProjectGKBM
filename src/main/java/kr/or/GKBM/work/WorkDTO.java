@@ -1,7 +1,10 @@
 package kr.or.GKBM.work;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;
 
@@ -18,6 +21,8 @@ public class WorkDTO {
 	private Integer c_pn;
 	// 계획번호
 	private String c_p;
+	// 작업 계획 번호
+	private String wi;
 	// BOM ID
 	private String c_b;
 	// 상품코드
@@ -32,6 +37,12 @@ public class WorkDTO {
 	private Integer c_d;
 	// 주차잔여수량
 	private Integer c_r;
+	// 수량
+	private Integer q;
+	// 완료여부
+	private String coml;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	private Date modify_date;
 
 	private String hidden;
 

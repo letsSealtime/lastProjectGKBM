@@ -1,0 +1,19 @@
+	<!-- Defect 삽입 -->	
+	
+	<insert id="insertDefect" parameterType="kr.or.GKBM.defect.DefectDTO">
+
+		INSERT INTO P_DEFECT
+		VALUES(SYSDATE, #{un}, #{wi}, SEQ.NEXTVAL)
+
+	</insert>
+	
+	<!-- WORK ID 수정 -->	
+	
+	<update id="defectUpdate"
+		parameterType="kr.or.GKBM.defect.DefectDTO">
+
+		UPDATE P_WORK_ORDER
+		SET COMPL = 'Y'
+		WHERE WORK_ORDER_ID = #{wi}
+
+	</update>

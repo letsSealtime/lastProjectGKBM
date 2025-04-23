@@ -10,10 +10,10 @@ import kr.or.GKBM.vendor.VendorDTO;
 
 @Repository
 public class DefectDAOImpl implements DefectDAO {
-	
+
 	@Autowired
 	SqlSession sqlSession;
-	
+
 	@Override
 	public List<DefectDTO> code_select(DefectDTO dto) {
 
@@ -25,6 +25,17 @@ public class DefectDAOImpl implements DefectDAO {
 		dto.setLine(line.getLine());
 
 		return select;
+	}
+
+	@Override
+	public int insert(DefectDTO dto) {
+		
+		int insert = sqlSession.update("gkbm.emp.insertDefect", dto);
+		int update = sqlSession.update("gkbm.emp.defectUpdate", dto);
+
+		System.out.println("work insert행: " + insert);
+
+		return insert;
 	}
 
 }

@@ -1,6 +1,7 @@
 package kr.or.GKBM.work;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,11 +13,11 @@ public class WorkServiceImpl implements WorkService {
 	WorkDAO dao;
 	
 	@Override
-	public List<WorkDTO> code_select() {
+	public Map code_select() {
 		
-		List<WorkDTO> code_select = dao.code_select();
+		Map map = dao.code_select();
 
-		return code_select;		
+		return map;		
 	}
 	
 	@Override
@@ -28,19 +29,11 @@ public class WorkServiceImpl implements WorkService {
 	}
 	
 	@Override
-	public List<WorkDTO> insert(WorkDTO dto) {
+	public int insert(WorkDTO dto) {
 		
-		List<WorkDTO> insert = dao.insert(dto);
+		int insert = dao.insert(dto);
 
 		return insert;
-	}
-	
-	@Override
-	public List<WorkDTO> delete(WorkDTO dto) {
-		
-		List<WorkDTO> delete = dao.delete(dto);
-
-		return delete;
 	}
 
 }

@@ -1,6 +1,7 @@
 package kr.or.GKBM.work;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,10 +26,9 @@ public class WorkController {
 		ModelAndView select_MV = new ModelAndView();
 		select_MV.setViewName("work");
 
-		List<WorkDTO> sku_select = WorkServiceImpl.code_select();
-		select_MV.addObject("select", sku_select);
-		
-		System.out.println(sku_select);
+		Map map = WorkServiceImpl.code_select();
+		select_MV.addObject("select", map.get("code_select"));
+		select_MV.addObject("select_1", map.get("select"));
 
 		return select_MV;
 	}
@@ -48,7 +48,7 @@ public class WorkController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/work", method = { RequestMethod.PUT })
-	public List<WorkDTO> insert(@RequestBody WorkDTO dto) {
+	public int insert(@RequestBody WorkDTO dto) {
 		
 		System.out.println("work 삽입 조회");
 		
@@ -56,20 +56,9 @@ public class WorkController {
 		System.out.println("dto.getC_b(): " + dto.getC_b());
 		System.out.println("dto.getC_d(): " + dto.getC_d());		
 
-		List<WorkDTO> insert = WorkServiceImpl.insert(dto);
+		int insert = WorkServiceImpl.insert(dto);
 		
 		return insert;
-	}
-	
-	@ResponseBody
-	@RequestMapping(value = "/work", method = { RequestMethod.DELETE })
-	public List<WorkDTO> delete(@RequestBody WorkDTO dto) {
-		
-		System.out.println("work 삭제 조회");	
-
-		List<WorkDTO> delete = WorkServiceImpl.delete(dto);
-		
-		return delete;
 	}
 
 }

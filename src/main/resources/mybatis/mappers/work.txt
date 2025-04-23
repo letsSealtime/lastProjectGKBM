@@ -9,9 +9,9 @@
 	
 	<select id="detail_select" parameterType="kr.or.GKBM.work.WorkDTO" 
 		resultType="kr.or.GKBM.work.WorkDTO">
-		select pW.work_order_id, pW.modify_date, pp.week_plan_id as c_pn, 
-		ps.sku_name as c_n, PS.SKU_CODE as c_c, pp.plan_count as c_cc, pW.quantity, 
-		pW.bom_id as c_b, pp.plan_year as c_y, pp.week as c_w, SPW.QSUM as c_s
+		select pW.work_order_id as wi, pW.modify_date, pp.week_plan_id as c_pn, 
+		ps.sku_name as c_n, PS.SKU_CODE as c_c, pp.plan_count as c_cc, pW.quantity as q, 
+		PB.bom_id as c_b, pp.plan_year as c_y, pp.week as c_w, SPW.QSUM as c_s 
 		from P_WEEK_PLAN PP
 		join P_SKU PS ON PP.SKU_ID = PS.SKU_ID
 		left join P_BOM PB ON PS.SKU_ID = PB.SKU_ID
@@ -31,6 +31,18 @@
 				AND pp.week_plan_id = #{c_pn}
 			</if>
 		</where>
+		GROUP BY
+		pW.work_order_id,
+    	pW.modify_date,
+    	pp.week_plan_id,
+    	ps.sku_name,
+    	ps.sku_code,
+    	pp.plan_count,
+    	pW.quantity,
+    	pB.bom_id,
+    	pp.plan_year,
+    	pp.week,
+    	SPW.QSUM
 	</select>
 	
 	<insert id="insertWork" parameterType="kr.or.GKBM.work.WorkDTO">

@@ -17,11 +17,13 @@
 	<table border="1">
 		<tr>
 			<th>번호</th>
-			<td>${board.board_id}</td>
+			<td><input type="hidden" id="board_id" value="${board.board_id}" />
+				${board.board_id}</td>
 		</tr>
 		<tr>
 			<th>작성자(사원번호)</th>
-			<td>${board.empno}</td>
+			<td><input type="hidden" id="empno" value="${board.empno}" />
+				${board.empno}</td>
 		</tr>
 		<tr>
 			<th>제목</th>
@@ -57,7 +59,7 @@
 	<!-- 덧글 영역 -->
 	<div id="commentArea">
 		<div id="newComment">
-			<textarea id="commentForm" placeholder="내용을 입력해 주세요."></textarea>
+			<input type="text" id="commentForm" />
 			<button id="submitCommentBtn">입력</button>
 
 
@@ -70,8 +72,8 @@
 			<div class="comment_item" data-comment-id="" data-comment-depth="">
 				<div id="comment_body">
 					<span class="writer_name"></span> <span class="comment_content"></span>
-					<button id="reply_btn">답글</button>
-					<button id="more_btn">더 보기</button>
+					<button class="reply_btn">답글</button>
+					<button class="more_btn">더 보기</button>
 				</div>
 
 
@@ -103,140 +105,153 @@
 	<a href="board">목록으로</a>
 
 	<script>
-	document.addEventListener.('DOMContentLoaded', function(){
-		const commentForm = document.querySelector("#commentForm");
-		const submitComment = document.querySelector("#submitCommentBtn");
-		const commentList = document.querySelector("#commentList");
+		document.addEventListener('DOMContentLoaded', function () {
+		  const commentSubmitBtn = document.querySelector('#submitCommentBtn');
+		  const commentContent = document.querySelector('#commentForm');
+		  const commentList = document.querySelector('#commentList');
+		  const contextPath = "${pageContext.request.contextPath}";
+		  const boardId = document.querySelector("#board_id")?.value || 1;
+		  const empno = document.querySelector("#empno")?.value || 0;
 		
-		submitComment.addEventListener("click", function(event){
-			cost content = commentForm.value.trim();
-			if(!content) return alert ('내용을 입력하세요.');
-			
-			let param = {
-					board_id : document.querySelector("#board_id").value,
-					empno : document.querySelector("#empno").value,
-					content : document.querySelector("#content").value,
-					depth : document.querySelector("#depth").value
-			};
-			
-			fetch("comment_insert"){
-				method : "POST",
-				headers : {
-					"Content-Type" : "application/json"
-				},
-				body : JSON.stringify(param)
-			}.then((resp) => resp.json())
-			.then((data) => {
-				if (data == 1) {
-					commentForm ="";
-					loadComments();
-				} else {
-					alert("댓글 입력에 실패했습니다.");
-				}.catch((err) => {
-					console.error("ERROR comment fetch", err);
-				});
-			});
-		});
+		  // 댓글 등록
+		  commentSubmitBtn?.addEventListener('click', function () {
+		    const content = commentContent.value.trim();
+		    if (!content) return alert("내용을 입력하세요");
 		
-		
-	})
-		function loadComments() {
-			   fetch("/comment/list")
-			   .then(res => res.json())
-			   .then(data => {
-			   commentList.innerHTML = "";
-			   data.forEach(drawComment);
-			});
-  		}
-	
-		function drawComments(comment){
-			const template = document.querySelector('#commentTemplate .comment_item"').cloneNode(true);
-			template.dataset.comment-id = comment.commentId;
-			template.dataset.comment-depth= comment.depth;
-			template.querySelector('.writer_name').textContent = comment.writerName;
-		    template.querySelector('.comment_content').textContent = comment.isDeleted ? "이 댓글은 삭제되었습니다" : comment.content;
-		
-		    template.querySelector('.more-btn').addEventListener('click', function () {
-		        template.querySelector('.more-menu').style.display = 'block';
-		      });
-
-		      template.querySelector('.edit-btn').addEventListener('click', function () {
-		        template.querySelector('.edit-form').style.display = 'block';
-		        template.querySelector('.edit-input').value = comment.content;
-		      });
-
-		      template.querySelector('.edit-submit').addEventListener('click', function () {
-		        const newContent = template.querySelector('.edit-input').value;
-		        fetch("/comment/edit", {
-		          method: "POST",
-		          headers: { "Content-Type": "application/json" },
-		          body: JSON.stringify({ commentId: comment.commentId, content: newContent })
-		        }).then(() => loadComments());
-		      });
-
-		      template.querySelector('.delete-btn').addEventListener('click', function () {
-		        fetch("/comment/delete", {
-		          method: "POST",
-		          headers: { "Content-Type": "application/json" },
-		          body: JSON.stringify({ commentId: comment.commentId })
-		        }).then(() => loadComments());
-		      });
-
-		      template.querySelector('.reply-btn').addEventListener('click', function () {
-		        template.querySelector('.reply-form').style.display = 'block';
-		      });
-
-		      template.querySelector('.reply-submit').addEventListener('click', function () {
-		        const replyContent = template.querySelector('.reply-input').value;
-		        fetch("/comment", {
-		          method: "POST",
-		          headers: { "Content-Type": "application/json" },
-		          body: JSON.stringify({
-		            boardId: 1,
-		            content: replyContent,
-		            parentId: comment.commentId,
-		            depth: comment.depth + 1
-		          })
-		        }).then(() => loadComments());
-		      });
-
-		      commentList.appendChild(template);
-		    }
-		    loadComments();
+		    fetch(contextPath + "/comment_insert", {
+		      method: "POST",
+		      headers: { "Content-Type": "application/json" },
+		      body: JSON.stringify({
+		        board_id: boardId,
+		        empno: empno,
+		        content: content,
+		        parent_id: null,
+		        depth: 0
+		      })
+		    })
+		    .then(() => {
+		      commentContent.value = "";
+		      loadComments();
+		    });
 		  });
-		}
-	
-	
-	document.querySelector("#delete").addEventListener("click", function(event){
-		event.preventDefault();
 		
-		const board_id = this.value;
-		console.log("삭제할 게시글 ID", board_id);
+		  // 댓글 불러오기
+	function loadComments() {
+  const currentBoardId = document.querySelector("#board_id").value;
+  fetch(contextPath + `/comment_list?board_id=${board.board_id}`)
+    .then(res => {
+      if (!res.ok) throw new Error("안됨");
+      return res.json();
+    })
+    .then(data => {
+      commentList.innerHTML = "";
+      data.forEach(drawComment);
+    })
+    .catch(err => {
+      console.error("안돼 이것아:", err);
+    });
+}
+		
+		  // 댓글 그리기
+		  function drawComment(comment) {
+		    const template = document.querySelector('#commentTemplate .comment_item').cloneNode(true);
+		    template.dataset.commentId = comment.comment_id;
+		    template.dataset.depth = comment.depth;
+		    template.querySelector('.writer_name').textContent = comment.writer_name;
+		    template.querySelector('.comment_content').textContent = comment.is_deleted ? "이 댓글은 삭제되었습니다" : comment.content;
+			
+		    const indentUnit = 24; // px 단위 들여쓰기 간격
+		    const marginLeft = comment.depth * indentUnit;
 
-	function deleteBoard(){
-	fetch('board', {
-		method : 'POST',
-		header : {
-			'Content-Type': 'application/json'
-		},
-		body : JSON.stringify({ 
-			command : 'delete', 
-			board_id : board_id })
-	}).then(resp => json())
-	.then(data => {
-		console.log(data)
-	}).catch((err)=>{
-		console.error.('ERROR board fetch', err)
-	})
-	
-	}
-	}
-	
-	const commentUpdateBtn
-	const commentDeleteBtn
-	const commentInsertBtn
-	
+		    template.querySelector('#comment_body').style.marginLeft = `${marginLeft}px`;
 		
+		    // 더보기
+		    template.querySelector('.more_btn').addEventListener('click', function () {
+		      template.querySelector('.more_comment').style.display = 'block';
+		    });
+		
+		    // 수정 버튼
+		    template.querySelector('.edit_btn').addEventListener('click', function () {
+		      template.querySelector('.edit_form').style.display = 'block';
+		      template.querySelector('.edit_text').value = comment.content;
+		    });
+		
+		    // 수정 완료
+		    template.querySelector('.edit_submit').addEventListener('click', function () {
+		      const newContent = template.querySelector('.edit_text').value;
+		      fetch(contextPath + "/comment_update", {
+		        method: "POST",
+		        headers: { "Content-Type": "application/json" },
+		        body: JSON.stringify({ comment_id: comment.comment_id, content: newContent })
+		      }).then(() => loadComments());
+		    });
+		
+		    // 삭제
+		    template.querySelector('#delete_btn').addEventListener('click', function () {
+		      fetch(contextPath + "/comment_delete", {
+		        method: "POST",
+		        headers: { "Content-Type": "application/json" },
+		        body: JSON.stringify({ comment_id: comment.comment_id })
+		      }).then(() => loadComments());
+		    });
+		
+		    // 답글 폼 열기
+		    template.querySelector('.reply_btn').addEventListener('click', function () {
+		      template.querySelector('.reply_form').style.display = 'block';
+		    });
+		
+		    // 답글 등록
+		    template.querySelector('.reply_submit').addEventListener('click', function () {
+		      const replyContent = template.querySelector('#reply_text').value;
+		      fetch(contextPath + "/comment_insert", {
+		        method: "POST",
+		        headers: { "Content-Type": "application/json" },
+		        body: JSON.stringify({
+		          board_id: boardId,
+		          empno: empno,
+		          content: replyContent,
+		          parent_id: comment.comment_id,
+		          depth: comment.depth + 1
+		        })
+		      }).then(() => loadComments());
+		    });
+		
+		    commentList.appendChild(template);
+		  }
+		
+		  // 초기 로딩
+		  loadComments();
+		});
+	
+	
+	const deleteBtn = document.querySelector("#delete_btn");
+	if (deleteBtn) {
+	  deleteBtn.addEventListener("click", function (event) {
+	    event.preventDefault();
+
+	    const board_id = document.querySelector("#board_id")?.value;
+	    console.log("삭제할 게시글 ID", board_id);
+
+	    fetch('/board_delete', {
+	      method: 'POST',
+	      headers: {
+	        'Content-Type': 'application/json'
+	      },
+	      body: JSON.stringify({
+	        board_id: board_id
+	      })
+	    })
+	      .then(resp => resp.json())
+	      .then(data => {
+	        console.log("삭제 결과", data);
+	        // 성공 시 목록으로 이동
+	        location.href = "board";
+	      })
+	      .catch((err) => {
+	        console.error("ERROR board fetch", err);
+	      });
+	  });
+	}
 
 	</script>
 

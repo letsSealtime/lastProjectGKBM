@@ -14,7 +14,17 @@ public class BoardCommentDAOImpl implements BoardCommentDAO {
 	
 	@Override
 	public int insertComment(BoardCommentDTO commentDTO) {
-		int dto = sqlSession.insert("gkbm.emp.insertComment", commentDTO);
+		int dto;
+		
+		if (commentDTO.getParent_id() == null) {
+			// 댓글
+			dto = sqlSession.insert("gkbm.emp.insertCommentParent", commentDTO);
+			
+		} else {
+			// 답글
+			dto = sqlSession.insert("gkbm.emp.insertCommentChild", commentDTO);
+		}
+		
 		return dto;
 	}
 
@@ -31,9 +41,9 @@ public class BoardCommentDAOImpl implements BoardCommentDAO {
 	}
 
 	@Override
-	public List selectComment(BoardCommentDTO commentDTO) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<BoardCommentDTO> selectComment(int board_id) {
+		List<BoardCommentDTO> selectComment = sqlSession.selectList("gkbm.emp.selectCommentList", board_id);
+		return selectComment;
 	}
 
 	@Override

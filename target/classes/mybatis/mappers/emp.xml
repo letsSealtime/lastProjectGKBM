@@ -156,7 +156,8 @@
 
 		SELECT COUNT(*) AS line
 		FROM P_BILL PB
-		LEFT JOIN P_VENDOR PV ON PB.VENDOR_ID = PV.VENDOR_ID
+		LEFT JOIN P_VENDOR PV
+		ON PB.VENDOR_ID = PV.VENDOR_ID
 
 	</select>
 
@@ -166,17 +167,22 @@
 		resultType="kr.or.GKBM.bill.BillDTO">
 
 		SELECT RNUM, c_c, c_q, c_p, c_a, c_i, c_d, c_n, c_b, c_j
-		FROM ( SELECT ROWNUM AS
+		FROM ( SELECT
+		ROWNUM AS
 		RNUM,
 		c_c, c_q, c_p, c_a, c_i, c_d, c_n, c_b, c_j
-		FROM ( SELECT PB.BILL_ID AS
+		FROM ( SELECT
+		PB.BILL_ID AS
 		c_c, PB.BILL_COUNT
 		AS c_q, PB.PRICE AS c_b,
-		PB.STATUS AS c_a, PB.VENDOR_ID AS c_i,
-		PB.BILL_DATE AS c_d, PV.VENDOR_NAME AS c_n, PV.VENDOR_PHONE AS c_p,
+		PB.STATUS AS
+		c_a, PB.VENDOR_ID AS c_i,
+		PB.BILL_DATE AS c_d, PV.VENDOR_NAME AS c_n,
+		PV.VENDOR_PHONE AS c_p,
 		PV.EMAIL AS c_j
 		FROM P_BILL PB
-		LEFT JOIN P_VENDOR PV ON PB.VENDOR_ID = PV.VENDOR_ID
+		LEFT JOIN P_VENDOR
+		PV ON PB.VENDOR_ID = PV.VENDOR_ID
 		ORDER BY VENDOR_NAME))
 		WHERE RNUM <![CDATA[ >= ]]>
 		${indexStart} AND RNUM <![CDATA[ <= ]]>
@@ -190,8 +196,9 @@
 		resultType="kr.or.GKBM.bill.BillDTO">
 		SELECT COUNT(*) AS line
 		FROM P_BILL PB
-		LEFT JOIN P_VENDOR PV ON PB.VENDOR_ID = PV.VENDOR_ID
-		
+		LEFT JOIN P_VENDOR PV ON
+		PB.VENDOR_ID = PV.VENDOR_ID
+
 		<where>
 			<if test="c_d != null and c_d != ''">
 				AND BILL_DATE = #{c_d}
@@ -229,17 +236,22 @@
 		parameterType="kr.or.GKBM.bill.BillDTO"
 		resultType="kr.or.GKBM.bill.BillDTO">
 		SELECT RNUM, c_c, c_q, c_p, c_a, c_i, c_d, c_n, c_b, c_j
-		FROM ( SELECT ROWNUM AS
+		FROM ( SELECT
+		ROWNUM AS
 		RNUM,
 		c_c, c_q, c_p, c_a, c_i, c_d, c_n, c_b, c_j
-		FROM ( SELECT PB.BILL_ID AS
+		FROM ( SELECT
+		PB.BILL_ID AS
 		c_c, PB.BILL_COUNT
 		AS c_q, PB.PRICE AS c_b,
-		PB.STATUS AS c_a, PB.VENDOR_ID AS c_i,
-		PB.BILL_DATE AS c_d, PV.VENDOR_NAME AS c_n, PV.VENDOR_PHONE AS c_p,
+		PB.STATUS AS
+		c_a, PB.VENDOR_ID AS c_i,
+		PB.BILL_DATE AS c_d, PV.VENDOR_NAME AS c_n,
+		PV.VENDOR_PHONE AS c_p,
 		PV.EMAIL AS c_j
 		FROM P_BILL PB
-		LEFT JOIN P_VENDOR PV ON PB.VENDOR_ID = PV.VENDOR_ID
+		LEFT JOIN P_VENDOR
+		PV ON PB.VENDOR_ID = PV.VENDOR_ID
 		<where>
 			<if test="c_d != null and c_d != ''">
 				AND BILL_DATE = #{c_d}
@@ -308,7 +320,8 @@
 		PRICE = #{c_b},
 		VENDOR_ID = #{c_i},
 		STATUS = #{c_a}
-		WHERE BILL._ID = #{c_c}
+		WHERE BILL._ID =
+		#{c_c}
 
 		UPDATE P_VENDOR
 		SET VENDOR_NAME = #{c_n},
@@ -320,20 +333,22 @@
 		#{c_c}
 
 	</update>
-	
-	<!-- Week 상품 조회 -->	
+
+	<!-- Week 상품 조회 -->
 	<select id="sku_select" resultType="kr.or.GKBM.week.WeekDTO">
 		SELECT SKU_ID AS c_s
-		FROM P_SKU
+		FROM
+		P_SKU
 	</select>
-	
+
 	<!-- WEEK 전체 조회 -->
 	<select id="selectWeekAll_1"
 		resultType="kr.or.GKBM.week.WeekDTO">
 
 		SELECT COUNT(*) AS line
 		FROM P_WEEK_PLAN PW
-		LEFT JOIN P_SKU PS ON PW.SKU_ID = PS.SKU_ID
+		LEFT JOIN P_SKU
+		PS ON PW.SKU_ID = PS.SKU_ID
 	</select>
 
 	<!-- 페이징 전체 조회 -->
@@ -346,12 +361,15 @@
 		RNUM,
 		c_i, c_n, c_k, c_c, c_w, c_y
 		FROM ( SELECT PW.WEEK_PLAN_ID AS
-		c_i, PS.SKU_NAME
+		c_i,
+		PS.SKU_NAME
 		AS c_n, PS.SKU_CODE AS c_k,
-		PW.PLAN_COUNT AS c_c, PW.WEEK AS c_w,
+		PW.PLAN_COUNT AS c_c, PW.WEEK AS
+		c_w,
 		PW.PLAN_YEAR AS c_y
 		FROM P_WEEK_PLAN PW
-		LEFT JOIN P_SKU PS ON PW.SKU_ID = PS.SKU_ID
+		LEFT JOIN P_SKU PS ON
+		PW.SKU_ID = PS.SKU_ID
 		ORDER BY PW.WEEK_PLAN_ID))
 		WHERE RNUM <![CDATA[ >= ]]>
 		${indexStart} AND RNUM <![CDATA[ <= ]]>
@@ -365,7 +383,8 @@
 		resultType="kr.or.GKBM.week.WeekDTO">
 		SELECT COUNT(*) AS line
 		FROM P_WEEK_PLAN PW
-		LEFT JOIN P_SKU PS ON PW.SKU_ID = PS.SKU_ID
+		LEFT JOIN P_SKU PS ON
+		PW.SKU_ID = PS.SKU_ID
 		<where>
 			<if test="c_i != null and c_i != ''">
 				AND WEEK_PLAN_ID = #{c_i}
@@ -398,12 +417,15 @@
 		RNUM,
 		c_i, c_n, c_k, c_c, c_w, c_y
 		FROM ( SELECT PW.WEEK_PLAN_ID AS
-		c_i, PS.SKU_NAME
+		c_i,
+		PS.SKU_NAME
 		AS c_n, PS.SKU_CODE AS c_k,
-		PW.PLAN_COUNT AS c_c, PW.WEEK AS c_w,
+		PW.PLAN_COUNT AS c_c, PW.WEEK AS
+		c_w,
 		PW.PLAN_YEAR AS c_y
 		FROM P_WEEK_PLAN PW
-		LEFT JOIN P_SKU PS ON PW.SKU_ID = PS.SKU_ID
+		LEFT JOIN P_SKU PS ON
+		PW.SKU_ID = PS.SKU_ID
 		<where>
 			<if test="c_i != null and c_i != ''">
 				AND WEEK_PLAN_ID = #{c_i}
@@ -431,12 +453,13 @@
 		AND RNUM <![CDATA[ <= ]]>
 		${indexEnd}
 	</select>
-	
+
 	<insert id="insertWeek_1"
 		parameterType="kr.or.GKBM.week.WeekDTO">
 
 		INSERT INTO P_WEEK_PLAN
-		VALUES(SEQ.NEXTVAL, #{c_y}, #{c_w}, #{c_d}, #{c_s}, #{c_c})
+		VALUES(SEQ.NEXTVAL, #{c_y},
+		#{c_w}, #{c_d}, #{c_s}, #{c_c})
 
 	</insert>
 
@@ -457,34 +480,42 @@
 
 		UPDATE P_WEEK_PLAN
 		SET WEEK_PLAN_ID = #{c_i},
-		PLAN_YEAR = #{c_y},
+		PLAN_YEAR =
+		#{c_y},
 		WEEK = #{c_w},
 		PLAN_DATE = #{c_d},
 		SKU_ID = #{c_s},
-		PLAN_COUNT = #{c_c}
+		PLAN_COUNT =
+		#{c_c}
 		WHERE WEEK_PLAN_ID = #{c_i}
 
 	</update>
-	
-	<!-- Work 상품 조회 -->	
-	
+
+	<!-- Work 상품 조회 -->
+
 	<select id="code_select" resultType="kr.or.GKBM.work.WorkDTO">
 		SELECT PLAN_YEAR AS c_y,
 		WEEK AS c_w
 		FROM P_WEEK_PLAN
 		GROUP BY PLAN_YEAR, WEEK
 	</select>
-	
-	<select id="detail_select" parameterType="kr.or.GKBM.work.WorkDTO" 
+
+	<select id="detail_select"
+		parameterType="kr.or.GKBM.work.WorkDTO"
 		resultType="kr.or.GKBM.work.WorkDTO">
-		select pW.work_order_id as wi, pW.modify_date, pp.week_plan_id as c_pn, 
-		ps.sku_name as c_n, PS.SKU_CODE as c_c, pp.plan_count as c_cc, pW.quantity as q, 
-		PB.bom_id as c_b, pp.plan_year as c_y, pp.week as c_w, SPW.QSUM as c_s 
+		select pW.work_order_id as wi, pW.modify_date, pp.week_plan_id as
+		c_pn,
+		ps.sku_name as c_n, PS.SKU_CODE as c_c, pp.plan_count as c_cc, pW.quantity as q,
+		PB.bom_id as c_b, pp.plan_year as c_y, pp.week as c_w, SPW.QSUM as c_s
 		from P_WEEK_PLAN PP
 		join P_SKU PS ON PP.SKU_ID = PS.SKU_ID
-		left join P_BOM PB ON PS.SKU_ID = PB.SKU_ID
-		left join P_WORK_ORDER PW ON PP.WEEK_PLAN_ID = PW.WEEK_PLAN_ID
-		LEFT JOIN (SELECT SUM(QUANTITY) AS QSUM, WEEK_PLAN_ID FROM P_WORK_ORDER GROUP BY WEEK_PLAN_ID) SPW ON PP.WEEK_PLAN_ID = SPW.WEEK_PLAN_ID
+		left join
+		P_BOM PB ON PS.SKU_ID = PB.SKU_ID
+		left join P_WORK_ORDER PW ON
+		PP.WEEK_PLAN_ID = PW.WEEK_PLAN_ID
+		LEFT JOIN (SELECT SUM(QUANTITY) AS
+		QSUM, WEEK_PLAN_ID FROM P_WORK_ORDER GROUP BY WEEK_PLAN_ID) SPW ON
+		PP.WEEK_PLAN_ID = SPW.WEEK_PLAN_ID
 		<where>
 			<if test="c_y != null and c_y != ''">
 				AND PP.plan_year = #{c_y}
@@ -501,85 +532,98 @@
 		</where>
 		GROUP BY
 		pW.work_order_id,
-    	pW.modify_date,
-    	pp.week_plan_id,
-    	ps.sku_name,
-    	ps.sku_code,
-    	pp.plan_count,
-    	pW.quantity,
-    	pB.bom_id,
-    	pp.plan_year,
-    	pp.week,
-    	SPW.QSUM
+		pW.modify_date,
+		pp.week_plan_id,
+		ps.sku_name,
+		ps.sku_code,
+		pp.plan_count,
+		pW.quantity,
+		pB.bom_id,
+		pp.plan_year,
+		pp.week,
+		SPW.QSUM
 	</select>
-	
-	<select id="select" parameterType="kr.or.GKBM.work.WorkDTO" 
+
+	<select id="select" parameterType="kr.or.GKBM.work.WorkDTO"
 		resultType="kr.or.GKBM.work.WorkDTO">
-		select pW.work_order_id as wi, pW.modify_date, pp.week_plan_id as c_pn, 
-		ps.sku_name as c_n, PS.SKU_CODE as c_c, pp.plan_count as c_cc, pW.quantity as q, 
-		PB.bom_id as c_b, pp.plan_year as c_y, pp.week as c_w, SPW.QSUM as c_s, PW.COMPL
+		select pW.work_order_id as wi, pW.modify_date,
+		pp.week_plan_id as c_pn,
+		ps.sku_name as c_n, PS.SKU_CODE as c_c, pp.plan_count as c_cc, pW.quantity as q,
+		PB.bom_id as c_b, pp.plan_year as c_y, pp.week as c_w, SPW.QSUM as
+		c_s, PW.COMPL
 		from P_WEEK_PLAN PP
 		join P_SKU PS ON PP.SKU_ID = PS.SKU_ID
 		left join P_BOM PB ON PS.SKU_ID = PB.SKU_ID
-		left join P_WORK_ORDER PW ON PP.WEEK_PLAN_ID = PW.WEEK_PLAN_ID
-		LEFT JOIN (SELECT SUM(QUANTITY) AS QSUM, WEEK_PLAN_ID FROM P_WORK_ORDER GROUP BY WEEK_PLAN_ID) SPW ON PP.WEEK_PLAN_ID = SPW.WEEK_PLAN_ID
+		left join P_WORK_ORDER PW
+		ON PP.WEEK_PLAN_ID = PW.WEEK_PLAN_ID
+		LEFT JOIN (SELECT SUM(QUANTITY) AS
+		QSUM, WEEK_PLAN_ID FROM P_WORK_ORDER GROUP BY WEEK_PLAN_ID) SPW ON
+		PP.WEEK_PLAN_ID = SPW.WEEK_PLAN_ID
 		WHERE pW.work_order_id IS NOT NULL
 		GROUP BY
 		pW.work_order_id,
-    	pW.modify_date,
-    	pp.week_plan_id,
-    	ps.sku_name,
-    	ps.sku_code,
-    	pp.plan_count,
-    	pW.quantity,
-    	pB.bom_id,
-    	pp.plan_year,
-    	pp.week,
-    	SPW.QSUM,
-    	PW.COMPL
+		pW.modify_date,
+		pp.week_plan_id,
+		ps.sku_name,
+		ps.sku_code,
+		pp.plan_count,
+		pW.quantity,
+		pB.bom_id,
+		pp.plan_year,
+		pp.week,
+		SPW.QSUM,
+		PW.COMPL
 	</select>
-	
+
 	<insert id="insertWork" parameterType="kr.or.GKBM.work.WorkDTO">
 
-		INSERT INTO P_WORK_ORDER (WORK_ORDER_ID, WEEK_PLAN_ID, MODIFY_DATE, QUANTITY, BOM_ID)
+		INSERT INTO P_WORK_ORDER
+		(WORK_ORDER_ID, WEEK_PLAN_ID, MODIFY_DATE, QUANTITY, BOM_ID)
 		VALUES(SEQ.NEXTVAL, #{c_pn}, SYSDATE, #{c_d}, #{c_b})
 
 	</insert>
 
-	<!-- Defect 삽입 -->	
-	
-	<insert id="insertDefect" parameterType="kr.or.GKBM.defect.DefectDTO">
+	<!-- Defect 삽입 -->
+
+	<insert id="insertDefect"
+		parameterType="kr.or.GKBM.defect.DefectDTO">
 
 		INSERT INTO P_DEFECT
-		VALUES(SYSDATE, #{un}, #{wi}, SEQ.NEXTVAL)
+		VALUES(SYSDATE, #{un}, #{wi},
+		SEQ.NEXTVAL)
 
 	</insert>
-	
-	<!-- WORK ID 수정 -->	
-	
+
+	<!-- WORK ID 수정 -->
+
 	<update id="defectUpdate"
 		parameterType="kr.or.GKBM.defect.DefectDTO">
 
 		UPDATE P_WORK_ORDER
 		SET COMPL = 'Y'
-		WHERE WORK_ORDER_ID = #{wi}
+		WHERE WORK_ORDER_ID =
+		#{wi}
 
 	</update>
-	
-	<!-- DISABLE 조회 -->	
-	
+
+	<!-- DISABLE 조회 -->
+
 	<select id="disable"
 		resultType="kr.or.GKBM.disposal_refurb.disableDTO">
-	
-		select pd.defect_id as id, ps.sku_code as code, 
-		ps.sku_name as name, ps.sku_category as type, 
+
+		select pd.defect_id as id, ps.sku_code as code,
+		ps.sku_name as name, ps.sku_category as type,
 		pv.vendor_name as vendor, pd.defect_count as count
 		from p_week_plan pw
-		left join p_sku ps on  pw.sku_id = ps.sku_id
-		left join p_work_order pwo on pw.week_plan_id = pwo.week_plan_id
-		left join p_defect pd on pwo.work_order_id = pd.work_order_id
-		left join p_vendor pv on ps.sku_id = pv.sku_id
-		
+		left join p_sku
+		ps on pw.sku_id = ps.sku_id
+		left join p_work_order pwo on
+		pw.week_plan_id = pwo.week_plan_id
+		left join p_defect pd on
+		pwo.work_order_id = pd.work_order_id
+		left join p_vendor pv on ps.sku_id
+		= pv.sku_id
+
 	</select>
 
 	<!-- 이주희 -->
@@ -605,15 +649,18 @@
 	<!-- 상품정보관리 등록 -->
 	<insert id="addition_2" parameterType="skuDTO"> insert into p_sku VALUES
 		(#{sku_id}, #{sku_code}, #{sku_name}, #{sku_size}, #{vendor_name},
-		#{price}, SYSDATE, #{modify_date}, #{sku_category}) </insert>
+		#{price}, SYSDATE, #{modify_date}, #{sku_category})
+	</insert>
 	<!-- 상품정보관리 삭제 -->
 	<delete id="delete_2" parameterType="skuDTO"> delete from p_sku where
-		sku_id = #{sku_id} </delete>
+		sku_id = #{sku_id}
+	</delete>
 	<!-- 상품정보관리 수정 -->
 	<update id="udpate_2" parameterType="skuDTO"> update p_sku set sku_code =
 		#{sku_code}, sku_name = #{sku_name}, sku_size = #{sku_size},
 		vendor_name = #{vendor_name}, price = #{price}, modify_date = SYSDATE,
-		sku_category = #{sku_category} where sku_id = #{sku_id} </update>
+		sku_category = #{sku_category} where sku_id = #{sku_id}
+	</update>
 	<!-- 원자재입고관리 -->
 	<!-- 전체조회 -->
 	<!-- <select id="fulltable_2_1" resultType="mioDTO" parameterType="mioDTO"> 
@@ -649,10 +696,12 @@
 	<insert id="addition_2_1" parameterType="mioDTO"> insert into
 		p_material_in_out VALUES (#{ib_id}, #{material_count},
 		#{material_price}, #{sku_type}, SYSDATE, #{modify_date}, #{remarks},
-		#{sku_id}, #{bill_id}) </insert>
+		#{sku_id}, #{bill_id})
+	</insert>
 	<!-- 원자재입고관리 삭제 -->
 	<delete id="delete_2_1" parameterType="mioDTO"> delete from
-		p_material_in_out where ib_id = #{ib_id} </delete>
+		p_material_in_out where ib_id = #{ib_id}
+	</delete>
 
 
 	<!-- ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ 이준규 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ -->
@@ -664,20 +713,51 @@
 		select * from p_emp
 	</select>
 
-	<!-- 설비등록 전체조회 and 검색 -->
+	<!-- 여기부터 설비 관련 쿼리문 -->
+
+	<select id="selectAllFacilities"
+		resultType="kr.or.GKBM.p_equipreg.P_equipregDTO" parameterType="map">
+		SELECT
+		* FROM p_facility
+	</select>
+
+	<!-- 설비등록 전체조회 and 검색 (페이징) -->
 	<select id="selectP_equipreg"
-		resultType="kr.or.GKBM.p_equipreg.equipregDTO" parameterType="map">
-		SELECT * FROM p_facility
-		where
-		upper(facility_code) like upper('%' || #{facility_code} || '%')
-		or
-		upper(facility_name) like upper('%' || #{facility_name} || '%')
+		resultType="kr.or.GKBM.p_equipreg.P_equipregDTO" parameterType="map">
+		SELECT * FROM (
+		SELECT p.*, ROW_NUMBER() OVER (ORDER BY facility_code)
+		AS rn
+		FROM p_facility p
+		<where>
+			<!-- 공백 제거 및 대소문자 통일 -->
+			(UPPER(facility_code) LIKE UPPER('%' || TRIM(#{facility_code}) ||
+			'%')
+			OR
+			UPPER(facility_name) LIKE UPPER('%' || TRIM(#{facility_name})
+			|| '%'))
+		</where>
+		)
+		WHERE rn BETWEEN #{startRow} AND #{endRow}
+	</select>
+
+	<!-- 전체 레코드 수 조회 -->
+	<select id="selectTotalCount" resultType="int"
+		parameterType="map">
+		SELECT COUNT(*)
+		FROM p_facility
+		<where>
+			(UPPER(facility_code) LIKE UPPER('%' || TRIM(#{facility_code})
+			|| '%')
+			OR
+			UPPER(facility_name) LIKE UPPER('%' ||
+			TRIM(#{facility_name}) || '%'))
+		</where>
 	</select>
 
 
 	<!-- 설비등록 DB에 추가 -->
 	<insert id="insertP_eq"
-		parameterType="kr.or.GKBM.p_equipreg.equipregDTO">
+		parameterType="kr.or.GKBM.p_equipreg.P_equipregDTO">
 		insert into p_facility
 		values
 		(#{facility_code},
@@ -689,31 +769,523 @@
 		#{remarks})
 	</insert>
 
-	<!-- 설비등록 삭제 -->
+	<!-- 설비등록페이지 내용삭제 -->
 	<delete id="deleteP_eq3"
-		parameterType="kr.or.GKBM.p_equipreg.equipregDTO">
+		parameterType="kr.or.GKBM.p_equipreg.P_equipregDTO">
 		delete from p_facility
 		where
-		facility_code = #{facility_code}
+		facility_code =
+		#{facility_code}
 	</delete>
+
+	<select id="checkChildReferences" resultType="int">
+		SELECT COUNT(*)
+		FROM child_table
+		WHERE facility_code = #{facilityCode}
+	</select>
+
 
 	<!-- 설비등록 수정 -->
 	<update id="updateP_eq3"
-		parameterType="kr.or.GKBM.p_equipreg.equipregDTO">
+		parameterType="kr.or.GKBM.p_equipreg.P_equipregDTO">
 		update p_facility
 		set
-		facility_manager = #{facility_manager},
+		facility_manager =
+		#{facility_manager},
 		installation_date = #{installation_date},
 		facility_name = #{facility_name},
-		facility_location = #{facility_location},
+		facility_location =
+		#{facility_location},
 		inspection_cycle =
 		#{inspection_cycle},
-		remarks = #{remarks}
+		remarks =
+		#{remarks}
 		where facility_code = #{facility_code}
 	</update>
 
 
-	<!--        @@@@@@@@@@@@김도희@@@@@@@@@@@@@           -->
+	<!-- 설비수리 전체조회 and 검색 (페이징) -->
+	<select id="selectP_repair"
+		resultType="kr.or.GKBM.p_repair.P_repairDTO" parameterType="map">
+		SELECT * FROM (
+		SELECT
+		r.*,
+		f.facility_name,  <!-- 설비명 추가 -->
+		ROW_NUMBER() OVER (ORDER BY repair_id) AS rn
+		FROM p_repair r
+		JOIN
+		p_facility f ON r.facility_code = f.facility_code
+		<where>
+			(UPPER(r.facility_code) LIKE UPPER('%' ||
+			TRIM(#{facility_code}) || '%')
+			OR
+			UPPER(r.repair_details) LIKE
+			UPPER('%' || TRIM(#{repair_details}) || '%'))
+		</where>
+		)
+		WHERE rn BETWEEN #{startRow} AND #{endRow}
+	</select>
+
+
+	<!-- 전체 레코드 수 조회 -->
+	<select id="selectRepairTotalCount" resultType="int"
+		parameterType="map">
+		SELECT COUNT(*)
+		FROM p_repair r
+		JOIN p_facility f ON r.facility_code =
+		f.facility_code
+		<where>
+			(UPPER(r.facility_code) LIKE UPPER('%' ||
+			TRIM(#{facility_code}) || '%')
+			OR
+			UPPER(r.repair_details) LIKE
+			UPPER('%' || TRIM(#{repair_details}) || '%'))
+		</where>
+	</select>
+
+
+	<!-- 설비수리 DB에 추가 -->
+	<insert id="insertP_repair"
+		parameterType="kr.or.GKBM.p_repair.P_repairDTO">
+		INSERT INTO p_repair
+		VALUES
+		(
+		p_repair_seq.NEXTVAL,
+		#{facility_code},
+		#{repair_request_date},
+		#{repair_details},
+		#{repair_requester},
+		#{repair_item},
+		#{remarks}
+		)
+	</insert>
+
+	<!-- 설비수리 내용삭제 -->
+	<delete id="deleteP_repair"
+		parameterType="kr.or.GKBM.p_repair.P_repairDTO">
+		DELETE FROM p_repair
+		WHERE repair_id = #{repair_id}
+	</delete>
+
+	<!-- 설비코드 참조 확인 (삭제 전 확인용) -->
+	<select id="checkFacilityExists" resultType="int">
+		SELECT COUNT(*)
+		FROM
+		p_facility
+		WHERE facility_code = #{facility_code}
+	</select>
+
+	<!-- 설비수리 수정 -->
+	<update id="updateP_repair"
+		parameterType="kr.or.GKBM.p_repair.P_repairDTO">
+		UPDATE p_repair
+		SET
+		facility_code = #{facility_code},
+		repair_request_date = #{repair_request_date},
+		repair_details =
+		#{repair_details},
+		repair_requester = #{repair_requester},
+		repair_item =
+		#{repair_item},
+		remarks = #{remarks}
+		WHERE repair_id = #{repair_id}
+	</update>
+
+	<!-- 설비점검 전체조회 and 검색 (페이징) -->
+	<select id="selectP_ins" resultType="kr.or.GKBM.p_ins.P_insDTO"
+		parameterType="map">
+		SELECT * FROM (
+		SELECT
+		i.*,
+		f.facility_name, <!-- 설비명 추가 -->
+		ROW_NUMBER() OVER (ORDER BY i.inspection_id) AS rn
+		FROM p_inspection i
+		JOIN
+		p_facility f ON i.facility_code = f.facility_code
+		<where>
+			(UPPER(i.facility_code) LIKE UPPER('%' ||
+			TRIM(#{facility_code}) || '%')
+			OR
+			UPPER(i.inspection_content) LIKE
+			UPPER('%' || TRIM(#{inspection_content}) || '%'))
+		</where>
+		)
+		WHERE rn BETWEEN #{startRow} AND #{endRow}
+	</select>
+
+
+	<!-- 전체 레코드 수 조회 -->
+	<select id="selectInsTotalCount" resultType="int"
+		parameterType="map">
+		SELECT COUNT(*)
+		FROM p_inspection i
+		JOIN p_facility f ON i.facility_code
+		= f.facility_code
+		<where>
+			(UPPER(i.facility_code) LIKE UPPER('%' ||
+			TRIM(#{facility_code}) || '%')
+			OR
+			UPPER(i.inspection_content) LIKE
+			UPPER('%' || TRIM(#{inspection_content}) || '%'))
+		</where>
+	</select>
+
+	<!-- 설비점검 DB 추가 -->
+	<insert id="insertP_ins"
+		parameterType="kr.or.GKBM.p_ins.P_insDTO">
+		INSERT INTO p_inspection
+		VALUES
+		(
+		p_inspection_seq.NEXTVAL,
+		#{facility_code},
+		#{inspection_date},
+		#{inspector},
+		#{inspection_item},
+		#{inspection_content},
+		#{remarks}
+		)
+	</insert>
+
+	<!-- 설비점검 삭제 -->
+	<delete id="deleteP_ins"
+		parameterType="kr.or.GKBM.p_ins.P_insDTO">
+		DELETE FROM p_inspection WHERE inspection_id =
+		#{inspection_id}
+	</delete>
+
+	<!-- 설비점검 수정 -->
+	<update id="updateP_ins"
+		parameterType="kr.or.GKBM.p_ins.P_insDTO">
+		UPDATE p_inspection SET
+		facility_code = #{facility_code},
+		inspection_date = #{inspection_date},
+		inspector = #{inspector},
+		inspection_item = #{inspection_item},
+		inspection_content =
+		#{inspection_content},
+		remarks = #{remarks}
+		WHERE inspection_id =
+		#{inspection_id}
+	</update>
+
+
+
+	<!-- 여기부터 소모품 관련 쿼리문 -->
+
+	<select id="selectAllConsumreg"
+		resultType="kr.or.GKBM.p_CMB.P_consumregDTO" parameterType="map">
+		SELECT
+		*
+		FROM p_consumable
+	</select>
+
+	<!-- 소모품관리 전체조회 및 검색 (페이징) -->
+	<select id="selectP_consumreg"
+		resultType="kr.or.GKBM.p_CMB.P_consumregDTO" parameterType="map">
+		SELECT * FROM (
+		SELECT c.*, ROW_NUMBER() OVER (ORDER BY
+		consumables_code) AS rn
+		FROM p_consumable c
+		<where>
+			(UPPER(consumables_code) LIKE UPPER('%' ||
+			TRIM(#{consumables_code}) || '%')
+			OR
+			UPPER(consumables_name) LIKE
+			UPPER('%' || TRIM(#{consumables_name}) || '%'))
+		</where>
+		)
+		WHERE rn BETWEEN #{startRow} AND #{endRow}
+	</select>
+
+	<!-- 전체 레코드 수 조회 -->
+	<select id="selectTotalCountConsum" resultType="int"
+		parameterType="map">
+		SELECT COUNT(*)
+		FROM p_consumable
+		<where>
+			(UPPER(consumables_code) LIKE UPPER('%' ||
+			TRIM(#{consumables_code}) || '%')
+			OR
+			UPPER(consumables_name) LIKE
+			UPPER('%' || TRIM(#{consumables_name}) || '%'))
+		</where>
+	</select>
+
+	<!-- 등록 -->
+	<insert id="insertP_con"
+		parameterType="kr.or.GKBM.p_CMB.P_consumregDTO">
+		INSERT INTO p_consumable
+		VALUES (
+		#{consumables_code},
+		#{consumables_name},
+		#{create_date},
+		#{p_Con_count},
+		#{manager},
+		#{remarks}
+		)
+	</insert>
+
+	<!-- 삭제 -->
+	<delete id="deleteP_con"
+		parameterType="kr.or.GKBM.p_CMB.P_consumregDTO">
+		DELETE FROM p_consumable
+		WHERE consumables_code =
+		#{consumables_code}
+	</delete>
+
+	<!-- 수정 -->
+	<update id="updateP_con"
+		parameterType="kr.or.GKBM.p_CMB.P_consumregDTO">
+		UPDATE p_consumable
+		SET
+		consumables_name =
+		#{consumables_name},
+		create_date = #{create_date},
+		p_Con_count =
+		#{p_Con_count},
+		manager = #{manager},
+		remarks = #{remarks}
+		WHERE
+		consumables_code =
+		#{consumables_code}
+	</update>
+
+
+	<!-- 소모품 폐기 전체조회 및 검색 (페이징) -->
+	<select id="selectP_disposal"
+		resultType="kr.or.GKBM.p_CPG.P_disposalDTO" parameterType="map">
+		SELECT * FROM (
+		SELECT
+		d.*,
+		c.consumables_name,
+		ROW_NUMBER() OVER (ORDER
+		BY d.disposal_date DESC) AS rn
+		FROM p_disposal d
+		JOIN p_consumable c ON
+		d.consumables_code = c.consumables_code
+		<where>
+			(UPPER(d.disposal_id) LIKE UPPER('%' || TRIM(#{searchKeyword})
+			|| '%')
+			OR UPPER(d.consumables_code) LIKE UPPER('%' ||
+			TRIM(#{searchKeyword})
+			|| '%')
+			OR UPPER(c.consumables_name) LIKE
+			UPPER('%' || TRIM(#{searchKeyword})
+			|| '%'))
+		</where>
+		)
+		WHERE rn BETWEEN #{startRow} AND #{endRow}
+	</select>
+
+	<!-- 소모품 폐기 전체 레코드 수 조회 -->
+	<select id="selectDisposalTotalCount" resultType="int"
+		parameterType="map">
+		SELECT COUNT(*)
+		FROM p_disposal d
+		JOIN p_consumable c ON
+		d.consumables_code = c.consumables_code
+		<where>
+			(UPPER(d.disposal_id) LIKE UPPER('%' || TRIM(#{searchKeyword})
+			|| '%')
+			OR UPPER(d.consumables_code) LIKE UPPER('%' ||
+			TRIM(#{searchKeyword})
+			|| '%')
+			OR UPPER(c.consumables_name) LIKE
+			UPPER('%' || TRIM(#{searchKeyword})
+			|| '%'))
+		</where>
+	</select>
+
+	<!-- 소모품 폐기 등록 -->
+	<insert id="insertP_disposal"
+		parameterType="kr.or.GKBM.p_CPG.P_disposalDTO">
+		INSERT INTO p_disposal
+		VALUES (
+		p_disposal_seq.NEXTVAL,  <!-- 시퀀스 사용 -->
+		#{consumables_code},
+		#{manager},
+		#{count},
+		#{disposal_reason},
+		#{disposal_date},
+		#{remarks}
+		)
+	</insert>
+
+	<!-- 소모품 수량 차감 -->
+	<update id="decreaseConsumable"
+		parameterType="kr.or.GKBM.p_CPG.P_disposalDTO">
+		UPDATE p_consumable
+		SET p_Con_count = p_Con_count -
+		#{count}
+		WHERE consumables_code = #{consumables_code}
+	</update>
+
+
+	<!-- 소모품 폐기 수량 조회 -->
+	<select id="selectOriginalDisposalCount" resultType="int">
+		SELECT count
+		FROM p_disposal
+		WHERE disposal_id = #{disposal_id}
+	</select>
+
+
+	<!-- 소모품 수량 증감/차감 -->
+	<update id="adjustConsumable" parameterType="map">
+		UPDATE p_consumable
+		SET p_Con_count = p_Con_count + #{adjustment}
+		WHERE consumables_code =
+		#{consumables_code}
+	</update>
+
+	<!-- 소모품 폐기 수정 -->
+	<update id="updateP_disposal"
+		parameterType="kr.or.GKBM.p_CPG.P_disposalDTO">
+		UPDATE p_disposal
+		SET
+		consumables_code =
+		#{consumables_code},
+		count = #{count},
+		disposal_reason =
+		#{disposal_reason},
+		disposal_date = #{disposal_date},
+		manager =
+		#{manager},
+		remarks = #{remarks}
+		WHERE disposal_id = #{disposal_id}
+	</update>
+
+	<!-- 소모품 폐기 삭제 -->
+	<delete id="deleteP_disposal"
+		parameterType="kr.or.GKBM.p_CPG.P_disposalDTO">
+		DELETE FROM p_disposal
+		WHERE disposal_id = #{disposal_id}
+	</delete>
+
+	<!-- 삭제 시 수량 복원 쿼리 -->
+	<update id="restoreConsumableOnDelete"
+		parameterType="kr.or.GKBM.p_CPG.P_disposalDTO">
+		UPDATE p_consumable
+		SET p_Con_count = p_Con_count +
+		#{count}
+		WHERE consumables_code = #{consumables_code}
+	</update>
+
+
+
+	<!-- 수불 목록 조회 -->
+	<select id="selectCsbList"
+		resultType="kr.or.GKBM.p_CSB.P_csbDTO" parameterType="map">
+		SELECT * FROM (
+		SELECT
+		log.*,
+		c.consumables_name,
+		ROW_NUMBER() OVER (ORDER
+		BY log.receipt_payment_date DESC) AS rn
+		FROM p_inventory_log log
+		JOIN
+		p_consumable c ON log.consumables_code = c.consumables_code
+		<where>
+			<if test="searchKeyword != null and searchKeyword != ''">
+				UPPER(c.consumables_name) LIKE UPPER('%' ||
+				#{searchKeyword} || '%')
+				OR UPPER(log.consumables_code) LIKE
+				UPPER('%' || #{searchKeyword} ||
+				'%')
+			</if>
+		</where>
+		)
+		WHERE rn BETWEEN #{startRow} AND #{endRow}
+	</select>
+
+	<!-- 전체 레코드 수 -->
+	<select id="selectCsbTotalCount" resultType="int"
+		parameterType="map">
+		SELECT COUNT(*)
+		FROM p_inventory_log log
+		JOIN p_consumable c ON
+		log.consumables_code = c.consumables_code
+		<where>
+			<if test="searchKeyword != null and searchKeyword != ''">
+				UPPER(c.consumables_name) LIKE UPPER('%' ||
+				#{searchKeyword} || '%')
+				OR UPPER(log.consumables_code) LIKE
+				UPPER('%' || #{searchKeyword} ||
+				'%')
+			</if>
+		</where>
+	</select>
+
+	<!-- 수불 등록 -->
+	<insert id="insertCsb" parameterType="kr.or.GKBM.p_CSB.P_csbDTO">
+		INSERT INTO p_inventory_log
+		(
+		receipt_payment_id,
+		consumables_code,
+		requester,
+		importer,
+		log_count,
+		receipt_payment_date,
+		remarks
+		) VALUES (
+		p_inventory_log_seq.NEXTVAL,
+		#{consumables_code},
+		#{requester},
+		#{importer},
+		#{log_count},
+		#{receipt_payment_date},
+		#{remarks}
+		)
+	</insert>
+
+	<!-- 수불 수량 조회 -->
+	<select id="selectOriginalCsbCount" resultType="int">
+		SELECT log_count
+		FROM p_inventory_log
+		WHERE receipt_payment_id = #{receipt_payment_id}
+	</select>
+
+
+	<!-- 수불 수정 -->
+	<update id="updateCsb" parameterType="kr.or.GKBM.p_CSB.P_csbDTO">
+		UPDATE p_inventory_log SET
+		consumables_code = #{consumables_code},
+		requester = #{requester},
+		importer = #{importer},
+		log_count = #{log_count},
+		receipt_payment_date =
+		#{receipt_payment_date},
+		remarks = #{remarks}
+		WHERE receipt_payment_id =
+		#{receipt_payment_id}
+	</update>
+
+	<!-- 소모품 폐기 삭제 -->
+	<delete id="deleteP_CSB"
+		parameterType="kr.or.GKBM.p_CSB.P_csbDTO">
+		DELETE FROM p_inventory_log
+		WHERE receipt_payment_id =
+		#{receipt_payment_id}
+	</delete>
+
+	<!-- 삭제 시 수량 복원 쿼리 -->
+	<update id="restoreP_CSB"
+		parameterType="kr.or.GKBM.p_CSB.P_csbDTO">
+		UPDATE p_consumable
+		SET p_Con_count = p_Con_count +
+		#{log_count}
+		WHERE consumables_code = #{consumables_code}
+	</update>
+
+	<!-- 단건 조회 -->
+	<select id="selectCsbById"
+		resultType="kr.or.GKBM.p_CSB.P_csbDTO" parameterType="int">
+		SELECT * FROM
+		p_inventory_log
+		WHERE receipt_payment_id = #{receipt_payment_id}
+	</select>
+
+
+	<!-- @@@@@@@@@@@@김도희@@@@@@@@@@@@@ -->
 
 	<select id="getBoardDetail" resultType="boardDTO"
 		parameterType="boardDTO">
@@ -737,12 +1309,14 @@
 
 
 	<insert id="insertBoard" parameterType="boardDTO">
-	  	<selectKey keyProperty="board_id" resultType="int" order="BEFORE">
-   		 SELECT board_id_seq.NEXTVAL FROM dual
-  		</selectKey>
-	
+		<selectKey keyProperty="board_id" resultType="int"
+			order="BEFORE">
+			SELECT board_id_seq.NEXTVAL FROM dual
+		</selectKey>
+
 		insert into p_board
-		(board_id, empno, title, board_content, notice, create_date,
+		(board_id, empno, title, board_content, notice,
+		create_date,
 		reserve_date, views)
 		VALUES (
 		#{board_id},
@@ -796,7 +1370,8 @@
 		parameterType="boardDTO">
 		select *
 		from (select rownum as rnum, inner_table.*
-		from (select * from p_board
+		from (select * from
+		p_board
 
 		<where>
 			<choose>
@@ -824,9 +1399,10 @@
 		where rnum >= #{indexStart} and rnum <= #{indexEnd}
 	]]>
 	</select>
-	
+
 	<insert id="uploadBoardFile" parameterType="boardFileDTO">
-		insert into p_board_file
+		insert into
+		p_board_file
 		(file_id, board_id, file_name, file_path, upload_date)
 		values (
 		board_file_seq.NEXTVAL,
@@ -839,49 +1415,56 @@
 
 
 	<delete id="deleteFileByFileId" parameterType="boardFileDTO">
-		delete from p_board_file
+		delete from
+		p_board_file
 		where file_id = #{file_id}
 	</delete>
-	
-	
-	<select id="getFileById" parameterType="Integer" resultType="boardFileDTO">
+
+
+	<select id="getFileById" parameterType="Integer"
+		resultType="boardFileDTO">
 		select *
-		from p_board_file 
+		from p_board_file
 		where board_id = #{board_id}
 	</select>
 
 	<insert id="insertComment" parameterType="commentDTO">
 		insert into p_comment
 		(comment_id, empno, board_id, content, create_date,
-		parent_id, depth, is_deleted)
+		parent_id, depth,
+		is_deleted)
 		values(
-			board_comment_seq.NEXTVAL,
-			#{empno},
-			#{board_id},
-			#{content},
-			sysdate,
-			#{parent_id},
-			#{depth},
-			0)
+		board_comment_seq.NEXTVAL,
+		#{empno},
+		#{board_id},
+		#{content},
+		sysdate,
+		#{parent_id},
+		#{depth},
+		0)
 	</insert>
-	
+
 	<update id="updateComment" parameterType="commentDTO">
-		update p_comment set content = #{content}
+		update p_comment set
+		content = #{content}
 		where comment_id = #{comment_id}
 	</update>
-	
+
 	<update id="deleteComment" parameterType="commentDTO">
-		update p_comment set is_deleted = 1
+		update p_comment set
+		is_deleted = 1
 		where comment_id = #{comment_id}
 	</update>
-	
+
 	<select id="checkCommentchildren" parameterType="commentDTO">
-		select count(*) from p_comment
+		select count(*)
+		from p_comment
 		where parent_id = #{comment_id}
 	</select>
-	
-	<select id="selectComment" parameterType="Integer" resultType="commentDTO">
-	
+
+	<select id="selectComment" parameterType="Integer"
+		resultType="commentDTO">
+
 	</select>
 
 

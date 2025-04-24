@@ -366,6 +366,47 @@ table th, table td {
 
 		</table>
 
+		<!-- 페이지 넘길때 쓸 버튼들 -->
+		<div class="pagination">
+			<c:set var="pageCount"
+				value="${(line mod viewCount == 0) ? (line div viewCount) : (line div viewCount + 1)}" />
+			<c:set var="prevPage" value="${page - viewCount}" />
+			<c:set var="nextPage" value="${page + viewCount}" />
+
+			<a href="vendor?page=1"><button>&lt;&lt;</button></a> <a
+				href="vendor?page=${prevPage}"><button>&lt;</button></a>
+
+			<c:choose>
+				<c:when test="${ page == pageCount }">
+					<c:forEach var="i" begin="${ page - (viewCount - 1) }"
+						end="${ page }">
+						<c:choose>
+							<c:when test="${ i == page }">
+								<strong><a style="color: red;" href="?page=${i}"><button>${ i }</button></a></strong>
+							</c:when>
+							<c:otherwise>
+								<a href="?page=${i}"><button>${ i }</button></a>
+							</c:otherwise>
+						</c:choose>
+					</c:forEach>
+				</c:when>
+				<c:otherwise>
+					<c:forEach var="i" begin="${ begin }" end="${ end }">
+						<c:choose>
+							<c:when test="${ i == page }">
+								<strong><a style="color: red;" href="?page=${i}"><button>${ i }</button></a></strong>
+							</c:when>
+							<c:otherwise>
+								<a href="?page=${i}"><button>${ i }</button></a>
+							</c:otherwise>
+						</c:choose>
+					</c:forEach>
+				</c:otherwise>
+			</c:choose>
+			<a href="vendor?page=${nextPage}"><button>&gt;</button> </a> <a
+				href="vendor?page=${lastPage}"><button>&gt;&gt;</button> </a>
+		</div>
+
 		<hr>
 
 		<!-- 내가 체크한것들을 조회버튼을 누르면 추출 -->

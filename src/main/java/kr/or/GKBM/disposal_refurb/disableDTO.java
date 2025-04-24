@@ -17,5 +17,13 @@ public class disableDTO {
 	private String count;
 	// 업체명
 	private String vendor;
+	
+	private int viewCount = 10;
+	private int page = 1;
+	private int indexStart;
+	private int indexEnd;
+	private int line;
+	private int begin;
+	private int end;
 
 }

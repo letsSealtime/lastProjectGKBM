@@ -10,7 +10,7 @@
 body {
 	margin: 0;
 	padding: 0;
-	background-color: #f9f9f9;
+	
 	font-family: Arial, sans-serif;
 }
 
@@ -19,8 +19,7 @@ body {
 	margin: auto;
 	background: white;
 	padding: 20px;
-	border-radius: 10px;
-	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	
 }
 
 h1 {

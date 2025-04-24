@@ -68,7 +68,7 @@ public class P_product_in_outController2 {
 			System.out.println(pioDTO2);
 			int select20 = miodao.addition_2_5(pioDTO2);
 
-			return "redirect:product_in_out2_2.tiles";
+			return "redirect:product_in_out2_2";
 		}
 		
 		// 삭제

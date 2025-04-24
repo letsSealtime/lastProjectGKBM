@@ -897,38 +897,38 @@ h3 {
     // iframe 매핑 정보
     const subMenuFileMap = {
         // ----- 기준정보 -----
-        '작업표준서': 'p_work_method.jsp',
-        'BOM관리': 'p_bom.jsp',
-        '상품정보관리': 'p_sku.jsp',
+        '작업표준서': 'p_work_method',
+        'BOM관리': 'p_bom',
+        '상품정보관리': 'p_sku',
 
         // ----- SCM -----
-        '거래처 정보관리': 'vendor.jsp',
-        '거래명세서': 'bill.jsp',
+        '거래처 정보관리': 'vendor',
+        '거래명세서': 'bill',
         
         // ----- 생산관리 -----
-        '생산계획관리': 'week.jsp',
-        '작업지시관리': 'work.jsp',
+        '생산계획관리': 'week',
+        '작업지시관리': 'work',
 
         // ----- 재고관리 -----
-        '원자재 입고관리': 'p_material_in_out.jsp',
-        '원자재 출고관리': 'p_material_in_out1.jsp',
-        '원자재 현황': 'p_material_in_out2.jsp',
-        '완제품 입고관리': 'p_product_in_out.jsp',
-        '완제품 출고관리': 'p_product_in_out1.jsp',
+        '원자재 입고관리': 'p_material_in_out',
+        '원자재 출고관리': 'p_material_in_out1',
+        '원자재 현황': 'p_material_in_out2',
+        '완제품 입고관리': 'p_product_in_out',
+        '완제품 출고관리': 'p_product_in_out1',
 
         // ----- 설비관리 -----
-        '설비등록': 'p_equipreg.jsp',
-        '설비점검':	'p_ins.jsp',
-        '설비수리': 'p_repair.jsp',
+        '설비등록': 'p_equipreg',
+        '설비점검':	'p_ins',
+        '설비수리': 'p_repair',
 
         // ----- 소모품관리 -----
-        '소모품 관리': 'p_CMB.jsp',
-        '소모품 폐기': 'p_CPG.jsp',
-        '소모품 수불관리': 'p_CSB.jsp',
+        '소모품 관리': 'p_CMB',
+        '소모품 폐기': 'p_CPG',
+        '소모품 수불관리': 'p_CSB',
 
         // ----- 품질관리 -----
-        '부적합관리': 'defect.jsp',
-        '리퍼브/폐기': 'disable.jsp',
+        '부적합관리': 'defect',
+        '리퍼브/폐기': 'disable',
 
         // ----- 커뮤니티 -----
         '게시판': 'board',

@@ -505,16 +505,22 @@
 		resultType="kr.or.GKBM.work.WorkDTO">
 		select pW.work_order_id as wi, pW.modify_date, pp.week_plan_id as
 		c_pn,
-		ps.sku_name as c_n, PS.SKU_CODE as c_c, pp.plan_count as c_cc, pW.quantity as q,
-		PB.bom_id as c_b, pp.plan_year as c_y, pp.week as c_w, SPW.QSUM as c_s
+		ps.sku_name as c_n, PS.SKU_CODE as c_c, pp.plan_count as c_cc,
+		pW.quantity as q,
+		PB.bom_id as c_b, pp.plan_year as c_y, pp.week as
+		c_w, SPW.QSUM as c_s
 		from P_WEEK_PLAN PP
-		join P_SKU PS ON PP.SKU_ID = PS.SKU_ID
+		join P_SKU PS ON PP.SKU_ID =
+		PS.SKU_ID
 		left join
 		P_BOM PB ON PS.SKU_ID = PB.SKU_ID
-		left join P_WORK_ORDER PW ON
+		left join
+		P_WORK_ORDER PW ON
 		PP.WEEK_PLAN_ID = PW.WEEK_PLAN_ID
-		LEFT JOIN (SELECT SUM(QUANTITY) AS
-		QSUM, WEEK_PLAN_ID FROM P_WORK_ORDER GROUP BY WEEK_PLAN_ID) SPW ON
+		LEFT JOIN (SELECT
+		SUM(QUANTITY) AS
+		QSUM, WEEK_PLAN_ID FROM P_WORK_ORDER GROUP BY
+		WEEK_PLAN_ID) SPW ON
 		PP.WEEK_PLAN_ID = SPW.WEEK_PLAN_ID
 		<where>
 			<if test="c_y != null and c_y != ''">
@@ -548,17 +554,23 @@
 		resultType="kr.or.GKBM.work.WorkDTO">
 		select pW.work_order_id as wi, pW.modify_date,
 		pp.week_plan_id as c_pn,
-		ps.sku_name as c_n, PS.SKU_CODE as c_c, pp.plan_count as c_cc, pW.quantity as q,
-		PB.bom_id as c_b, pp.plan_year as c_y, pp.week as c_w, SPW.QSUM as
+		ps.sku_name as c_n, PS.SKU_CODE as c_c,
+		pp.plan_count as c_cc, pW.quantity as q,
+		PB.bom_id as c_b, pp.plan_year
+		as c_y, pp.week as c_w, SPW.QSUM as
 		c_s, PW.COMPL
 		from P_WEEK_PLAN PP
 		join P_SKU PS ON PP.SKU_ID = PS.SKU_ID
-		left join P_BOM PB ON PS.SKU_ID = PB.SKU_ID
+		left join P_BOM PB ON PS.SKU_ID
+		= PB.SKU_ID
 		left join P_WORK_ORDER PW
-		ON PP.WEEK_PLAN_ID = PW.WEEK_PLAN_ID
+		ON PP.WEEK_PLAN_ID =
+		PW.WEEK_PLAN_ID
 		LEFT JOIN (SELECT SUM(QUANTITY) AS
-		QSUM, WEEK_PLAN_ID FROM P_WORK_ORDER GROUP BY WEEK_PLAN_ID) SPW ON
-		PP.WEEK_PLAN_ID = SPW.WEEK_PLAN_ID
+		QSUM, WEEK_PLAN_ID
+		FROM P_WORK_ORDER GROUP BY WEEK_PLAN_ID) SPW ON
+		PP.WEEK_PLAN_ID =
+		SPW.WEEK_PLAN_ID
 		WHERE pW.work_order_id IS NOT NULL
 		GROUP BY
 		pW.work_order_id,
@@ -612,15 +624,20 @@
 		resultType="kr.or.GKBM.disposal_refurb.disableDTO">
 
 		select pd.defect_id as id, ps.sku_code as code,
-		ps.sku_name as name, ps.sku_category as type,
-		pv.vendor_name as vendor, pd.defect_count as count
+		ps.sku_name
+		as name, ps.sku_category as type,
+		pv.vendor_name as vendor,
+		pd.defect_count as count
 		from p_week_plan pw
 		left join p_sku
-		ps on pw.sku_id = ps.sku_id
+		ps on
+		pw.sku_id = ps.sku_id
 		left join p_work_order pwo on
-		pw.week_plan_id = pwo.week_plan_id
+		pw.week_plan_id =
+		pwo.week_plan_id
 		left join p_defect pd on
-		pwo.work_order_id = pd.work_order_id
+		pwo.work_order_id =
+		pd.work_order_id
 		left join p_vendor pv on ps.sku_id
 		= pv.sku_id
 
@@ -649,18 +666,15 @@
 	<!-- 상품정보관리 등록 -->
 	<insert id="addition_2" parameterType="skuDTO"> insert into p_sku VALUES
 		(#{sku_id}, #{sku_code}, #{sku_name}, #{sku_size}, #{vendor_name},
-		#{price}, SYSDATE, #{modify_date}, #{sku_category})
-	</insert>
+		#{price}, SYSDATE, #{modify_date}, #{sku_category}) </insert>
 	<!-- 상품정보관리 삭제 -->
 	<delete id="delete_2" parameterType="skuDTO"> delete from p_sku where
-		sku_id = #{sku_id}
-	</delete>
+		sku_id = #{sku_id} </delete>
 	<!-- 상품정보관리 수정 -->
 	<update id="udpate_2" parameterType="skuDTO"> update p_sku set sku_code =
 		#{sku_code}, sku_name = #{sku_name}, sku_size = #{sku_size},
 		vendor_name = #{vendor_name}, price = #{price}, modify_date = SYSDATE,
-		sku_category = #{sku_category} where sku_id = #{sku_id}
-	</update>
+		sku_category = #{sku_category} where sku_id = #{sku_id} </update>
 	<!-- 원자재입고관리 -->
 	<!-- 전체조회 -->
 	<!-- <select id="fulltable_2_1" resultType="mioDTO" parameterType="mioDTO"> 
@@ -673,7 +687,6 @@
 		SELECT * FROM ( SELECT pmio.*, ps.sku_code, ps.sku_name, ps.sku_size,
 		ROW_NUMBER() OVER (ORDER BY pmio.ib_id DESC) AS rn FROM
 		P_MATERIAL_IN_OUT pmio LEFT JOIN P_SKU ps ON pmio.sku_id = ps.sku_id
-		<!-- WHERE pmio.sku_type = 'In' -->
 		<where>
 			pmio.sku_type = 'In'
 			<if test="sku_code != null and sku_code != ''"> AND upper(ps.sku_code) like upper('%' || #{sku_code} ||
@@ -685,7 +698,6 @@
 	<select id="Count_2_1" parameterType="mioDTO" resultType="int">
 		SELECT COUNT(*) FROM P_MATERIAL_IN_OUT pmio LEFT JOIN P_SKU ps ON
 		pmio.sku_id = ps.sku_id
-		<!-- WHERE pmio.sku_type = 'In' -->
 		<where>
 			pmio.sku_type = 'In'
 			<if test="sku_code != null and sku_code != ''"> AND upper(ps.sku_code) like upper('%' || #{sku_code} ||
@@ -696,13 +708,217 @@
 	<insert id="addition_2_1" parameterType="mioDTO"> insert into
 		p_material_in_out VALUES (#{ib_id}, #{material_count},
 		#{material_price}, #{sku_type}, SYSDATE, #{modify_date}, #{remarks},
-		#{sku_id}, #{bill_id})
-	</insert>
+		#{sku_id}, #{bill_id}) </insert>
 	<!-- 원자재입고관리 삭제 -->
 	<delete id="delete_2_1" parameterType="mioDTO"> delete from
-		p_material_in_out where ib_id = #{ib_id}
-	</delete>
-
+		p_material_in_out where ib_id = #{ib_id} </delete>
+	<!-- 원자재입고관리 수정 -->
+	<update id="udpate_2_1" parameterType="mioDTO"> update p_material_in_out
+		set material_count = #{material_count}, material_price =
+		#{material_price}, sku_type = #{sku_type}, remarks = #{remarks},
+		modify_date = SYSDATE, sku_id = #{sku_id}, bill_id = #{bill_id} where
+		ib_id = #{ib_id} </update>
+	<!-- 원자재출고관리 페이징된 목록 -->
+	<select id="fulltable_2_2" parameterType="mioDTO2"
+		resultType="mioDTO">
+		SELECT * FROM ( SELECT pmio.*, ps.sku_code, ps.sku_name, ps.sku_size,
+		ROW_NUMBER() OVER (ORDER BY pmio.ib_id DESC) AS rn FROM
+		P_MATERIAL_IN_OUT pmio LEFT JOIN P_SKU ps ON pmio.sku_id = ps.sku_id
+		<where>
+			pmio.sku_type = 'Out'
+			<if test="sku_code != null and sku_code != ''"> AND upper(ps.sku_code) like upper('%' || #{sku_code} ||
+				'%') </if>
+		</where>
+		) WHERE rn BETWEEN #{startRow} AND #{endRow}
+	</select>
+	<!-- 원자재출고관리 전체 데이터 수 조회 -->
+	<select id="Count_2_2" parameterType="mioDTO2" resultType="int">
+		SELECT COUNT(*) FROM P_MATERIAL_IN_OUT pmio LEFT JOIN P_SKU ps ON
+		pmio.sku_id = ps.sku_id
+		<where>
+			pmio.sku_type = 'Out'
+			<if test="sku_code != null and sku_code != ''"> AND upper(ps.sku_code) like upper('%' || #{sku_code} ||
+				'%') </if>
+		</where>
+	</select>
+	<!-- 원자재출고관리 등록 -->
+	<insert id="addition_2_2" parameterType="mioDTO2"> insert into
+		p_material_in_out VALUES (#{ib_id}, #{material_count},
+		#{material_price}, #{sku_type}, SYSDATE, #{modify_date}, #{remarks},
+		#{sku_id}, #{bill_id}) </insert>
+	<!-- 원자재출고관리 삭제 -->
+	<delete id="delete_2_2" parameterType="mioDTO2"> delete from
+		p_material_in_out where ib_id = #{ib_id} </delete>
+	<!-- 원자재출고관리 수정 -->
+	<update id="udpate_2_2" parameterType="mioDTO2"> update p_material_in_out
+		set material_count = #{material_count}, material_price =
+		#{material_price}, sku_type = #{sku_type}, remarks = #{remarks},
+		modify_date = SYSDATE, sku_id = #{sku_id}, bill_id = #{bill_id} where
+		ib_id = #{ib_id} </update>
+	<!-- 원자재현황 페이징된 목록 -->
+	<select id="fulltable_2_3" parameterType="mioDTO3"
+		resultType="mioDTO">
+		SELECT * FROM ( SELECT pmio.*, ps.sku_code, ps.sku_name, ps.sku_size,
+		ROW_NUMBER() OVER (ORDER BY pmio.ib_id DESC) AS rn FROM
+		P_MATERIAL_IN_OUT pmio LEFT JOIN P_SKU ps ON pmio.sku_id = ps.sku_id
+		<where>
+			<if test="sku_code != null and sku_code != ''"> AND upper(ps.sku_code) like upper('%' || #{sku_code} ||
+				'%') </if>
+		</where>
+		) WHERE rn BETWEEN #{startRow} AND #{endRow}
+	</select>
+	<!-- 원자재현황 전체 데이터 수 조회 -->
+	<select id="Count_2_3" parameterType="mioDTO3" resultType="int">
+		SELECT COUNT(*) FROM P_MATERIAL_IN_OUT pmio LEFT JOIN P_SKU ps ON
+		pmio.sku_id = ps.sku_id
+		<where>
+			<if test="sku_code != null and sku_code != ''"> AND upper(ps.sku_code) like upper('%' || #{sku_code} ||
+				'%') </if>
+		</where>
+	</select>
+	<!-- 완제품입고관리 페이징된 목록 -->
+	<select id="fulltable_2_4" parameterType="pioDTO"
+		resultType="pioDTO">
+		SELECT * FROM ( SELECT pmio.*, ps.sku_code, ps.sku_name, ps.sku_size,
+		ROW_NUMBER() OVER (ORDER BY pmio.ib_id DESC) AS rn FROM
+		P_PRODUCT_IN_OUT pmio LEFT JOIN P_SKU ps ON pmio.sku_id = ps.sku_id
+		<where>
+			pmio.sku_type = 'In'
+			<if test="sku_code != null and sku_code != ''"> AND upper(ps.sku_code) like upper('%' || #{sku_code} ||
+				'%') </if>
+		</where>
+		) WHERE rn BETWEEN #{startRow} AND #{endRow}
+	</select>
+	<!-- 완제품입고관리 전체 데이터 수 조회 -->
+	<select id="Count_2_4" parameterType="pioDTO" resultType="int">
+		SELECT COUNT(*) FROM P_PRODUCT_IN_OUT pmio LEFT JOIN P_SKU ps ON
+		pmio.sku_id = ps.sku_id
+		<where>
+			pmio.sku_type = 'In'
+			<if test="sku_code != null and sku_code != ''"> AND upper(ps.sku_code) like upper('%' || #{sku_code} ||
+				'%') </if>
+		</where>
+	</select>
+	<!-- 완제품입고관리 등록 -->
+	<insert id="addition_2_4" parameterType="pioDTO"> insert into
+		P_PRODUCT_IN_OUT VALUES (#{ib_id}, #{product_count}, #{product_price},
+		#{sku_type}, SYSDATE, #{modify_date}, #{remarks}, #{sku_id}, #{empno})
+	</insert>
+	<!-- 완제품입고관리 삭제 -->
+	<delete id="delete_2_4" parameterType="pioDTO"> delete from
+		P_PRODUCT_IN_OUT where ib_id = #{ib_id} </delete>
+	<!-- 완제품입고관리 수정 -->
+	<update id="udpate_2_4" parameterType="pioDTO"> update P_PRODUCT_IN_OUT
+		set product_count = #{product_count}, product_price =
+		#{product_price}, sku_type = #{sku_type}, remarks = #{remarks},
+		modify_date = SYSDATE, sku_id = #{sku_id}, empno = #{empno} where
+		ib_id = #{ib_id} </update>
+	<!-- 완제품출고관리 페이징된 목록 -->
+	<select id="fulltable_2_5" parameterType="pioDTO2"
+		resultType="pioDTO">
+		SELECT * FROM ( SELECT pmio.*, ps.sku_code, ps.sku_name, ps.sku_size,
+		ROW_NUMBER() OVER (ORDER BY pmio.ib_id DESC) AS rn FROM
+		P_PRODUCT_IN_OUT pmio LEFT JOIN P_SKU ps ON pmio.sku_id = ps.sku_id
+		<where>
+			pmio.sku_type = 'Out'
+			<if test="sku_code != null and sku_code != ''"> AND upper(ps.sku_code) like upper('%' || #{sku_code} ||
+				'%') </if>
+		</where>
+		) WHERE rn BETWEEN #{startRow} AND #{endRow}
+	</select>
+	<!-- 완제품출고관리 전체 데이터 수 조회 -->
+	<select id="Count_2_5" parameterType="pioDTO2" resultType="int">
+		SELECT COUNT(*) FROM P_PRODUCT_IN_OUT pmio LEFT JOIN P_SKU ps ON
+		pmio.sku_id = ps.sku_id
+		<where>
+			pmio.sku_type = 'Out'
+			<if test="sku_code != null and sku_code != ''"> AND upper(ps.sku_code) like upper('%' || #{sku_code} ||
+				'%') </if>
+		</where>
+	</select>
+	<!-- 완제품출고관리 등록 -->
+	<insert id="addition_2_5" parameterType="pioDTO2"> insert into
+		P_PRODUCT_IN_OUT VALUES (#{ib_id}, #{product_count}, #{product_price},
+		#{sku_type}, SYSDATE, #{modify_date}, #{remarks}, #{sku_id}, #{empno})
+	</insert>
+	<!-- 완제품출고관리 삭제 -->
+	<delete id="delete_2_5" parameterType="pioDTO2"> delete from
+		P_PRODUCT_IN_OUT where ib_id = #{ib_id} </delete>
+	<!-- 완제품출고관리 수정 -->
+	<update id="udpate_2_5" parameterType="pioDTO2"> update P_PRODUCT_IN_OUT
+		set product_count = #{product_count}, product_price =
+		#{product_price}, sku_type = #{sku_type}, remarks = #{remarks},
+		modify_date = SYSDATE, sku_id = #{sku_id}, empno = #{empno} where
+		ib_id = #{ib_id} </update>
+	<!-- 작업표준서 페이징된 목록 -->
+	<select id="fulltable_2_6" parameterType="wmDTO"
+		resultType="wmDTO">
+		SELECT * FROM ( SELECT pmio.*, ps.sku_code, ps.sku_name, ps.sku_size,
+		ROW_NUMBER() OVER (ORDER BY pmio.work_method DESC) AS rn FROM
+		P_work_method pmio LEFT JOIN P_SKU ps ON pmio.sku_id = ps.sku_id
+		<where>
+			<if test="sku_code != null and sku_code != ''"> AND upper(ps.sku_code) like upper('%' || #{sku_code} ||
+				'%') </if>
+		</where>
+		) WHERE rn BETWEEN #{startRow} AND #{endRow}
+	</select>
+	<!-- 작업표준서 전체 데이터 수 조회 -->
+	<select id="Count_2_6" parameterType="wmDTO" resultType="int">
+		SELECT COUNT(*) FROM P_work_method pmio LEFT JOIN P_SKU ps ON
+		pmio.sku_id = ps.sku_id
+		<where>
+			<if test="sku_code != null and sku_code != ''"> AND upper(ps.sku_code) like upper('%' || #{sku_code} ||
+				'%') </if>
+		</where>
+	</select>
+	<!-- 작업표준서 등록 -->
+	<insert id="addition_2_6" parameterType="wmDTO"> insert into
+		P_work_method VALUES (seq_p_work_method.nextval, #{work},
+		#{consumption}, #{sku_id}, #{work_file}, SYSDATE, #{modify_date})
+	</insert>
+	<!-- 작업표준서 삭제 -->
+	<delete id="delete_2_6" parameterType="wmDTO"> delete from P_work_method
+		where work_method = #{work_method} </delete>
+	<!-- 작업표준서 수정 -->
+	<update id="udpate_2_6" parameterType="wmDTO"> update P_work_method set
+		work = #{work}, consumption = #{consumption}, sku_id = #{sku_id},
+		work_file = #{work_file}, modify_date = SYSDATE where work_method =
+		#{work_method} </update>
+	<!-- BOM 페이징 목록 -->
+	<select id="fulltable_2_7" parameterType="bDTO"
+		resultType="bDTO">
+		SELECT * FROM ( SELECT pb.*, ps.sku_code, ps.sku_name, ps.sku_size,
+		pwm.work, pwm.work_file, ROW_NUMBER() OVER (ORDER BY pb.bom_id DESC)
+		AS rn FROM p_bom pb LEFT JOIN p_sku ps ON pb.sku_id = ps.sku_id LEFT
+		JOIN p_work_method pwm ON pb.work_method = pwm.work_method
+		<where>
+			<if test="sku_code != null and sku_code != ''"> AND UPPER(ps.sku_code) LIKE UPPER('%' || #{sku_code} ||
+				'%') </if>
+		</where>
+		) WHERE rn BETWEEN #{startRow} AND #{endRow}
+	</select>
+	<!-- BOM 데이터 수 조회 -->
+	<select id="Count_2_7" parameterType="bDTO" resultType="int">
+		SELECT COUNT(*) FROM p_bom pb LEFT JOIN p_sku ps ON pb.sku_id =
+		ps.sku_id LEFT JOIN p_work_method pwm ON pb.work_method =
+		pwm.work_method
+		<where>
+			<if test="sku_code != null and sku_code != ''"> AND UPPER(ps.sku_code) LIKE UPPER('%' || #{sku_code} ||
+				'%') </if>
+		</where>
+	</select>
+	<!-- bom 등록 -->
+	<insert id="addition_2_7" parameterType="bDTO"> insert into p_bom
+		VALUES (seq_p_bom.nextval, #{sku_id_material}, #{consumption},
+		#{sku_id}, #{work_method}, SYSDATE, #{modify_date}) </insert>
+	<!-- 작업표준서 삭제 -->
+	<delete id="delete_2_7" parameterType="bDTO"> delete from p_bom where
+		bom_id = #{bom_id} </delete>
+	<!-- bom 수정 -->
+	<update id="udpate_2_7" parameterType="bDTO"> update p_bom set
+		sku_id_material = #{sku_id_material}, consumption = #{consumption},
+		sku_id = #{sku_id}, work_method = #{work_method}, modify_date =
+		SYSDATE where bom_id = #{bom_id} </update>
 
 	<!-- ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ 이준규 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ -->
 

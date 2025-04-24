@@ -77,7 +77,7 @@ public class P_skuController {
 	    model.addAttribute("currentPage", currentPage);
 	    model.addAttribute("totalPages", totalPages);
 
-	    return "P_sku";
+	    return "P_sku.tiles";
 	}
 
 	

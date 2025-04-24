@@ -58,7 +58,7 @@ public class P_material_in_outController {
 		    model.addAttribute("currentPage", currentPage);
 		    model.addAttribute("totalPages", totalPages);
 
-		    return "P_material_in_out";
+		    return "P_material_in_out.tiles";
 		}
 		// 추가
 		@RequestMapping(value = "/p_material_in_out", method = { RequestMethod.GET, RequestMethod.POST })

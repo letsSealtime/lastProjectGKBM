@@ -12,7 +12,6 @@
 body {
 	margin: 0;
 	padding: 0;
-	background-color: #f9f9f9;
 	font-family: Arial, sans-serif;
 }
 
@@ -21,8 +20,6 @@ body {
 	margin: auto;
 	background: white;
 	padding: 20px;
-	border-radius: 10px;
-	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
@@ -52,19 +49,11 @@ h1 {
 	gap: 10px;
 }
 
-input[type="text"] {
-	width: 40%;
-}
-
-.소모품명 {
-	width: 40%;
-}
-
 label {
 	min-width: 80px;
 }
 
-input {
+input, select {
 	padding: 8px;
 	border: 1px solid #ccc;
 	border-radius: 5px;
@@ -114,45 +103,38 @@ table th, table td {
 	border-radius: 5px;
 }
 
+.active {
+	background-color: #0056b3;
+}
+
+.별 {
+	color: red;
+}
+
+.seach {
+	margin-bottom: 15px;
+}
+
+#consumables_code {
+    background-color: #ccc;
+}
+
+
 @media screen and (max-width: 800px) {
 	.form-row {
 		flex-direction: column;
 		align-items: stretch;
 		gap: 5px !important;
-		/* 모바일에서 간격 조정 */
-		width: auto .buttons{
-                    flex-direction: row;
+		width: auto;
+	}
+	.buttons {
+		flex-direction: row;
 		justify-content: center;
 		margin-top: 10px;
 	}
 	button {
 		width: auto;
 	}
-}
-
-.edit-buttons {
-	margin-top: 10px;
-}
-
-.active {
-	background-color: #0056b3;
-}
-
-h1 {
-	width: 90%;
-}
-
-}
-.active {
-	background-color: #0056b3;
-}
-
-.hide {
-	display: none;
-}
-
-.별 {
-	color: red;
 }
 </style>
 </head>
@@ -161,413 +143,330 @@ h1 {
 	<div class="container">
 		<h1>◎ 소모품 수불관리</h1>
 
-		<span class="별">* 모두기입</span>
+		<span class="별">* 모두기입</span><br>
+		<span class="별">소모품 코드는 소모품명 선택시 자동입력</span>
+		<!-- 검색 폼 -->
+		<form method="get" action="${pageContext.request.contextPath}/p_CSB">
+			<span>소모품코드 or 소모품명</span> <input type="text" name="searchKeyword"
+				placeholder="검색어를 입력하세요" value="${searchKeyword}"> <input
+				type="hidden" name="currentPage" value="1">
+			<button type="submit" class="seach">검색</button>
+		</form>
+
+		<!-- 등록/수정 폼 -->
 		<div class="form">
 			<div class="form-fields">
 				<div class="form-row">
-					<label for="소모품코드">소모품코드<span class="별"> *</span></label> <input
-						type="text" id="소모품코드"> <span>소모품명</span><span class="별">
-						*</span> <select class="소모품명">
-						<option>라텍스장갑</option>
-						<option>보안경</option>
-						<option>마스크</option>
-						<option>헤어넷</option>
-						<option>작업복</option>
-						<option>안전화</option>
-						<option>소독제</option>
-						<option>종이타월</option>
-						<option>청소용 천</option>
-						<option>걸레</option>
-						<option>브러시</option>
-						<option>진공 청소기 필터</option>
-						<option>윤활유</option>
-						<option>구리스</option>
-						<option>세척제</option>
-						<option>부품 세정액</option>
-						<option>방청제</option>
-						<option>테이프</option>
-						<option>완충재</option>
-						<option>라벨 스티커</option>
-						<option>포장용 끈</option>
-						<option>칼</option>
-						<option>가위</option>
-						<option>마킹 펜</option>
-						<option>접착제</option>
-						<option>검사용 돋보기</option>
-						<option>pH테스트 스트립</option>
-						<option>샘플링 백</option>
-						<option>품질 검사 스티커</option>
-						<option>프린터 잉크 카트리지</option>
-						<option>복사용지</option>
-						<option>문서파일</option>
-						<option>바인터클립</option>
-						<option>보드마커</option>
+					<label for="consumables_code">소모품코드<span class="별">
+							*</span></label> <input type="text" id="consumables_code" required readonly>
+					<label for="consumables_name">소모품명<span class="별"> *</span></label>
+					<select id="consumables_name" required>
+						<option value="">소모품 선택</option>
+						<c:forEach var="item" items="${consumregList}">
+							<option value="${item.consumables_code}"
+								data-stock="${item.p_Con_count}">
+								${item.consumables_name} (현재 재고: ${item.p_Con_count})</option>
+						</c:forEach>
 					</select>
 				</div>
+
 				<div class="form-row">
-					<label for="불출자">불출자<span class="별"> *</span></label> <input
-						type="text" id="불출자"> <label for="수입자">수입자<span
-						class="별"> *</span></label> <input type="text" id="수입자">
+					<label for="requester">불출자<span class="별"> *</span></label> <input
+						type="text" id="requester"> <label for="importer">수입자<span
+						class="별"> *</span></label> <input type="text" id="importer">
 				</div>
 
 				<div class="form-row">
-					<label for="수량">수량<span class="별"> *</span></label> <input
-						type="text" id="수량"> <label for="수불일자">수불일자<span
-						class="별"> *</span></label> <input type="date" id="수불일자">
-
+					<label for="log_count">수량<span class="별"> *</span></label> <input
+						type="text" id="log_count"> <label
+						for="receipt_payment_date">수불일자<span class="별"> *</span></label> <input
+						type="date" id="receipt_payment_date">
 				</div>
 
 				<div class="form-row">
-					<label for="비고사항">비고사항</label> <input type="text" id="비고사항">
+					<label for="remarks">비고사항</label> <input type="text" id="remarks">
 				</div>
 			</div>
 
 			<!-- 버튼 영역 -->
 			<div class="buttons">
-				<c:if test="${user.grade == 2}">
-					<button type="button" class="buttons search1">조회</button>
-				</c:if>
-				<c:if test="${user.grade == 1}">
-					<button type="submit" value="insert" class="buttons insert1"
-						name="action">등록</button>
-					<button type="button" class="buttons search1">조회</button>
-					<button type="submit" value="update" class="buttons update1"
-						name="action">수정</button>
-					<button type="submit" value="delete" class="buttons delete1"
-						name="action">삭제</button>
-				</c:if>
+				<button type="button" value="등록" class="buttons insert1">등록</button>
+				<button type="button" value="수정" class="buttons update1">수정</button>
+				<button type="button" value="삭제" class="buttons delete1">삭제</button>
 			</div>
+		</div>
+
+		<table>
+			<thead>
+				<tr>
+					<th><input type="checkbox" id="selectAll"></th>
+					<th>NO.</th>
+					<th>소모품코드</th>
+					<th>소모품명</th>
+					<th>불출자</th>
+					<th>수입자</th>
+					<th>수량</th>
+					<th>수불일자</th>
+					<th>비고</th>
+				</tr>
+			</thead>
+			<tbody id="table-body">
+				<c:if test="${empty resultList}">
+					<tr>
+						<td colspan="9">일치되는 항목이 없습니다.</td>
+					</tr>
+				</c:if>
+				<c:forEach var="dto" items="${resultList}" varStatus="loop">
+					<tr>
+						<td><input type="checkbox" name="check"
+							value="${dto.receipt_payment_id}"></td>
+						<td>${(currentPage-1)*pageSize + loop.count}</td>
+						<td>${dto.consumables_code}</td>
+						<td>${dto.consumables_name}</td>
+						<td>${dto.requester}</td>
+						<td>${dto.importer}</td>
+						<td>${dto.log_count}</td>
+						<td>${dto.receipt_payment_date}</td>
+						<td>${dto.remarks}</td>
+					</tr>
+				</c:forEach>
+			</tbody>
+		</table>
+
+		<!-- 페이지 넘길때 쓸 버튼들 -->
+		<div class="pagination">
+			<%
+			int pageBlock = 10;
+			int currentPage = Integer.parseInt(String.valueOf(request.getAttribute("currentPage")));
+			int totalPages = Integer.parseInt(String.valueOf(request.getAttribute("totalPages")));
+			int startPage = ((currentPage - 1) / pageBlock) * pageBlock + 1;
+			int endPage = startPage + pageBlock - 1;
+			if (endPage > totalPages)
+				endPage = totalPages;
+
+			request.setAttribute("startPage", startPage);
+			request.setAttribute("endPage", endPage);
+			%>
+
+			<c:if test="${startPage > 1}">
+				<form method="get" style="display: inline;">
+					<input type="hidden" name="currentPage" value="${startPage - 10}" />
+					<input type="hidden" name="searchKeyword" value="${searchKeyword}" />
+					<button type="submit">&lt;</button>
+				</form>
+			</c:if>
+
+			<c:forEach var="pageNum" begin="${startPage}" end="${endPage}">
+				<form method="get" style="display: inline;">
+					<input type="hidden" name="currentPage" value="${pageNum}" /> <input
+						type="hidden" name="searchKeyword" value="${searchKeyword}" />
+					<button type="submit"
+						class="${pageNum == currentPage ? 'active' : ''}">${pageNum}</button>
+				</form>
+			</c:forEach>
+
+			<c:if test="${endPage < totalPages}">
+				<form method="get" style="display: inline;">
+					<input type="hidden" name="currentPage" value="${startPage + 10}" />
+					<input type="hidden" name="searchKeyword" value="${searchKeyword}" />
+					<button type="submit">&gt;</button>
+				</form>
+			</c:if>
 		</div>
 	</div>
 
-	<div id="check"></div>
-
-	<table>
-		<thead>
-			<tr>
-				<th><input type="checkbox" id="체크박스"></th>
-				<th>소모품코드</th>
-				<th>소모품명</th>
-				<th>불출자</th>
-				<th>수입자</th>
-				<th>수량</th>
-				<th>수불일자</th>
-				<th>비고사항</th>
-			</tr>
-			<tr>
-				<td><input type="checkbox" id="체크박스"></td>
-				<td>NT-100</td>
-				<td>니트릴장갑</td>
-				<td>김천안</td>
-				<td>홍길동</td>
-				<td>100</td>
-				<td>2025-02-06</td>
-				<td>-</td>
-			</tr>
-		</thead>
-		<tbody id="table-body"></tbody>
-	</table>
-
-	<!-- 페이지 넘길때 쓸 버튼들 -->
-	<div class="pagination">
-		<button>&lt;</button>
-		<button>1</button>
-		<button>2</button>
-		<button>3</button>
-		<button>4</button>
-		<button>5</button>
-		<button>6</button>
-		<button>7</button>
-		<button>8</button>
-		<button>9</button>
-		<button>10</button>
-		<button>&gt;</button>
-	</div>
-	</div>
-
 	<script>
-        // 항상 오늘 날짜로 하는 스크립트
-        document.getElementById('수불일자').value = new Date().toISOString().substring(0, 10);
+	document.addEventListener('DOMContentLoaded', function() {
+	    // 오늘 날짜로 초기화
+	    document.getElementById('receipt_payment_date').value = new Date().toISOString().substring(0, 10);
+	    
+	    // 소모품명 선택 시 코드 자동 입력
+	    document.getElementById('consumables_name').addEventListener('change', function() {
+	        const selectedOption = this.options[this.selectedIndex];
+	        document.getElementById('consumables_code').value = selectedOption.value || '';
+	    });
 
-        // 체크박스 템플릿 생성
-        const checkboxTemplate = document.createElement('input');
-        checkboxTemplate.type = 'checkbox';
+	    // 전체 선택/해제 체크박스
+	    document.getElementById('selectAll').addEventListener('change', function() {
+	        const checkboxes = document.querySelectorAll('input[name="check"]');
+	        checkboxes.forEach(checkbox => checkbox.checked = this.checked);
+	    });
 
-        // 행 번호를 갱신하는 함수
-        function updateRowNumbers() {
-            const rows = document.querySelectorAll("#table-body tr");
-            rows.forEach((row, index) => {
-                row.cells[1].textContent = index + 1;  // 순번 갱신
-            });
-        }
+	 // 등록 버튼 이벤트 수정 (출고 검증 추가)
+	    document.querySelector('.insert1').addEventListener('click', function(event) {
+	        event.preventDefault();
+	        
+	        // 필수값 검증
+	        const requiredFields = ['consumables_code', 'requester', 'importer', 'log_count', 'receipt_payment_date'];
+	        for (const field of requiredFields) {
+	            const el = document.getElementById(field);
+	            if (!el || (el.type === 'number' ? el.value <= 0 : !el.value.trim())) {
+	                alert("필수 항목을 모두 입력해주세요.");
+	                return;
+	            }
+	        }
 
-        // 새 행을 추가하는 함수
-        function addRow(소모품코드, 소모품명, 불출자, 수입자, 수량, 수불일자, 비고사항) {
-            const tableBody = document.getElementById("table-body");
-            const row = document.createElement("tr");
-            const checkbox = checkboxTemplate.cloneNode(true);
+	        // 재고 검증 (출고 시)
+	        const selectedOption = document.getElementById('consumables_name').selectedOptions[0];
+	        const currentStock = parseInt(selectedOption.dataset.stock);
+	        const logCount = parseInt(document.getElementById('log_count').value);
+	        
+	        if (logCount > currentStock) {
+	            alert(`출고 수량이 현재 재고보다 많습니다.\n현재 재고: ${currentStock}`);
+	            return;
+	        }
 
-            // 개별 체크박스에 이벤트 리스너 추가
-            checkbox.addEventListener('change', updateSelectAllCheckbox);
+	        // 데이터 전송
+	        const data = {
+	            consumables_code: document.getElementById('consumables_code').value,
+	            requester: document.getElementById('requester').value,
+	            importer: document.getElementById('importer').value,
+	            log_count: parseInt(document.getElementById('log_count').value),
+	            receipt_payment_date: document.getElementById('receipt_payment_date').value,
+	            remarks: document.getElementById('remarks').value
+	        };
 
-            row.innerHTML = `
-        <td></td>
-        <td>${tableBody.children.length + 1}</td>
-        <td>${소모품코드}</td>
-        <td>${소모품명}</td>
-        <td>${불출자}</td>
-        <td>${수입자}</td>
-        <td>${수량}</td>
-        <td>${수불일자}</td>
-        <td>${비고사항}</td>`;
+	        fetch('${pageContext.request.contextPath}/p_CSBinsert', {
+	            method: 'POST',
+	            headers: { 'Content-Type': 'application/json' },
+	            body: JSON.stringify(data)
+	        })
+	        .then(response => response.text())
+	        .then(result => {
+	            if (result === "success") {
+	                alert("등록 성공!");
+	                location.reload();
+	            } else {
+	                alert("등록 실패!");
+	            }
+	        });
+	    });
 
-            row.cells[0].appendChild(checkbox);
-            tableBody.appendChild(row);
-            updateRowNumbers();
-            updateTable();
-        }
+	    // 삭제 버튼 이벤트
+	    document.querySelector('.delete1').addEventListener('click', function(e) {
+		    e.preventDefault();
+		    const selectedRows = Array.from(document.querySelectorAll('input[name="check"]:checked'))
+		                            .map(cb => {
+		                                const row = cb.closest('tr');
+		                                return {
+		                                	receipt_payment_id: cb.value,
+		                                    consumables_code: row.cells[2].textContent.trim(),
+		                                    log_count: parseInt(row.cells[6].textContent.trim())
+		                                };
+		                            });
+		    
+		    if (selectedRows.length === 0) {
+		        alert("삭제할 항목을 선택하세요.");
+		        return;
+		    }
+		    if (!confirm("정말 삭제하시겠습니까?")) return;
+		
+		    Promise.all(selectedRows.map(row => {
+		        return fetch('${pageContext.request.contextPath}/p_CSBdelete', {
+		            method: 'POST',
+		            headers: {'Content-Type': 'application/json'},
+		            body: JSON.stringify(row)
+		        }).then(res => res.text());
+		    })).then(results => {
+		        if (results.every(r => r === "success")) {
+		            alert("삭제 성공!");
+		            location.reload();
+		        } else {
+		            alert("삭제 실패!");
+		        }
+		    });
+		});
 
-        // '등록' 버튼 이벤트 리스너
-        document.getElementById("등록").addEventListener("click", function () {
-            const fields = ["소모품코드", "소모품명", "불출자", "수입자", "수량", "수불일자"];
-            const values = fields.map(field => document.getElementById(field).value);
+	    // 수정 버튼 이벤트
+	    document.querySelector('.update1').addEventListener('click', function() {
+	        const selectedChecks = document.querySelectorAll('input[name="check"]:checked');
+	        if (selectedChecks.length !== 1) {
+	            alert(selectedChecks.length > 1 ? 
+	                "수정 시 하나의 항목만 선택해주세요." : 
+	                "수정할 항목을 선택해주세요.");
+	            return;
+	        }
 
-            if (values.some(value => !value)) {
-                alert("필수 항목을 모두 올바르게 입력해주세요.");
-                return;
-            }
+	        // 선택된 행 데이터 추출
+	        const selectedRow = selectedChecks[0].closest('tr');
+	        const cells = selectedRow.cells;
+	        
+	     // 소모품명 select의 value(=소모품코드)로 맞추기
+	        const codeToSelect = cells[2].textContent.trim();
+	        const selectBox = document.getElementById('consumables_name');
+	        selectBox.value = codeToSelect;
+	        // 만약 value가 안 맞으면 아래 루프로 강제 선택
+	        if (selectBox.value !== codeToSelect) {
+	            Array.from(selectBox.options).forEach(opt => {
+	                if (opt.value === codeToSelect) opt.selected = true;
+	            });
+	        }
 
-            const 비고사항 = document.getElementById("비고사항").value || "";
+	        // 폼에 데이터 채우기
+	        document.getElementById('consumables_code').value = cells[2].textContent.trim();
+	        document.getElementById('requester').value = cells[4].textContent.trim();
+	        document.getElementById('importer').value = cells[5].textContent.trim();
+	        document.getElementById('log_count').value = cells[6].textContent.trim();
+	        document.getElementById('receipt_payment_date').value = cells[7].textContent.trim();
+	        document.getElementById('remarks').value = cells[8].textContent.trim();
 
-            addRow(...values, 비고사항);
-            clearInputFields();
-        });
+	        // 기존 버튼 숨기기
+	        document.querySelectorAll('.buttons button').forEach(btn => btn.style.display = 'none');
 
-        // '조회' 버튼 이벤트 리스너
-        document.getElementById("조회").addEventListener("click", function () {
-            const checkedRows = document.querySelectorAll("#table-body tr input[type='checkbox']:checked");
-            const check = [];
+	        // 수정완료/취소 버튼 생성
+	        const completeBtn = document.createElement('button');
+	        completeBtn.textContent = '수정완료';
+	        completeBtn.className = 'complete-update';
 
-            checkedRows.forEach(checkbox => {
-                const row = checkbox.closest('tr');
-                const cells = row.cells;
-                const data = {
-                    순번: cells[1].textContent,
-                    소모품코드: cells[2].textContent,
-                    소모품명: cells[3].textContent,
-                    불출자: cells[4].textContent,
-                    수입자: cells[5].textContent,
-                    수량: cells[6].textContent,
-                    수불일자: cells[7].textContent,
-                    비고사항: cells[8].textContent
-                };
-                check.push(data);
-            });
+	        const cancelBtn = document.createElement('button');
+	        cancelBtn.textContent = '수정취소';
+	        cancelBtn.className = 'cancel-update';
 
-            const resultArea = document.getElementById("check");
-            resultArea.innerHTML = '';
-            check.forEach(item => {
-                const p = document.createElement('p');
-                p.textContent = `순번: ${item.순번}, 
-                소모품코드: ${item.소모품코드}, 
-                소모품명: ${item.소모품명}, 
-                불출자: ${item.불출자}, 
-                수입자: ${item.수입자}, 
-                수량: ${item.수량}, 
-                수불일자: ${item.수불일자}, 
-                비고사항: ${item.비고사항}`;
-                resultArea.appendChild(p);
-            });
+	        document.querySelector('.buttons').append(completeBtn, cancelBtn);
 
-            uncheckAllCheckboxes();
-        });
+	        // 수정완료 이벤트
+	        completeBtn.addEventListener('click', function() {
+	            const data = {
+	                receipt_payment_id: selectedChecks[0].value,
+	                consumables_code: document.getElementById('consumables_code').value,
+	                requester: document.getElementById('requester').value,
+	                importer: document.getElementById('importer').value,
+	                log_count: parseInt(document.getElementById('log_count').value),
+	                receipt_payment_date: document.getElementById('receipt_payment_date').value,
+	                remarks: document.getElementById('remarks').value
+	            };
 
-        // 입력 필드 초기화 함수
-        function clearInputFields() {
-            document.querySelectorAll(".form-fields input").forEach(input => {
-                if (input.id === '수불일자') {
-                    input.value = new Date().toISOString().substring(0, 10);
-                } else {
-                    input.value = "";
-                }
-            });
-        }
+	            fetch('${pageContext.request.contextPath}/p_CSBupdate', {
+	                method: 'POST',
+	                headers: { 'Content-Type': 'application/json' },
+	                body: JSON.stringify(data)
+	            })
+	            .then(response => response.text())
+	            .then(result => {
+	                if (result === "success") {
+	                    alert("수정 성공!");
+	                    location.reload();
+	                } else {
+	                    alert("수정 실패!");
+	                }
+	            });
+	        });
 
-        // '삭제' 버튼 이벤트 리스너
-        document.getElementById("삭제").addEventListener("click", function () {
-            const checkedRows = document.querySelectorAll("#table-body tr input[type='checkbox']:checked");
-
-            if (checkedRows.length === 0) {
-                alert("삭제할 항목을 1개 이상 체크해주십시오.");
-                return;
-            }
-
-            if (confirm("삭제 하시겠습니까?")) {
-                let deletedCount = 0;
-
-                checkedRows.forEach(checkbox => {
-                    checkbox.closest('tr').remove();
-                    deletedCount++;
-                });
-
-                if (deletedCount > 0) {
-                    updateRowNumbers();
-                    updateTable();
-                }
-            }
-
-            uncheckAllCheckboxes();
-        });
-
-        // '수정' 버튼 이벤트 리스너
-        document.getElementById("수정").addEventListener("click", function () {
-            const checkedRows = document.querySelectorAll("#table-body tr input[type='checkbox']:checked");
-            if (checkedRows.length !== 1) {
-                alert("수정할 항목을 하나만 선택해주세요.");
-                return;
-            }
-
-            const row = checkedRows[0].closest('tr');
-            const cells = row.cells;
-
-            uncheckAllCheckboxes();
-            toggleEditMode(true);
-
-            const editableCells = [2, 3, 4, 5, 6, 7, 8, 9];
-            const originalValues = {};
-            editableCells.forEach(index => {
-                originalValues[index] = cells[index].textContent;
-                cells[index].innerHTML = createInputField(index, originalValues[index]);
-            });
-
-            document.getElementById("수정완료").addEventListener("click", () => completeEdit(cells, editableCells));
-            document.getElementById("수정취소").addEventListener("click", () => cancelEdit(cells, originalValues, editableCells));
-        });
-
-        function toggleEditMode(isEditing) {
-            const buttonsContainer = document.querySelector('.buttons');
-            const originalButtons = Array.from(document.querySelectorAll('.buttons button'));
-            const formRows = document.querySelectorAll('.form-row');
-
-            originalButtons.forEach(button => button.style.display = isEditing ? 'none' : '');
-            formRows.forEach(row => row.classList.toggle('hide', isEditing));
-
-            if (isEditing) {
-                const editButtons = createEditButtons();
-                buttonsContainer.appendChild(editButtons);
-            } else {
-                document.querySelector('.edit-buttons')?.remove();
-            }
-        }
-
-        function createEditButtons() {
-            const editButtons = document.createElement('div');
-            editButtons.className = 'edit-buttons';
-            editButtons.innerHTML = `
-        <button id="수정완료">수정완료</button>
-        <button id="수정취소">수정취소</button>
-    `;
-            return editButtons;
-        }
-
-        function createInputField(index, value) {
-            const inputType = index === 8 ? 'date' : 'text';
-            return `<input type="${inputType}" value="${value}" style="width: 90%;">`;
-        }
-
-        function completeEdit(cells, editableCells) {
-            editableCells.forEach(index => {
-                const input = cells[index].querySelector('input');
-                cells[index].textContent = input.value;
-            });
-            toggleEditMode(false);
-        }
-
-        function cancelEdit(cells, originalValues, editableCells) {
-            editableCells.forEach(index => {
-                cells[index].textContent = originalValues[index];
-            });
-            toggleEditMode(false);
-        }
-
-        // 개별 체크박스 변경 시 전체 선택 체크박스 상태 업데이트
-        function updateSelectAllCheckbox() {
-            const allCheckboxes = document.querySelectorAll("#table-body input[type='checkbox']");
-            const selectAllCheckbox = document.getElementById("체크박스");
-            selectAllCheckbox.checked = allCheckboxes.length > 0 &&
-                Array.from(allCheckboxes).every(checkbox => checkbox.checked);
-        }
-
-        // 모든 체크박스 해제 함수
-        function uncheckAllCheckboxes() {
-            document.querySelectorAll("#table-body input[type='checkbox'], #체크박스").forEach(checkbox => {
-                checkbox.checked = false;
-            });
-        }
-
-        // 전체 선택 체크박스 이벤트 리스너
-        document.getElementById("체크박스").addEventListener("change", function () {
-            const checkboxes = document.querySelectorAll("#table-body input[type='checkbox']");
-            checkboxes.forEach(checkbox => checkbox.checked = this.checked);
-        });
-
-        // 페이지당 표시할 데이터 수
-        const pagedata = 5;
-
-        // 현재 페이지 번호
-        let page = 1;
-
-        // 페이지네이션 버튼에 이벤트 리스너 추가
-        document.querySelectorAll('.pagination button').forEach(button => {
-            button.addEventListener('click', function () {
-                const pageText = this.textContent;
-                if (pageText === '<') {
-                    if (page > 1) {
-                        page--;
-                    }
-                } else if (pageText === '>') {
-                    if (page < Math.ceil(tableBody.children.length / pagedata)) {
-                        page++;
-                    }
-                } else {
-                    page = parseInt(pageText, 10);
-                }
-                updateTable();
-            });
-        });
-
-        // 테이블 업데이트 함수
-        function updateTable() {
-            const rows = document.querySelectorAll("#table-body tr");
-            const startIndex = (page - 1) * pagedata;
-            const endIndex = startIndex + pagedata;
-
-            rows.forEach((row, index) => {
-                if (index >= startIndex && index < endIndex) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-
-            // 페이지네이션 버튼 업데이트
-            updatePaginationButtons();
-        }
-
-        // 페이지네이션 버튼 업데이트 함수
-        function updatePaginationButtons() {
-            const buttons = document.querySelectorAll('.pagination button');
-            buttons.forEach(button => {
-                if (button.textContent === page.toString()) {
-                    button.classList.add('active');
-                } else {
-                    button.classList.remove('active');
-                }
-            });
-        }
-
-        // 초기 테이블 업데이트
-        updateTable();
+	        // 수정취소 이벤트
+	        cancelBtn.addEventListener('click', function() {
+	            document.querySelectorAll('.buttons button').forEach(btn => btn.style.display = 'inline-block');
+	            completeBtn.remove();
+	            cancelBtn.remove();
+	            document.querySelectorAll('input[name="check"]').forEach(cb => cb.checked = false);
+	            document.getElementById('consumables_code').value = '';
+	            document.getElementById('requester').value = '';
+	            document.getElementById('importer').value = '';
+	            document.getElementById('log_count').value = '';
+	            document.getElementById('receipt_payment_date').value = new Date().toISOString().substring(0, 10);
+	            document.getElementById('remarks').value = '';
+	        });
+	    });
+	});
 
     </script>
 </body>

@@ -3,7 +3,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,7 +11,6 @@
 body {
 	margin: 0;
 	padding: 0;
-	background-color: #f9f9f9;
 	font-family: Arial, sans-serif;
 }
 
@@ -21,8 +19,6 @@ body {
 	margin: auto;
 	background: white;
 	padding: 20px;
-	border-radius: 10px;
-	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
@@ -52,19 +48,11 @@ h1 {
 	gap: 10px;
 }
 
-input[type="text"] {
-	width: 40%;
-}
-
-.소모품명 {
-	width: 40%;
-}
-
 label {
 	min-width: 80px;
 }
 
-input {
+input, select {
 	padding: 8px;
 	border: 1px solid #ccc;
 	border-radius: 5px;
@@ -114,14 +102,27 @@ table th, table td {
 	border-radius: 5px;
 }
 
+.active {
+	background-color: #0056b3;
+}
+
+.별 {
+	color: red;
+}
+
+.seach {
+	margin-bottom: 15px;
+}
+
 @media screen and (max-width: 800px) {
 	.form-row {
 		flex-direction: column;
 		align-items: stretch;
 		gap: 5px !important;
-		/* 모바일에서 간격 조정 */
-		width: auto .buttons{
-                    flex-direction: row;
+		width: auto;
+	}
+	.buttons {
+		flex-direction: row;
 		justify-content: center;
 		margin-top: 10px;
 	}
@@ -129,160 +130,316 @@ table th, table td {
 		width: auto;
 	}
 }
-
-.edit-buttons {
-	margin-top: 10px;
-}
-
-.active {
-	background-color: #0056b3;
-}
-
-h1 {
-	width: 90%;
-}
-
-}
-.active {
-	background-color: #0056b3;
-}
-
-.hide {
-	display: none;
-}
-
-.별 {
-	color: red;
-}
 </style>
 </head>
-
 <body>
 	<div class="container">
 		<h1>◎ 소모품 관리</h1>
 
 		<span class="별">* 모두기입</span>
-		<div class="form">
+
+		<!-- 검색 폼 -->
+		<form method="get" action="${pageContext.request.contextPath}/p_CMB">
+			<span>소모품코드 or 소모품명</span> <input type="text" name="searchKeyword"
+				placeholder="검색어를 입력하세요" value="${searchKeyword}"> <input
+				type="hidden" name="currentPage" value="1">
+			<button type="submit" class="seach">검색</button>
+		</form>
+
+		<!-- 등록/수정 폼 -->
+		<form method="post" action="p_consumreg" class="form">
 			<div class="form-fields">
 				<div class="form-row">
-					<label for="소모품코드">소모품코드<span class="별"> *</span></label> <input
-						type="text" id="소모품코드"> <span>소모품명</span><span class="별">
-						*</span> <select class="소모품명">
-						<option>라텍스장갑</option>
-						<option>보안경</option>
-						<option>마스크</option>
-						<option>헤어넷</option>
-						<option>작업복</option>
-						<option>안전화</option>
-						<option>소독제</option>
-						<option>종이타월</option>
-						<option>청소용 천</option>
-						<option>걸레</option>
-						<option>브러시</option>
-						<option>진공 청소기 필터</option>
-						<option>윤활유</option>
-						<option>구리스</option>
-						<option>세척제</option>
-						<option>부품 세정액</option>
-						<option>방청제</option>
-						<option>테이프</option>
-						<option>완충재</option>
-						<option>라벨 스티커</option>
-						<option>포장용 끈</option>
-						<option>칼</option>
-						<option>가위</option>
-						<option>마킹 펜</option>
-						<option>접착제</option>
-						<option>검사용 돋보기</option>
-						<option>pH테스트 스트립</option>
-						<option>샘플링 백</option>
-						<option>품질 검사 스티커</option>
-						<option>프린터 잉크 카트리지</option>
-						<option>복사용지</option>
-						<option>문서파일</option>
-						<option>바인터클립</option>
-						<option>보드마커</option>
-					</select>
+					<label for="consumablesCode">소모품코드<span class="별"> *</span></label>
+					<input type="text" id="consumablesCode" name="consumables_code"
+						value="${dto.consumables_code}" required> <label
+						for="manager">담당자<span class="별"> *</span></label> <input
+						type="text" id="manager" name="manager" value="${dto.manager}"
+						required>
+				</div>
+				<div class="form-row">
+					<label for="createDate">등록일자<span class="별"> *</span></label> <input
+						type="date" id="createDate" name="create_date"
+						value="${dto.create_date}" required> <label
+						for="consumablesName">소모품명<span class="별"> *</span></label> <input
+						type="text" id="consumablesName" name="consumables_name"
+						value="${dto.consumables_name}" required>
+				</div>
+				<div class="form-row">
+					<label for="p_Con_count">수량<span class="별"> *</span></label> <input
+						type="number" id="p_Con_count" name="p_Con_count"
+						value="${dto.count}" required> <label for="remarks">비고사항</label>
+					<input type="text" id="remarks" name="remarks"
+						value="${dto.remarks}">
 				</div>
 
-				<div class="form-row">
-					<label for="등록일">등록일<span class="별"> *</span></label> <input
-						type="date" id="등록일"> <label for="수량">수량<span
-						class="별"> *</span></label> <input type="text" id="수량">
-				</div>
-
-				<div class="form-row">
-					<label for="관리자">관리자<span class="별"> *</span></label> <input
-						type="text" id="관리자"> <label for="비고사항">비고사항</label> <input
-						type="text" id="비고사항">
-				</div>
 			</div>
-
-			<!-- 버튼 영역 -->
 			<div class="buttons">
-				<c:if test="${user.grade == 2}">
-					<button type="button" class="buttons search1">조회</button>
-				</c:if>
-				<c:if test="${user.grade == 1}">
-					<button type="submit" value="insert" class="buttons insert1"
-						name="action">등록</button>
-					<button type="button" class="buttons search1">조회</button>
-					<button type="submit" value="update" class="buttons update1"
-						name="action">수정</button>
-					<button type="submit" value="delete" class="buttons delete1"
-						name="action">삭제</button>
-				</c:if>
+				<button type="button" value="등록" class="buttons insert1">등록</button>
+				<button type="button" value="수정" class="buttons update1">수정</button>
+				<button type="button" value="삭제" class="buttons delete1">삭제</button>
 			</div>
+		</form>
+	
+		<table>
+			<thead>
+				<tr>
+					<th><input type="checkbox" id="selectAll"></th>
+					<th>NO.</th>
+					<th>소모품코드</th>
+					<th>소모품명</th>
+					<th>담당자</th>
+					<th>등록일자</th>
+					<th>수량</th>
+					<th>비고사항</th>
+				</tr>
+			</thead>
+			<tbody id="table-body">
+				<c:if test="${empty resultList}">
+					<tr>
+						<td colspan="8">일치되는 항목이 없습니다.</td>
+					</tr>
+				</c:if>
+				<c:forEach var="dto" items="${resultList}" varStatus="loop">
+					<tr>
+						<td><input type="checkbox" name="check"
+							value="${dto.consumables_code}"></td>
+						<td>${(currentPage-1) * pageSize + loop.count}</td>
+						<td>${dto.consumables_code}</td>
+						<td>${dto.consumables_name}</td>
+						<td>${dto.manager}</td>
+						<td>${dto.create_date}</td>
+						<td>${dto.p_Con_count}</td>
+						<td>${dto.remarks}</td>
+					</tr>
+				</c:forEach>
+			</tbody>
+		</table>
+
+		<!-- 페이징 영역 -->
+		<div class="pagination">
+			<%
+			int pageBlock = 10;
+			int currentPage = Integer.parseInt(String.valueOf(request.getAttribute("currentPage")));
+			int totalPages = Integer.parseInt(String.valueOf(request.getAttribute("totalPages")));
+			int startPage = ((currentPage - 1) / pageBlock) * pageBlock + 1;
+			int endPage = startPage + pageBlock - 1;
+			if (endPage > totalPages)
+				endPage = totalPages;
+
+			request.setAttribute("startPage", startPage);
+			request.setAttribute("endPage", endPage);
+			%>
+
+			<c:if test="${startPage > 1}">
+				<form method="get" style="display: inline;">
+					<input type="hidden" name="currentPage" value="${startPage - 10}" />
+					<input type="hidden" name="searchKeyword" value="${searchKeyword}" />
+					<button type="submit">&lt;</button>
+				</form>
+			</c:if>
+
+			<c:forEach var="pageNum" begin="${startPage}" end="${endPage}">
+				<form method="get" style="display: inline;">
+					<input type="hidden" name="currentPage" value="${pageNum}" /> <input
+						type="hidden" name="searchKeyword" value="${searchKeyword}" />
+					<button type="submit"
+						class="${pageNum == currentPage ? 'active' : ''}">${pageNum}</button>
+				</form>
+			</c:forEach>
+
+			<c:if test="${endPage < totalPages}">
+				<form method="get" style="display: inline;">
+					<input type="hidden" name="currentPage" value="${startPage + 10}" />
+					<input type="hidden" name="searchKeyword" value="${searchKeyword}" />
+					<button type="submit">&gt;</button>
+				</form>
+			</c:if>
 		</div>
-	</div>
 
-	<div id="check"></div>
-
-	<table>
-		<thead>
-			<tr>
-				<th><input type="checkbox" id="체크박스"></th>
-				<th>소모품코드</th>
-				<th>소모품명</th>
-				<th>관리자</th>
-				<th>수량</th>
-				<th>등록일</th>
-				<th>비고사항</th>
-			</tr>
-
-			<tr>
-				<td><input type="checkbox" id="체크박스"></td>
-				<td>NT-100</td>
-				<td>니트릴장갑</td>
-				<td>김천안</td>
-				<td>200</td>
-				<td>2025-02-06</td>
-				<td>-</td>
-			</tr>
-		</thead>
-		<tbody id="table-body"></tbody>
-	</table>
-
-	<!-- 페이지 넘길때 쓸 버튼들 -->
-	<div class="pagination">
-		<button>&lt;</button>
-		<button>1</button>
-		<button>2</button>
-		<button>3</button>
-		<button>4</button>
-		<button>5</button>
-		<button>6</button>
-		<button>7</button>
-		<button>8</button>
-		<button>9</button>
-		<button>10</button>
-		<button>&gt;</button>
-	</div>
 	</div>
 
 	<script>
-		
+	document.addEventListener('DOMContentLoaded', function() {
+	    // 오늘 날짜 자동 입력
+	    if(document.getElementById('createDate')) {
+	        document.getElementById('createDate').value = new Date().toISOString().substring(0, 10);
+	    }
+
+	    // 전체 선택/해제 체크박스
+	    document.getElementById('selectAll').addEventListener('change', function() {
+	        var checkboxes = document.querySelectorAll('input[name="check"]');
+	        checkboxes.forEach(function(checkbox) {
+	            checkbox.checked = this.checked;
+	        }, this);
+	    });
+	    
+	    // 개별 체크박스 전체선택 동기화
+	    document.querySelectorAll('input[name="check"]').forEach(function(checkbox) {
+	        checkbox.addEventListener('change', function() {
+	            const allChecked = Array.from(document.querySelectorAll('input[name="check"]')).every(cb => cb.checked);
+	            document.getElementById('selectAll').checked = allChecked;
+	        });
+	    });
+
+	    // 등록 버튼
+	    document.querySelector('.insert1').addEventListener('click', function(event) {
+	    	event.preventDefault();
+	    	
+	    	// 필수값 검사
+		    var requiredFields = [
+		        'consumablesCode', 'manager', 'createDate',
+		        'consumablesName', 'p_Con_count'
+		    ];
+		    for (var i = 0; i < requiredFields.length; i++) {
+		        if (!document.getElementById(requiredFields[i]).value.trim()) {
+		            alert("필수 항목을 모두 입력해주세요.");
+		            return;
+		        }
+		    }
+	    	
+	        const data = {
+	            consumables_code: document.getElementById('consumablesCode').value,
+	            consumables_name: document.getElementById('consumablesName').value,
+	            create_date: document.getElementById('createDate').value,
+	            p_Con_count: document.getElementById('p_Con_count').value,
+	            manager: document.getElementById('manager').value,
+	            remarks: document.getElementById('remarks').value
+	        };
+	        fetch('${pageContext.request.contextPath}/p_CMB', {
+	            method: 'POST',
+	            headers: {'Content-Type': 'application/json'},
+	            body: JSON.stringify(data)
+	        })
+	        .then(response => response.text())
+	        .then(result => {
+	            if(result === "success") {
+	                alert("등록 성공!");
+	                location.reload();
+	            } else if(result === "duplicate") {
+	                alert("상품코드는 중복될 수 없습니다");
+	            } else {
+	                alert("등록 실패!");
+	            }
+	        });
+
+	    });
+
+	    // 삭제 버튼
+	    document.querySelector('.delete1').addEventListener('click', function(e) {
+	        e.preventDefault();
+	        const selectedCodes = Array.from(document.querySelectorAll('input[name="check"]:checked')).map(cb => cb.value);
+	        if (selectedCodes.length === 0) {
+	            alert("삭제할 항목을 선택하세요.");
+	            return;
+	        }
+	        if (!confirm("정말 삭제하시겠습니까?")) return;
+	        fetch('p_conDelete', {
+	            method: 'POST',
+	            headers: {'Content-Type': 'application/json'},
+	            body: JSON.stringify(selectedCodes)
+	        })
+	        .then(response => response.text())
+	        .then(result => {
+	            if(result === "true") {
+	                alert("삭제 성공!");
+	                location.reload();
+	            } else {
+	                alert("삭제 실패!");
+	            }
+	        });
+	    });
+
+	    // 수정 버튼
+	    document.querySelector('.update1').addEventListener('click', function() {
+	        const selectedChecks = document.querySelectorAll('input[name="check"]:checked');
+	        if (selectedChecks.length !== 1) {
+	            alert(selectedChecks.length > 1 ?
+	                "수정 시 하나의 항목만 선택해주세요." :
+	                "수정할 항목을 선택해주세요.");
+	            return;
+	        }
+	        // 선택된 행 데이터 추출
+	        const consumablesCode = selectedChecks[0].value;
+	        const selectedRow = selectedChecks[0].closest('tr');
+	        const cells = selectedRow.cells;
+
+	        // 폼에 데이터 채우기
+	        document.getElementById('consumablesCode').value = consumablesCode;
+	        document.getElementById('consumablesName').value = cells[3].textContent.trim();
+	        document.getElementById('manager').value = cells[4].textContent.trim();
+	        document.getElementById('createDate').value = new Date().toISOString().substring(0, 10);
+	        document.getElementById('p_Con_count').value = cells[6].textContent.trim();
+	        document.getElementById('remarks').value = cells[7].textContent.trim();
+	        document.getElementById('consumablesCode').readOnly = true;
+
+	        // 기존 버튼 숨기기
+	        document.querySelectorAll('.buttons button').forEach(button => {
+	            button.style.display = 'none';
+	        });
+
+	        // 수정완료/수정취소 버튼 생성
+	        const completeButton = document.createElement('button');
+	        completeButton.textContent = '수정완료';
+	        completeButton.type = 'button';
+	        completeButton.className = 'complete-update';
+
+	        const cancelButton = document.createElement('button');
+	        cancelButton.textContent = '수정취소';
+	        cancelButton.type = 'button';
+	        cancelButton.className = 'cancel-update';
+
+	        document.querySelector('.buttons').appendChild(completeButton);
+	        document.querySelector('.buttons').appendChild(cancelButton);
+
+	        // 수정완료 버튼 AJAX
+	        completeButton.addEventListener('click', function() {
+	            const data = {
+	                consumables_code: document.getElementById('consumablesCode').value,
+	                consumables_name: document.getElementById('consumablesName').value,
+	                create_date: document.getElementById('createDate').value,
+	                p_Con_count: document.getElementById('p_Con_count').value,
+	                manager: document.getElementById('manager').value,
+	                remarks: document.getElementById('remarks').value
+	            };
+	            fetch('p_conUpdate', {
+	                method: 'POST',
+	                headers: {'Content-Type': 'application/json'},
+	                body: JSON.stringify(data)
+	            })
+	            .then(response => response.text())
+	            .then(result => {
+	                if(result === "true") {
+	                    alert("수정 성공!");
+	                    location.reload();
+	                } else {
+	                    alert("수정 실패!");
+	                }
+	            });
+	        });
+
+	        // 수정취소 버튼
+	        cancelButton.addEventListener('click', function() {
+	            // 체크박스 초기화
+	            document.querySelectorAll('input[name="check"]').forEach(cb => cb.checked = false);
+	            document.getElementById('consumablesCode').readOnly = false;
+	            document.querySelectorAll('.buttons button').forEach(button => {
+	                button.style.display = 'inline-block';
+	            });
+	            // 폼 초기화
+	            document.getElementById('consumablesCode').value = '';
+	            document.getElementById('consumablesName').value = '';
+	            document.getElementById('createDate').value = new Date().toISOString().substring(0, 10);
+	            document.getElementById('p_Con_count').value = '';
+	            document.getElementById('manager').value = '';
+	            document.getElementById('remarks').value = '';
+	            completeButton.remove();
+	            cancelButton.remove();
+	        });
+	    });
+	});
+
+
 	</script>
 </body>
-
 </html>

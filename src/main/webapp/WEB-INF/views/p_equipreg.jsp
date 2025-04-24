@@ -11,7 +11,6 @@
 body {
 	margin: 0;
 	padding: 0;
-	background-color: #f9f9f9;
 	font-family: Arial, sans-serif;
 }
 
@@ -20,8 +19,6 @@ body {
 	margin: auto;
 	background: white;
 	padding: 20px;
-	border-radius: 10px;
-	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
@@ -109,6 +106,10 @@ table th, table td {
 	color: red;
 }
 
+.seach{
+	margin-bottom: 15px;
+}
+
 @media screen and (max-width: 800px) {
 	.form-row {
 		flex-direction: column;
@@ -151,9 +152,6 @@ table th, table td {
 	background-color: #0056b3;
 }
 
-h1 {
-	width: 90%;
-}
 </style>
 </head>
 
@@ -161,14 +159,18 @@ h1 {
 	<div class="container">
 		<h1>◎ 설비 등록</h1>
 
-		<span class="별">* 모두 기입</span>
+		<span class="별">* 모두기입</span>
 
 		<!-- 검색 폼 -->
-		<form method="get" action="p_eq" class="form">
-			<span>설비코드 or 설비명</span> <input type="text" name="searchKeyword"
-				placeholder="검색어를 입력하세요">
-			<button type="submit">검색</button>
+		<form method="get"
+			action="${pageContext.request.contextPath}/p_equipreg">
+			<span>설비코드 or 설비명</span> <input type="text"name="searchKeyword"
+				placeholder="검색어를 입력하세요" value="${searchKeyword}"> <input
+				type="hidden" name="currentPage" value="1">
+			
+			<button type="submit" class="seach">검색</button>
 		</form>
+
 
 		<!-- 등록/수정 폼 -->
 		<form method="post" action="p_equipreg" class="form">
@@ -212,7 +214,7 @@ h1 {
 					<button type="button" value="조회" class="buttons serch1">조회</button>
 				</c:if>
 				<%-- 				<c:if test="${user.grade == 1}"> --%>
-				<button type="submit" value="등록" class="buttons insert1">등록</button>
+				<button type="button" value="등록" class="buttons insert1">등록</button>
 				<button type="button" value="수정" class="buttons update1">수정</button>
 				<button type="submit" value="삭제" class="buttons delete1">삭제</button>
 				<%-- 				</c:if> --%>
@@ -235,11 +237,16 @@ h1 {
 			</thead>
 
 			<tbody id="table-body">
+				<c:if test="${empty resultList}">
+					<tr>
+						<td colspan="9">일치되는 항목이 없습니다.</td>
+					</tr>
+				</c:if>
+				
 				<c:forEach var="dto" items="${resultList}" varStatus="loop">
 					<tr>
-						<td><input type="checkbox" name="check"
-							value="${dto.facility_code}"></td>
-						<td>${loop.count}</td>
+						<td><input type="checkbox" name="check" value="${dto.facility_code}"></td>
+						 <td>${(currentPage-1) * pageSize + loop.count}</td>
 						<td>${dto.facility_code}</td>
 						<td>${dto.facility_name}</td>
 						<td>${dto.facility_manager}</td>
@@ -251,20 +258,47 @@ h1 {
 				</c:forEach>
 			</tbody>
 		</table>
+
 		<div class="pagination">
-			<button>&lt;</button>
-			<button>1</button>
-			<button>2</button>
-			<button>3</button>
-			<button>4</button>
-			<button>5</button>
-			<button>6</button>
-			<button>7</button>
-			<button>8</button>
-			<button>9</button>
-			<button>10</button>
-			<button>&gt;</button>
+			<%
+			int pageBlock = 10;
+			int currentPage = Integer.parseInt(String.valueOf(request.getAttribute("currentPage")));
+			int totalPages = Integer.parseInt(String.valueOf(request.getAttribute("totalPages")));
+			int startPage = ((currentPage - 1) / pageBlock) * pageBlock + 1;
+			int endPage = startPage + pageBlock - 1;
+			if (endPage > totalPages)
+				endPage = totalPages;
+
+			request.setAttribute("startPage", startPage);
+			request.setAttribute("endPage", endPage);
+			%>
+
+			<c:if test="${startPage > 1}">
+				<form method="get" style="display: inline;">
+					<input type="hidden" name="currentPage" value="${startPage - 10}" />
+					<input type="hidden" name="searchKeyword" value="${searchKeyword}" />
+					<button type="submit">&lt;</button>
+				</form>
+			</c:if>
+
+			<c:forEach var="pageNum" begin="${startPage}" end="${endPage}">
+				<form method="get" style="display: inline;">
+					<input type="hidden" name="currentPage" value="${pageNum}" /> <input
+						type="hidden" name="searchKeyword" value="${searchKeyword}" />
+					<button type="submit"
+						class="${pageNum == currentPage ? 'active' : ''}">${pageNum}</button>
+				</form>
+			</c:forEach>
+
+			<c:if test="${endPage < totalPages}">
+				<form method="get" style="display: inline;">
+					<input type="hidden" name="currentPage" value="${startPage + 10}" />
+					<input type="hidden" name="searchKeyword" value="${searchKeyword}" />
+					<button type="submit">&gt;</button>
+				</form>
+			</c:if>
 		</div>
+
 	</div>
 	<script>
 		// 페이지 로드 시 초기 설정
@@ -289,10 +323,54 @@ h1 {
 		        checkbox.checked = document.getElementById('selectAll').checked;
 		    });
 		});
-
-		// 조회 버튼
-
-
+		
+		// 등록 버튼 클릭 이벤트
+		document.querySelector('.insert1').addEventListener('click', function(event) {
+		    event.preventDefault();
+		
+		    // 필수값 검사
+		    var requiredFields = [
+		        'facilityCode', 'facilityManager', 'installationDate',
+		        'facilityName', 'facilityLocation', 'inspectionCycle'
+		    ];
+		    for (var i = 0; i < requiredFields.length; i++) {
+		        if (!document.getElementById(requiredFields[i]).value.trim()) {
+		            alert("필수 항목을 모두 입력해주세요.");
+		            return;
+		        }
+		    }
+		
+		    // 데이터 준비 (DTO 필드명과 일치)
+		    var data = {
+		        facility_code: document.getElementById('facilityCode').value,
+		        facility_manager: document.getElementById('facilityManager').value,
+		        installation_date: document.getElementById('installationDate').value,
+		        facility_name: document.getElementById('facilityName').value,
+		        facility_location: document.getElementById('facilityLocation').value,
+		        inspection_cycle: document.getElementById('inspectionCycle').value,
+		        remarks: document.getElementById('remarks').value
+		    };
+		
+		    // AJAX로 등록 요청
+		    fetch('${pageContext.request.contextPath}/p_equipreg', {
+		        method: 'POST',
+		        headers: { 'Content-Type': 'application/json' },
+		        body: JSON.stringify(data)
+		    })
+		    .then(response => response.text())
+		    .then(result => {
+		        if (result === "success") {
+		            alert("등록 성공!");
+		            location.reload();
+		        } else if(result === "duplicate") {
+	                alert("설비코드는 중복될 수 없습니다");
+		        }else {
+		            alert("등록 실패!");
+		        }
+		    })
+		    .catch(() => alert("서버 오류!"));
+		});
+		
 		// 삭제 버튼 클릭 이벤트
 		document.querySelector('.delete1').addEventListener('click', function(event) {
 		    event.preventDefault();
@@ -343,7 +421,7 @@ h1 {
 		    document.getElementById('facilityCode').value = facilityCode;
 		    document.getElementById('facilityName').value = cells[3].textContent;
 		    document.getElementById('facilityManager').value = cells[4].textContent;
-		    document.getElementById('installationDate').value = cells[5].textContent;
+		    document.getElementById('installationDate').value = new Date().toISOString().substring(0, 10);
 		    document.getElementById('inspectionCycle').value = cells[6].textContent;
 		    document.getElementById('facilityLocation').value = cells[7].textContent;
 		    document.getElementById('remarks').value = cells[8].textContent;
@@ -457,24 +535,6 @@ h1 {
 		        checkbox.addEventListener('change', updateSelectAll);
 		    }
 		});
-
-// 		// 수정 폼 숨기기
-// 		function hideUpdateForm() {
-// 		    document.getElementById('updateForm').style.display = 'none';
-// 		}
-
-		// 수정 폼 표시
-// 		function showUpdateForm(facilityCode, facilityManager, installationDate, facilityName, facilityLocation, inspectionCycle, remarks) {
-// 		    document.getElementById('updateFacilityCode').value = facilityCode;
-// 		    document.getElementById('updateFacilityManager').value = facilityManager;
-// 		    document.getElementById('updateInstallationDate').value = installationDate;
-// 		    document.getElementById('updateFacilityName').value = facilityName;
-// 		    document.getElementById('updateFacilityLocation').value = facilityLocation;
-// 		    document.getElementById('updateInspectionCycle').value = inspectionCycle;
-// 		    document.getElementById('updateRemarks').value = remarks;
-
-// 		    document.getElementById('updateForm').style.display = 'block';
-// 		}
 
 		// 등록 버튼 클릭 시 required 속성 추가
 		document.querySelector('.insert1').addEventListener('click', function() {

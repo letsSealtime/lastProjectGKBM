@@ -1644,11 +1644,10 @@
 		where board_id = #{board_id}
 	</select>
 
-	<insert id="insertComment" parameterType="commentDTO">
+	<insert id="insertCommentChild" parameterType="commentDTO">
 		insert into p_comment
 		(comment_id, empno, board_id, content, create_date,
-		parent_id, depth,
-		is_deleted)
+		parent_id, depth, is_deleted)
 		values(
 		board_comment_seq.NEXTVAL,
 		#{empno},
@@ -1656,6 +1655,21 @@
 		#{content},
 		sysdate,
 		#{parent_id},
+		#{depth},
+		0)
+	</insert>
+	
+		<insert id="insertCommentParent" parameterType="commentDTO">
+		insert into p_comment
+		(comment_id, empno, board_id, content, create_date,
+		parent_id, depth, is_deleted)
+		values(
+		board_comment_seq.NEXTVAL,
+		#{empno},
+		#{board_id},
+		#{content},
+		sysdate,
+		null ,
 		#{depth},
 		0)
 	</insert>
@@ -1678,10 +1692,40 @@
 		where parent_id = #{comment_id}
 	</select>
 
-	<select id="selectComment" parameterType="Integer"
-		resultType="commentDTO">
-
-	</select>
+	 <select id="selectCommentList" parameterType="int" resultType="commentDTO">
+		 WITH comment_recu (
+		    lv, comment_id, empno, writer, content, create_date
+		  ) AS (
+		    SELECT
+		      0 AS lv,
+		      c.comment_id,
+		      c.empno,
+		      e.emp_name AS writer,
+		      c.content,
+		      c.create_date
+		    FROM p_comment c
+		    JOIN p_emp e ON c.empno = e.empno
+		    WHERE c.depth = 0 AND c.board_id = #{value}
+		
+		    UNION ALL
+		
+		    SELECT
+		      cr.lv + 1,
+		      c.comment_id,
+		      c.empno,
+		      e.emp_name AS writer,
+		      c.content,
+		      c.create_date
+		    FROM comment_recu cr
+		    LEFT OUTER JOIN p_comment c ON c.parent_id = cr.comment_id
+		    LEFT OUTER JOIN p_emp e ON c.empno = e.empno
+		    WHERE c.depth > 0 AND c.board_id = #{value}
+		  )
+		  SEARCH DEPTH FIRST BY comment_id ASC SET sort_comment
+		  SELECT *
+		  FROM comment_recu
+		  ORDER BY sort_comment
+    </select>
 
 
 </mapper>

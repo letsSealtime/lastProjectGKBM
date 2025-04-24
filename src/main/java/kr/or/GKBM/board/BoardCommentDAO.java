@@ -9,7 +9,7 @@ public interface BoardCommentDAO {
 	int deleteComment(BoardCommentDTO commentDTO);
 	int checkCommentchildren(BoardCommentDTO commentDTO);
 	
-	List selectComment(BoardCommentDTO commentDTO);
+	List<BoardCommentDTO> selectComment(int board_id);
 	
 	
 }

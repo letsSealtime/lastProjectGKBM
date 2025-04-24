@@ -134,7 +134,7 @@ span {
 	background: #fff;
 	color: #333;
 	font-size: 14px;
-	appearance: none;
+	appearance: auto;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 	transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -554,7 +554,7 @@ select option, input[type='number'], input[type=text]:hover {
 									value=${ list.wi }></td>
 								<td>${ list.modify_date }</td>
 								<td>${ list.wi }</td>
-								<td>${ list.c_n }</td>
+								<td><a href="P_work_method_View_details1?type=${ list.c_n }">${ list.c_n }</a></td>
 								<td>${ list.c_c }</td>
 								<td>${ list.c_cc }</td>
 								<td>${ list.q }</td>

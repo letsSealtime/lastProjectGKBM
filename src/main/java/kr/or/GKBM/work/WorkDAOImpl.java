@@ -15,7 +15,7 @@ public class WorkDAOImpl implements WorkDAO {
 	SqlSession sqlSession;
 	
 	@Override
-	public Map code_select() {
+	public Map code_select(WorkDTO dto) {
 		
 		Map map = new HashMap();
 		

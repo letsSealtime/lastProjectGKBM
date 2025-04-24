@@ -136,7 +136,7 @@ span {
 	color: #333; /* 텍스트 색상 */
 	font-size: 14px;
 	font-family: Arial, sans-serif; /* 깔끔한 글꼴 */
-	appearance: none; /* 기본 브라우저 화살표 제거 */
+	appearance: auto; /* 기본 브라우저 화살표 제거 */
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* 은은한 그림자 */
 	transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -183,7 +183,7 @@ select option:hover {
 			        c_y: document.querySelector("#c_y").value,
 			        c_w: document.querySelector("#c_w").value,
 			        c_c: document.querySelector("#c_c").value,
-			        c_s: document.querySelector("#c_s").value
+			        c_k: document.querySelector("#c_k").value
 			};
 			
 			// for~in으로 data객체의 값을 꺼낼 수 있으나
@@ -200,7 +200,7 @@ select option:hover {
 			// js에서 form요소의 공백 및 null 미기입 확인
 		for(let key in data) {
 			console.log(key);
-			if(!data.c_c || !data.c_s) {
+			if(!data.c_c || !data.c_k) {
 				alert("필수 기입값을 모두 기입해주세요.");
 				return;
 			}
@@ -211,7 +211,7 @@ select option:hover {
 			xhr.open("PUT", "week");
 			xhr.setRequestHeader("Content-type", "application/json");
 			document.querySelector("#c_c").innerText = ""
-	        document.querySelector("#c_s").innerText = ""
+	        document.querySelector("#c_k").innerText = ""
 			xhr.send(JSON.stringify(data));
 			
 			console.log("중간 확인");
@@ -359,8 +359,8 @@ select option:hover {
 				c_i.setAttribute("readonly", "readonly")
 				const c_c = document.querySelector("#c_c");
 				c_c.value = td[4].innerText	
-				const c_s = document.querySelector("#c_s");
-				c_s.data = td[7].innerText
+				const c_k = document.querySelector("#c_k");
+				c_k.data = td[7].innerText
 				const c_y = document.querySelector("#year");
 				c_y.value = td[5].innerText
 				const c_w = document.querySelector("#c_w");
@@ -393,7 +393,7 @@ select option:hover {
 					
 					c_i.value = ""
 					c_c.value = ""
-					c_s.value = ""
+					c_k.value = ""
 					c_y.value = ""
 					c_w.value = ""
 					c_i.removeAttribute("readonly")
@@ -405,7 +405,7 @@ select option:hover {
 					
 					let data = {
 						c_c: document.querySelector("#c_c").value,
-					    c_s: document.querySelector("#c_s").value
+						c_k: document.querySelector("#c_k").value
 					};
 					
 					form.classList.toggle("none");
@@ -414,7 +414,7 @@ select option:hover {
 					
 					c_i.value = ""
 					c_c.value = ""
-					c_s.value = ""
+					c_k.value = ""
 					c_y.value = ""
 					c_w.value = ""
 					c_i.removeAttribute("readonly")
@@ -472,12 +472,12 @@ select option:hover {
 							type="number" id="c_c" name="c_c">
 					</div>
 					<div class="form-column select">
-						상품코드<span>*</span> <select id="c_s" name="c_s">
+						상품코드<span>*</span> <select id="c_k" name="c_k">
 							<option></option>
 							<c:if test="${not empty list}">
 								<c:forEach var="list" items="${ list }">
 
-									<option data=${ list.c_s } value=${ list.c_s }>${ list.c_s }</option>
+									<option data=${ list.c_k } value=${ list.c_k }>${ list.c_k }</option>
 
 								</c:forEach>
 							</c:if>
@@ -489,7 +489,7 @@ select option:hover {
 					Date date = new Date();
 					int year = date.getYear() + 1900;
 					%>
-						<select id="year" name="c_y">
+						<select id="c_y" name="c_y">
 							<option value=""></option>
 							<option value="<%=year%>"><%=year%></option>
 							<option value="<%=year - 1%>"><%=year - 1%></option>
@@ -575,13 +575,13 @@ select option:hover {
 			<c:set var="prevPage" value="${page - viewCount}" />
 			<c:set var="nextPage" value="${page + viewCount}" />
 
-			<a href="vendor?page=1"><button>&lt;&lt;</button></a> <a
-				href="vendor?page=${prevPage}"><button>&lt;</button></a>
+			<a href="week?page=1"><button>&lt;&lt;</button></a> <a
+				href="week?page=${prevPage}"><button>&lt;</button></a>
 
 			<c:choose>
 				<c:when test="${ page == pageCount }">
-					<c:forEach var="i" begin="${ page - (viewCount - 1) }"
-						end="${ page }">
+					<c:forEach var="i" begin="${ begin }"
+						end="${ end }">
 						<c:choose>
 							<c:when test="${ i == page }">
 								<strong><a style="color: red;" href="?page=${i}"><button>${ i }</button></a></strong>
@@ -605,8 +605,8 @@ select option:hover {
 					</c:forEach>
 				</c:otherwise>
 			</c:choose>
-			<a href="vendor?page=${nextPage}"><button>&gt;</button> </a> <a
-				href="vendor?page=${lastPage}"><button>&gt;&gt;</button> </a>
+			<a href="week?page=${nextPage}"><button>&gt;</button> </a> <a
+				href="week?page=${lastPage}"><button>&gt;&gt;</button> </a>
 		</div>
 	</div>
 </body>

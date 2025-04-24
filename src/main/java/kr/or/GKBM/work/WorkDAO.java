@@ -5,10 +5,10 @@ import java.util.Map;
 
 public interface WorkDAO {
 
-	Map code_select();
-
 	int insert(WorkDTO dto);
 
 	List<WorkDTO> detail_select(WorkDTO dto);
+
+	Map code_select(WorkDTO dto);
 
 }

@@ -336,7 +336,7 @@
 
 	<!-- Week 상품 조회 -->
 	<select id="sku_select" resultType="kr.or.GKBM.week.WeekDTO">
-		SELECT SKU_ID AS c_s
+		SELECT SKU_ID AS c_k
 		FROM
 		P_SKU
 	</select>
@@ -363,7 +363,7 @@
 		FROM ( SELECT PW.WEEK_PLAN_ID AS
 		c_i,
 		PS.SKU_NAME
-		AS c_n, PS.SKU_CODE AS c_k,
+		AS c_n, PS.SKU_ID AS c_k,
 		PW.PLAN_COUNT AS c_c, PW.WEEK AS
 		c_w,
 		PW.PLAN_YEAR AS c_y
@@ -459,7 +459,7 @@
 
 		INSERT INTO P_WEEK_PLAN
 		VALUES(SEQ.NEXTVAL, #{c_y},
-		#{c_w}, #{c_d}, #{c_s}, #{c_c})
+		#{c_w}, #{c_d}, #{c_k}, #{c_c})
 
 	</insert>
 
@@ -484,7 +484,7 @@
 		#{c_y},
 		WEEK = #{c_w},
 		PLAN_DATE = #{c_d},
-		SKU_ID = #{c_s},
+		SKU_ID = #{c_k},
 		PLAN_COUNT =
 		#{c_c}
 		WHERE WEEK_PLAN_ID = #{c_i}

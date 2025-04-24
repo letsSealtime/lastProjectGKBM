@@ -29,10 +29,9 @@ public class WeekContorller {
 		System.out.println("week 페이지 진입");
 		System.out.println("진입 방법: " + dto.getHidden());
 
-		List<WeekDTO> sku_select = WeekServiceImpl.sku_select();
+		List<WeekDTO> sku_select = WeekServiceImpl.sku_select(dto);
 
 		ModelAndView select_MV = new ModelAndView();
-		select_MV.setViewName("week");
 		select_MV.addObject("list", sku_select);
 
 		if ("search".equals(dto.getHidden())) {

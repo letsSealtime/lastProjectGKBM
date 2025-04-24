@@ -192,8 +192,8 @@ span {
 			let xhr = new XMLHttpRequest();
 			
 			xhr.open("PUT", "bill");
-			xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
-			xhr.send(query);
+			xhr.setRequestHeader("Content-type", "application/json");
+			xhr.send(JSON.stringify(query));
 			
 			console.log("중간 확인");
 			xhr.onreadystatechange = () => {
@@ -204,7 +204,7 @@ span {
 						
 						console.log(xhr.responseText);
 						//console.log(json);
-						document.getElementById('check').innerText = json.error;
+						window.location.reload();
 							
 						console.log(hidden.value);
 							
@@ -278,8 +278,8 @@ span {
 			
 			let xhr = new XMLHttpRequest();
 			xhr.open("DELETE", "bill");
-			xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
-			xhr.send(query);
+			xhr.setRequestHeader("Content-type", "application/json");
+			xhr.send(JSON.stringify(query));
 			
 			xhr.onreadystatechange = () => {
 				if(xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
@@ -405,8 +405,8 @@ span {
 					
 					let xhr = new XMLHttpRequest();
 					xhr.open("POST", "bill", true);
-					xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
-					xhr.send(query);
+					xhr.setRequestHeader("Content-type", "application/json");
+					xhr.send(JSON.stringify(query));
 					
 					xhr.onreadystatechange = () => {
 						if(xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {

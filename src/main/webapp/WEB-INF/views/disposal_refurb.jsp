@@ -139,6 +139,8 @@ table th, table td {
 
         function init() {
         	
+        	const pie
+        	
         	let re;
         	let dis;
         	
@@ -259,6 +261,9 @@ table th, table td {
 
 	    		            // table-body에 tr 추가
 	    		            table.appendChild(tr);
+	    		            
+	    		            pie.data.datasets[0].data = [re, dis];
+	    		            pie.update();
 	    				            
 	    				})
     					
@@ -275,7 +280,7 @@ table th, table td {
                 labels: ["부적합", "폐기물"],
                 datasets: [{
                     label: "부적합/폐기물 그래프",
-                    data: [60, 35],
+                    data: ,
                     backgroundColor: [
                         'rgba(74, 144, 226, 0.6)', // #4a90e2의 반투명 배경색
                         'rgba(0, 86, 179, 0.6)'    // #0056b3의 반투명 배경색
@@ -334,7 +339,7 @@ table th, table td {
                 plugins: [ChartDataLabels]
             }
 
-            const pie = new Chart(canvas, all);
+            pie = new Chart(canvas, all);
 
         }
     </script>

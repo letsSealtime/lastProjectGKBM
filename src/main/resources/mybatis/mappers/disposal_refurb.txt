@@ -1,0 +1,13 @@
+<select id="disable"
+		resultType="kr.or.GKBM.disposal_refurb.disableDTO">
+	
+		select pd.defect_id as id, ps.sku_code as code, 
+		ps.sku_name as name, ps.sku_category as type, 
+		pv.vendor_name as vendor, pd.defect_count as count
+		from p_week_plan pw
+		left join p_sku ps on  pw.sku_id = ps.sku_id
+		left join p_work_order pwo on pw.week_plan_id = pwo.week_plan_id
+		left join p_defect pd on pwo.work_order_id = pd.work_order_id
+		left join p_vendor pv on ps.sku_id = pv.sku_id
+		
+	</select>

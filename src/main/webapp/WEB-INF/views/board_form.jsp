@@ -7,136 +7,158 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title><c:out value="${boardDTO.board_id != null and boardDTO.board_id != 0 ? '게시글 수정' : '새 글 작성'}" /></title>
+<title><c:out
+		value="${boardDTO.board_id != null and boardDTO.board_id != 0 ? '게시글 수정' : '새 글 작성'}" /></title>
 <style>
-	* {
-		margin: 0;
-		padding: 0;
-		box-sizing: border-box;
-		font-family: Arial, sans-serif;
-	}
-	body {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		background-color: #f5f5f5;
-		padding: 20px;
-	}
-	.container {
-		width: 80%;
-		max-width: 800px;
-		background: white;
-		padding: 20px;
-		border-radius: 8px;
-		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-	}
-	table {
-		width: 100%;
-		border-collapse: collapse;
-		margin-top: 15px;
-	}
-	th, td {
-		padding: 10px;
-		border: 1px solid #ccc;
-		text-align: left;
-	}
-	th {
-		background-color: #f0f0f0;
-		width: 20%;
-	}
-	input[type="text"], textarea, select {
-		width: 100%;
-		padding: 8px;
-		border: 1px solid #ccc;
-		border-radius: 4px;
-	}
-	input[type="submit"] {
-		margin-top: 20px;
-		padding: 10px 20px;
-		background-color: #007BFF;
-		color: white;
-		border: none;
-		border-radius: 4px;
-		cursor: pointer;
-	}
-	input[type="submit"]:hover {
-		background-color: #0056b3;
-	}
-	a {
-		display: inline-block;
-		margin-top: 20px;
-		text-decoration: none;
-		color: #007BFF;
-	}
-	a:hover {
-		text-decoration: underline;
-	}
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: Arial, sans-serif;
+}
+
+body {
+	align-items: center;
+	background-color: #f5f5f5;
+	padding: 20px;
+}
+
+.container {
+	width: 80%;
+	max-width: 800px;
+	background: white;
+	padding: 20px;
+	border-radius: 8px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-top: 15px;
+}
+
+th, td {
+	padding: 10px;
+	border: 1px solid #ccc;
+	text-align: left;
+}
+
+th {
+	background-color: #f0f0f0;
+	width: 20%;
+}
+
+input[type="text"], textarea, select {
+	width: 100%;
+	padding: 8px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
+
+input[type="submit"] {
+	margin-top: 20px;
+	padding: 10px 20px;
+	background-color: #007BFF;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+input[type="submit"]:hover {
+	background-color: #0056b3;
+}
+
+a {
+	display: inline-block;
+	margin-top: 20px;
+	text-decoration: none;
+	color: #007BFF;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+.button {
+	padding: 10px 15px;
+	background-color: #4a90e2;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+.button:hover {
+	background-color: #0056b3;
+}
 </style>
 </head>
 <body>
 
-<div class="container">
-	<h2>
-		<c:out value="${boardDTO.board_id != null and boardDTO.board_id != 0 ? '게시글 수정' : '새 글 작성'}" />
-	</h2>
+	<div class="container">
+		<h2>
+			<c:out
+				value="${boardDTO.board_id != null and boardDTO.board_id != 0 ? '게시글 수정' : '새 글 작성'}" />
+		</h2>
 
-	<form id="fileForm" method="post" action="uploads"
-		enctype="multipart/form-data" accept-charset="utf-8">
-		<c:if test="${boardDTO.board_id != null and boardDTO.board_id != 0}">
-			<input type="hidden" id="board_id" name="board_id" value="${boardDTO.board_id}">
-			<input type="hidden" id="empno" name="empno" value="${boardDTO.empno}">
-		</c:if>
-
-		<table>
-			<c:if test="${boardDTO.board_id == null or boardDTO.board_id == 0}">
-				<tr>
-					<th>사원번호</th>
-					<td><input type="text" id="empno" name="empno"></td>
-				</tr>
+		<form id="fileForm" method="post" action="uploads"
+			enctype="multipart/form-data" accept-charset="utf-8">
+			<c:if test="${boardDTO.board_id != null and boardDTO.board_id != 0}">
+				<input type="hidden" id="board_id" name="board_id"
+					value="${boardDTO.board_id}">
+				<input type="hidden" id="empno" name="empno"
+					value="${boardDTO.empno}">
 			</c:if>
-			<tr>
-				<th>제목</th>
-				<td><input type="text" id="title" name="title" value="${boardDTO.title}"></td>
-			</tr>
-			<tr>
-				<th>내용</th>
-				<td><textarea id="board_content" name="board_content">${boardDTO.board_content}</textarea></td>
-			</tr>
-			<tr>
-				<th>공지사항</th>
-				<td>
-					<select id="notice" name="notice">
-						<option value="0" ${boardDTO.notice == 0 ? 'selected' : ''}>일반</option>
-						<option value="1" ${boardDTO.notice == 1 ? 'selected' : ''}>공지</option>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<th>파일첨부</th>
-				<td>
-					<c:forEach var="file" items="${fileList}">
-						<label>
-							<input type="checkbox" name="deleteFileIds" value="${file.file_id}"> 삭제
-						</label>
-						<a href="fileDownload?file_name=${file.file_name}">${file.file_name}</a><br>
-					</c:forEach>
-					<input type="file" id="files" name="files" multiple>
-				</td>
-			</tr>
-		</table>
 
-		<c:if test="${boardDTO.board_id != null and boardDTO.board_id != 0}">
-			<input type="submit" id="update_btn" value="수정하기">
-		</c:if>
-		<c:if test="${boardDTO.board_id == null or boardDTO.board_id == 0}">
-			<input type="submit" id="insert_btn" value="작성하기">
-		</c:if>
-	</form>
+			<table>
+				<c:if test="${boardDTO.board_id == null or boardDTO.board_id == 0}">
+					<tr>
+						<th>사원번호</th>
+						<td><input type="text" id="empno" name="empno"></td>
+					</tr>
+				</c:if>
+				<tr>
+					<th>제목</th>
+					<td><input type="text" id="title" name="title"
+						value="${boardDTO.title}"></td>
+				</tr>
+				<tr>
+					<th>내용</th>
+					<td><textarea id="board_content" name="board_content">${boardDTO.board_content}</textarea></td>
+				</tr>
+				<tr>
+					<th>공지사항</th>
+					<td><select id="notice" name="notice">
+							<option value="0" ${boardDTO.notice == 0 ? 'selected' : ''}>일반</option>
+							<option value="1" ${boardDTO.notice == 1 ? 'selected' : ''}>공지</option>
+					</select></td>
+				</tr>
+				<tr>
+					<th>파일첨부</th>
+					<td><c:forEach var="file" items="${fileList}">
+							<label> <input type="checkbox" name="deleteFileIds"
+								value="${file.file_id}"> 삭제
+							</label>
+							<a href="fileDownload?file_name=${file.file_name}">${file.file_name}</a>
+							<br>
+						</c:forEach> <input type="file" id="files" name="files" multiple></td>
+				</tr>
+			</table>
 
-	<a href="board">목록으로</a>
-</div>
+			<c:if test="${boardDTO.board_id != null and boardDTO.board_id != 0}">
+				<input type="submit" id="update_btn" value="수정하기">
+			</c:if>
+			<c:if test="${boardDTO.board_id == null or boardDTO.board_id == 0}">
+				<input type="submit" id="insert_btn" value="작성하기">
+			</c:if>
+		</form>
 
-<script>
+		<a href="board" class="input">목록으로</a>
+	</div>
+
+	<script>
 window.addEventListener('DOMContentLoaded', function(){
 	const form = document.querySelector("form");
 	const boardId = document.querySelector("#board_id");

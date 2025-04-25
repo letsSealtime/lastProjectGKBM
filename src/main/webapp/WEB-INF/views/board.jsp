@@ -12,50 +12,84 @@
 <meta charset="UTF-8">
 <title>게시판 목록</title>
 <style>
-	* {
-		margin: 0;
-		padding: 0;
-		box-sizing: border-box;
-		font-family: Arial, sans-serif;
-	}
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: Arial, sans-serif;
+}
 
-	body {
-		background-color: #f5f5f5;
-	}
+body {
+	background-color: #f5f5f5;
+}
 
-	.main-content {
-		flex: 1;
-		width: 95%;
-		margin: auto;
-		background: white;
-		padding: 20px;
-	}
+.main-content {
+	flex: 1;
+	width: 95%;
+	margin: auto;
+	background: white;
+	padding: 20px;
+}
 
-	form, table, .pagination, a {
-		margin-top: 20px;
-	}
+form, table, .pagination, a {
+	margin-top: 20px;
+}
 
-	table {
-		width: 100%;
-		border-collapse: collapse;
-		margin-top: 10px;
-	}
+table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-top: 10px;
+}
 
-	th, td {
-		padding: 10px;
-		border: 1px solid #ccc;
-		text-align: center;
-	}
+th, td {
+	padding: 10px;
+	border: 1px solid #ccc;
+	text-align: center;
+}
 
-	th {
-		background-color: #f0f0f0;
-	}
+th {
+	background-color: #f0f0f0;
+}
 
-	a.bold {
-		font-weight: bold;
-		text-decoration: underline;
-		color: black;
+a.bold {
+	font-weight: bold;
+	text-decoration: underline;
+	color: black;
+}
+
+button {
+	padding: 10px 15px;
+	background-color: #4a90e2;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+button:hover {
+	background-color: #0056b3;
 	}
+	
+	
+.pagination {
+	margin-top: 20px;
+	display: flex;
+	justify-content: center;
+	gap: 5px;
+}
+
+.pagination button {
+	padding: 5px 10px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	background: #4a90e2;
+	cursor: pointer;
+}
+
+.pagination button:hover {
+	background: #0056b3;
+}
+	
 </style>
 </head>
 <body>
@@ -97,51 +131,47 @@
 			</c:forEach>
 		</tbody>
 	</table>
-
+		
 	<div class="pagination">
-		<%
-			Map map = (Map)request.getAttribute("map");
-			BoardDTO boardDTO = (BoardDTO)request.getAttribute("dto");
+	<%
+		Map map = (Map)request.getAttribute("map");
+		BoardDTO boardDTO = (BoardDTO)request.getAttribute("dto");
 
-			int total = (Integer)map.get("total");
-			int pageNo = boardDTO.getPage();
-			int viewCount = boardDTO.getViewCount();
-			int lastPage = (int)Math.ceil((double)total / viewCount);
+		int total = (Integer)map.get("total");
+		int pageNo = boardDTO.getPage(); // 현재 페이지
+		int viewCount = boardDTO.getViewCount(); // 페이지당 게시글 수
+		int lastPage = (int)Math.ceil((double)total / viewCount); // 전체 페이지 수
 
-			int groupCount = 5;
-			int groupPosition = (int)Math.ceil((double)pageNo / groupCount);
-			int begin = ((groupPosition-1) * groupCount)+1;
-			int end = groupPosition * groupCount;
-			if(end > lastPage) end = lastPage;
-		%>
+		int groupCount = 5; // 한번에 보여줄 페이지 버튼 수
+		int groupPosition = (int)Math.ceil((double)pageNo / groupCount); // 현재 그룹
+		int begin = ((groupPosition - 1) * groupCount) + 1;
+		int end = groupPosition * groupCount;
+		if (end > lastPage) end = lastPage;
 
-		<c:if test="<%= begin == 1 %>">
-			[이전]
-		</c:if>
-		<c:if test="<%= begin != 1 %>">
-			<a href="board?page=<%= begin-1 %>">[이전]</a>
-		</c:if>
+		int prevPage = begin - 1;
+		int nextPage = end + 1;
+	%>
 
-		<c:forEach var="i" begin="<%= begin %>" end="<%= end %>">
-			<c:choose>
-				<c:when test="${i == dto.page}">
-					<a href="board?page=${i}" class="bold">${i}</a>
-				</c:when>
-				<c:otherwise>
-					<a href="board?page=${i}">${i}</a>
-				</c:otherwise>
-			</c:choose>
-		</c:forEach>
+	<a href="board?page=1"><button>&lt;&lt;</button></a>
+	<a href="board?page=<%= (prevPage < 1 ? 1 : prevPage) %>"><button>&lt;</button></a>
 
-		<c:if test="<%= end == lastPage %>">
-			[다음]
-		</c:if>
-		<c:if test="<%= end != lastPage %>">
-			<a href="board?page=<%= end+1 %>">[다음]</a>
-		</c:if>
-	</div>
+	<c:forEach var="i" begin="<%= begin %>" end="<%= end %>">
+		<c:choose>
+			<c:when test="${i == dto.page}">
+				<a href="board?page=${i}"><button style="color:red;">${i}</button></a>
+			</c:when>
+			<c:otherwise>
+				<a href="board?page=${i}"><button>${i}</button></a>
+			</c:otherwise>
+		</c:choose>
+	</c:forEach>
 
-	<a href="board_form">새 글 작성</a>
+	<a href="board?page=<%= (nextPage > lastPage ? lastPage : nextPage) %>"><button>&gt;</button></a>
+	<a href="board?page=<%= lastPage %>"><button>&gt;&gt;</button></a>
+</div>
+
+
+	<button><a href="board_form">새 글 작성</a></button>
 
 </div>
 </body>

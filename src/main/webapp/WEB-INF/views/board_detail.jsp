@@ -17,7 +17,6 @@
 }
 
 body {
-	display: flex;
 	background-color: #f5f5f5;
 }
 
@@ -67,16 +66,77 @@ a:hover {
 }
 
 button {
-	padding: 6px 12px;
-	background-color: #007BFF;
-	border: none;
+	padding: 10px 15px;
+	background-color: #4a90e2;
 	color: white;
-	border-radius: 4px;
+	border: none;
+	border-radius: 5px;
 	cursor: pointer;
 }
 
 button:hover {
 	background-color: #0056b3;
+}
+
+.button-group {
+	margin-top: 30px;
+	display: flex;
+	justify-content: center;
+	gap: 10px;
+}
+
+.button-group .action-btn {
+	padding: 8px 16px;
+	background-color: #4a90e2;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	font-size: 14px;
+	transition: background-color 0.2s ease;
+}
+
+.button-group .action-btn:hover {
+	background-color: #0056b3;
+}
+
+.comment-input-group {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-top: 20px;
+}
+
+.comment-input-group input[type="text"] {
+	flex: 1;
+	padding: 6px 10px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
+
+.comment-input-group button {
+	padding: 6px 12px;
+	background-color: #4a90e2;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+.comment-input-group button:hover {
+	background-color: #0056b3;
+}
+
+.comment-body {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	margin-top: 10px;
+}
+
+.comment-buttons {
+	display: flex;
+	gap: 6px;
 }
 
 input[type="text"] {
@@ -138,51 +198,57 @@ input[type="text"] {
 
 	<!-- 덧글 영역 -->
 	<div id="commentArea">
-		<div id="newComment">
-			<input type="text" id="commentForm" />
+		<div id="newComment" class="comment-input-group">
+			<input type="text" id="commentForm" placeholder="댓글을 입력하세요">
 			<button id="submitCommentBtn">입력</button>
-
-
-			<!-- 덧글 리스트 -->
-			<div id="commentList"></div>
 		</div>
 
-		<!-- 덧글 양식 -->
-		<div id="commentTemplate">
-			<div class="comment_item" data-comment-id="" data-comment-depth="">
-				<div id="comment_body">
-					<span class="writer_name"></span> <span class="comment_content"></span>
+
+		<!-- 덧글 리스트 -->
+		<div id="commentList"></div>
+	</div>
+
+	<!-- 덧글 양식 -->
+	<div id="commentTemplate">
+		<div class="comment_item" data-comment-id="" data-comment-depth="">
+			<div id="comment_body" class="comment-body">
+				<span class="writer_name"></span> <span class="comment_content"></span>
+				<div class="comment-buttons">
 					<button class="reply_btn">답글</button>
 					<button class="more_btn">더 보기</button>
 				</div>
-
-
-				<!-- 더보기 메뉴 -->
-				<div class="more_comment" style="display: none">
-					<button class="edit_btn">수정</button>
-					<button id="delete_btn">삭제</button>
-				</div>
-
-				<!-- 수정창 -->
-				<div class="edit_form" style="display: none">
-					<input type="text" class="edit_text" />
-					<button class="edit_submit">수정완료</button>
-				</div>
-
-				<!-- 답글 입력창 -->
-				<div class="reply_form" style="display: none">
-					<input type="text" id="reply_text" placeholder="답글을 입력하세요." />
-					<button class="reply_submit">등록</button>
-				</div>
-
 			</div>
+
+
+			<!-- 더보기 메뉴 -->
+			<div class="more_comment" style="display: none">
+				<button class="edit_btn">수정</button>
+				<button id="delete_btn">삭제</button>
+			</div>
+
+			<!-- 수정창 -->
+			<div class="edit_form" style="display: none">
+				<input type="text" class="edit_text" />
+				<button class="edit_submit">수정완료</button>
+			</div>
+
+			<!-- 답글 입력창 -->
+			<div class="reply_form" style="display: none">
+				<input type="text" id="reply_text" placeholder="답글을 입력하세요." />
+				<button class="reply_submit">등록</button>
+			</div>
+
 		</div>
 	</div>
+	</div>
 
-	<a href="board_modify?board_id=${board.board_id}">수정</a>
-	<a href="board_delete?board_id=${board.board_id}">삭제</a>
-
-	<a href="board">목록으로</a>
+	<div class="button-group">
+		<a href="board_modify?board_id=${board.board_id}"><button
+				class="action-btn">수정</button></a> <a
+			href="board_delete?board_id=${board.board_id}"><button
+				class="action-btn">삭제</button></a> <a href="board"><button
+				class="action-btn">목록으로</button></a>
+	</div>
 
 	<script>
 		document.addEventListener('DOMContentLoaded', function () {

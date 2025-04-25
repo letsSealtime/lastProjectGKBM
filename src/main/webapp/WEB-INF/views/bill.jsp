@@ -558,45 +558,76 @@ span {
 		</form>
 		<!-- 페이지 넘길때 쓸 버튼들 -->
 		<div class="pagination">
+			<!-- <c:url>을 사용하여 동적으로 URL을 생성 -->
+			<c:url var="pagingUrl" value="bill">
+				<c:param name="c_d" value="${param.c_d}" />
+				<c:param name="c_c" value="${param.c_c}" />
+				<c:param name="c_q" value="${param.c_q}" />
+				<c:param name="c_b" value="${param.c_b}" />
+				<c:param name="c_i" value="${param.c_i}" />
+				<c:param name="c_n" value="${param.c_n}" />
+				<c:param name="c_p" value="${param.c_p}" />
+				<c:param name="c_j" value="${param.c_j}" />
+				<c:param name="c_a" value="${param.c_a}" />
+			</c:url>
+
+			<!-- 페이지 카운트 및 네비게이션 설정 -->
 			<c:set var="pageCount"
 				value="${(line mod viewCount == 0) ? (line div viewCount) : (line div viewCount + 1)}" />
 			<c:set var="prevPage" value="${page - viewCount}" />
 			<c:set var="nextPage" value="${page + viewCount}" />
 
-			<a href="vendor?page=1"><button>&lt;&lt;</button></a> <a
-				href="vendor?page=${prevPage}"><button>&lt;</button></a>
+			<!-- << 버튼 (첫 페이지로 이동) -->
+			<a href="${pagingUrl}&page=1"><button>&lt;&lt;</button></a>
+
+			<!-- < 버튼 (이전 페이지로 이동) -->
+			<a href="${pagingUrl}&page=${prevPage}"><button>&lt;</button></a>
 
 			<c:choose>
-				<c:when test="${ page == pageCount }">
-					<c:forEach var="i" begin="${ page - (viewCount - 1) }"
-						end="${ page }">
+				<c:when test="${page == pageCount}">
+					<c:forEach var="i" begin="${page - (viewCount - 1)}" end="${page}">
 						<c:choose>
-							<c:when test="${ i == page }">
-								<strong><a style="color: red;" href="?page=${i}"><button>${ i }</button></a></strong>
+							<c:when test="${i == page}">
+								<strong> <a style="color: red;"
+									href="${pagingUrl}&page=${i}">
+										<button>${i}</button>
+								</a>
+								</strong>
 							</c:when>
 							<c:otherwise>
-								<a href="?page=${i}"><button>${ i }</button></a>
+								<a href="${pagingUrl}&page=${i}">
+									<button>${i}</button>
+								</a>
 							</c:otherwise>
 						</c:choose>
 					</c:forEach>
 				</c:when>
 				<c:otherwise>
-					<c:forEach var="i" begin="${ begin }" end="${ end }">
+					<c:forEach var="i" begin="${begin}" end="${end}">
 						<c:choose>
-							<c:when test="${ i == page }">
-								<strong><a style="color: red;" href="?page=${i}"><button>${ i }</button></a></strong>
+							<c:when test="${i == page}">
+								<strong> <a style="color: red;"
+									href="${pagingUrl}&page=${i}">
+										<button>${i}</button>
+								</a>
+								</strong>
 							</c:when>
 							<c:otherwise>
-								<a href="?page=${i}"><button>${ i }</button></a>
+								<a href="${pagingUrl}&page=${i}">
+									<button>${i}</button>
+								</a>
 							</c:otherwise>
 						</c:choose>
 					</c:forEach>
 				</c:otherwise>
 			</c:choose>
-			<a href="vendor?page=${nextPage}"><button>&gt;</button> </a> <a
-				href="vendor?page=${lastPage}"><button>&gt;&gt;</button> </a>
+
+			<!-- > 버튼 (다음 페이지로 이동) -->
+			<a href="${pagingUrl}&page=${nextPage}"><button>&gt;</button></a>
+
+			<!-- >> 버튼 (마지막 페이지로 이동) -->
+			<a href="${pagingUrl}&page=${lastPage}"><button>&gt;&gt;</button></a>
 		</div>
-	</div>
 </body>
 
 </html>

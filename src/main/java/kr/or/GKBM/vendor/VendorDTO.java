@@ -20,6 +20,7 @@ public class VendorDTO {
 	private String c_a;
 	// 스큐ID FK(SKU_ID)
 	private String c_i;
+	
 	private String hidden;
 	
 	private int viewCount = 10;

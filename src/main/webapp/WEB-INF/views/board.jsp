@@ -20,7 +20,6 @@
 	}
 
 	body {
-		display: flex;
 		background-color: #f5f5f5;
 	}
 
@@ -30,8 +29,6 @@
 		margin: auto;
 		background: white;
 		padding: 20px;
-		border-radius: 10px;
-		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 	}
 
 	form, table, .pagination, a {

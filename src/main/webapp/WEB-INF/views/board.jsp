@@ -11,20 +11,70 @@
 <head>
 <meta charset="UTF-8">
 <title>게시판 목록</title>
+<style>
+	* {
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
+		font-family: Arial, sans-serif;
+	}
+
+	body {
+		display: flex;
+		background-color: #f5f5f5;
+	}
+
+	.main-content {
+		flex: 1;
+		width: 95%;
+		margin: auto;
+		background: white;
+		padding: 20px;
+		border-radius: 10px;
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	}
+
+	form, table, .pagination, a {
+		margin-top: 20px;
+	}
+
+	table {
+		width: 100%;
+		border-collapse: collapse;
+		margin-top: 10px;
+	}
+
+	th, td {
+		padding: 10px;
+		border: 1px solid #ccc;
+		text-align: center;
+	}
+
+	th {
+		background-color: #f0f0f0;
+	}
+
+	a.bold {
+		font-weight: bold;
+		text-decoration: underline;
+		color: black;
+	}
+</style>
 </head>
 <body>
+<div class="main-content">
 
 	<form method="get" action="board">
 		<select name="type">
 			<option value="empno">작성자</option>
 			<option value="title">제목</option>
 			<option value="board_content">글 내용</option>
-		</select> <input type="text" id="search" name="keyword" value="${dto.keyword }">
+		</select> 
+		<input type="text" id="search" name="keyword" value="${dto.keyword }">
 		<button type="submit">검색</button>
 	</form>
-	<br>
-	
-	<table border="1">
+
+	<table>
 		<thead>
 			<tr>
 				<th>번호</th>
@@ -36,90 +86,66 @@
 				<th>댓글</th>
 			</tr>
 		</thead>
-
 		<tbody>
-
 			<c:forEach var="dto" items="${map.list}">
 				<tr>
-					<!-- 게시글 번호 -->
 					<td>${dto.board_id}</td>
-
-					<!-- 사원번호 -->
 					<td>${dto.empno}</td>
-
-					<!-- 게시글 제목 (클릭 시 상세보기) -->
-					<td><a href="board_detail?board_id=${dto.board_id}">
-							${dto.title}</a></td>
-
-					<!-- 공지사항 여부 -->
+					<td><a href="board_detail?board_id=${dto.board_id}">${dto.title}</a></td>
 					<td>${dto.notice == 1 ? "공지" : "-"}</td>
-
-					<!-- 작성일 -->
 					<td>${dto.create_date}</td>
-
-					<!-- 조회수 -->
 					<td>${dto.views}</td>
-
-					<!-- 댓글 개수 -->
 					<td></td>
-
 				</tr>
 			</c:forEach>
 		</tbody>
 	</table>
 
-	<div>
+	<div class="pagination">
 		<%
-				Map map = (Map)request.getAttribute("map");
-				BoardDTO boardDTO = (BoardDTO)request.getAttribute("dto");
-		
-				int total = (Integer)map.get("total");
-				int pageNo = boardDTO.getPage(); // 현재 보는 페이지
-				int viewCount = boardDTO.getViewCount();
-				 	
-				 // 1401 / 10 = 140.1 올림해서 141 ceil			 	
-				 int lastPage = (int)Math.ceil((double)total / viewCount);
-				 				// 	13 % 10 = 2 목록 개수
-				 
-				 int groupCount = 5; // 한 번에 보여줄 페이지 개수
-				 int groupPosition = (int)Math.ceil((double)pageNo / groupCount);
-				 					// 1 % 5 = 1 현재 페이지는 몇 그룹?
-				 int begin = ((groupPosition-1) * groupCount)+1; // (1-1) * 5 +1 = 1 시작
-				 int end = groupPosition * groupCount; // 1 * 5 = 5
-				 if(end > lastPage) end = lastPage; // 5 > 2 : end = 2
-				 	
-				 	
-				%>
+			Map map = (Map)request.getAttribute("map");
+			BoardDTO boardDTO = (BoardDTO)request.getAttribute("dto");
+
+			int total = (Integer)map.get("total");
+			int pageNo = boardDTO.getPage();
+			int viewCount = boardDTO.getViewCount();
+			int lastPage = (int)Math.ceil((double)total / viewCount);
+
+			int groupCount = 5;
+			int groupPosition = (int)Math.ceil((double)pageNo / groupCount);
+			int begin = ((groupPosition-1) * groupCount)+1;
+			int end = groupPosition * groupCount;
+			if(end > lastPage) end = lastPage;
+		%>
 
 		<c:if test="<%= begin == 1 %>">
-				[이전]
-			</c:if>
+			[이전]
+		</c:if>
 		<c:if test="<%= begin != 1 %>">
 			<a href="board?page=<%= begin-1 %>">[이전]</a>
 		</c:if>
 
 		<c:forEach var="i" begin="<%= begin %>" end="<%= end %>">
-			<c:if test="${i == dto.page }">
-				<c:set var="clazz" value="bold" />
-			</c:if>
-			<c:if test="${ not (i == dto.page) }">
-				<c:set var="clazz" value="" />
-			</c:if>
-
-			<a href="board?page=${ i }" class="${clazz }">${ i }</a>
+			<c:choose>
+				<c:when test="${i == dto.page}">
+					<a href="board?page=${i}" class="bold">${i}</a>
+				</c:when>
+				<c:otherwise>
+					<a href="board?page=${i}">${i}</a>
+				</c:otherwise>
+			</c:choose>
 		</c:forEach>
 
 		<c:if test="<%= end == lastPage %>">
-				[다음]
-			</c:if>
+			[다음]
+		</c:if>
 		<c:if test="<%= end != lastPage %>">
 			<a href="board?page=<%= end+1 %>">[다음]</a>
 		</c:if>
-
 	</div>
-	<br>
+
 	<a href="board_form">새 글 작성</a>
 
-
+</div>
 </body>
 </html>

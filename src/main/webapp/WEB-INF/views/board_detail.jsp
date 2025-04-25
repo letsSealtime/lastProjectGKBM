@@ -8,6 +8,86 @@
 <head>
 <meta charset="UTF-8">
 <title>게시글 상세보기</title>
+<style>
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: Arial, sans-serif;
+}
+
+body {
+	display: flex;
+	background-color: #f5f5f5;
+}
+
+.main-content {
+	flex: 1;
+	width: 95%;
+	margin: auto;
+	background: white;
+	padding: 20px;
+	border-radius: 10px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.board-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-top: 15px;
+}
+
+th, td {
+	padding: 10px;
+	border: 1px solid #ccc;
+	text-align: left;
+}
+
+th {
+	background-color: #f0f0f0;
+	width: 20%;
+}
+
+a {
+	display: inline-block;
+	margin-right: 10px;
+	margin-top: 20px;
+	text-decoration: none;
+	color: #007BFF;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+button {
+	padding: 6px 12px;
+	background-color: #007BFF;
+	border: none;
+	color: white;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+button:hover {
+	background-color: #0056b3;
+}
+
+input[type="text"] {
+	width: 100%;
+	padding: 6px;
+	margin-top: 5px;
+	margin-bottom: 10px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
+</style>
 </head>
 <body>
 

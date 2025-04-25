@@ -52,7 +52,7 @@ public class BoardController {
 		model.addAttribute("map", map);
 		model.addAttribute("dto", boardDTO);
 
-		return "board";
+		return "board.tiles";
 
 	}
 
@@ -76,7 +76,7 @@ public class BoardController {
 		model.addAttribute("board", select);
 		model.addAttribute("fileList", fileList);
 
-		return "board_detail";
+		return "board_detail.tiles";
 	}
 
 	// 수정 화면으로
@@ -92,7 +92,7 @@ public class BoardController {
 		List<BoardFileDTO> fileList = boardFileDAO.getFileById(board_id);
 		model.addAttribute("fileList", fileList);
 		
-		return "board_form";
+		return "board_form.tiles";
 
 	}
 	
@@ -145,7 +145,7 @@ public class BoardController {
 		System.out.println("delete 결과" + delete);
 
 		// 전체목록으로 리턴
-		return "redirect:board";
+		return "redirect:board.tiles";
 	}
 
 	// 새글 작성으로 이동
@@ -153,7 +153,7 @@ public class BoardController {
 	public String boardForm(@ModelAttribute BoardDTO boardDTO, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
-		return "board_form";
+		return "board_form.tiles";
 	}
 
 	// 새 글
@@ -206,7 +206,7 @@ public class BoardController {
 			}
 		}
 
-		return "redirect:/board";
+		return "redirect:/board.tiles";
 	}
 
 	// 파일 수정 - 업로드
@@ -277,7 +277,7 @@ public class BoardController {
 			}
 		}
 
-		return "redirect:/board";
+		return "redirect:/board.tiles";
 	}
 
 }

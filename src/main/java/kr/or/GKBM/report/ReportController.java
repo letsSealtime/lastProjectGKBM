@@ -2,6 +2,7 @@ package kr.or.GKBM.report;
 
 import org.springframework.stereotype.Controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,27 +21,60 @@ public class ReportController {
 
     @Autowired
     private DefectDAO defectDAO;
-
+    
+    
+    // 리포팅 : 기본 경영 실적 페이지 
     @GetMapping("")
-    public String showReportPage() {
-        return "reporting";
+    public String ReportPage() {
+        return "report_financial.tiles";
     }
     
-    @GetMapping("/production")
+    // 생산 실적 페이지
+    @GetMapping("/production/page")
+    public String showProductionPage() {
+        return "report_production.tiles"; 
+    }
+    
+    // 불량품 추이 페이지
+    @GetMapping("/defect/page")
+    public String showDefectPage() {
+        return "report_defect.tiles"; 
+    }
+    
+    // 경영 실적
+    @GetMapping("/financial")
+    @ResponseBody
+    public List<FinancialDTO> getFinancialData(@RequestParam(required = false) String startDate,
+                                               @RequestParam(required = false) String endDate) {
+        if (startDate != null && endDate != null) {
+            Map<String, String> params = new HashMap<>();
+            params.put("startDate", startDate);
+            params.put("endDate", endDate);
+            return financialDAO.selectByPeriod(params);
+        }
+        return financialDAO.selectAll();
+    }
+    
+    // 생산 실적
+    @GetMapping("production")
     @ResponseBody
     public List<ProductionDTO> getProductionData() {
         return productionDAO.selectProductionByUnit(null); // 전체 불러오기용 (필요 시 파라미터 전달)
     }
-
-    @GetMapping("/financial")
+    
+    // 생산 실적 (상세)
+    @GetMapping("production/detailed")
     @ResponseBody
-    public List<FinancialDTO> getFinancialData() {
-        return financialDAO.selectAll(); // 전체 매출 및 영업이익
+    public List<ProductionDTO> getDetailedProductionData() {
+        return productionDAO.selectDetailedProduction();
     }
 
+    // 불량품 상황
     @GetMapping("/defect")
     @ResponseBody
-    public List<DefectDTO> getDefectData() {
-        return defectDAO.selectDefectByUnit(null); // 전체 불량률
+    public List<DefectDTO> getDefectRateData(@RequestParam(value = "unit", defaultValue = "month") String unit) {
+        Map<String, String> param = new HashMap<>();
+        param.put("unit", unit);
+        return defectDAO.selectDefectRateByUnit(param);
     }
 }

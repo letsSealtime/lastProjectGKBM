@@ -2,16 +2,19 @@ package kr.or.GKBM.report;
 
 import java.sql.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Data;
 
 @Data
 public class FinancialDTO {
 
-	int financialId;
-	Date reportDate;
-	int totalSales;
-	int operatingProfit;
-	int netProfit;
-	int ibId;
+	int financial_id;
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	Date report_date;
+	int total_sales;
+	int operating_profit;
+	int net_profit;
+	int ib_id;
 	
 }

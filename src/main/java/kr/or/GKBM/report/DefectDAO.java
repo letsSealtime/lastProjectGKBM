@@ -13,7 +13,7 @@ public class DefectDAO {
     @Autowired
     private SqlSession sqlSession;
 
-    public List<DefectDTO> selectDefectByUnit(Map<String, String> param) {
-        return sqlSession.selectList("gkbm.emp.selectDefectByUnit", param);
+    public List<DefectDTO> selectDefectRateByUnit(Map<String, String> param) {
+        return sqlSession.selectList("gkbm.emp.selectDefectRateByUnit", param);
     }
 }

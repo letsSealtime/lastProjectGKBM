@@ -1726,6 +1726,138 @@
 		  FROM comment_recu
 		  ORDER BY sort_comment
     </select>
+    
+        <select id="selectProductionByUnit" resultType="productionDTO" parameterType="String">
+        SELECT 
+            <choose>
+                <when test="unit == 'week'">
+                    TO_CHAR(production_date, 'IYYY-IW')
+                </when>
+                <when test="unit == 'month'">
+                    TO_CHAR(production_date, 'YYYY-MM')
+                </when>
+                <when test="unit == 'quarter'">
+                    TO_CHAR(production_date, 'YYYY-Q')
+                </when>
+                <otherwise>
+                    TO_CHAR(production_date, 'YYYY-MM')
+                </otherwise>
+            </choose> AS period,
+            SUM(quantity) AS total_production
+        FROM P_PRODUCTION
+        GROUP BY 
+            <choose>
+                <when test="unit == 'week'">
+                    TO_CHAR(production_date, 'IYYY-IW')
+                </when>
+                <when test="unit == 'month'">
+                    TO_CHAR(production_date, 'YYYY-MM')
+                </when>
+                <when test="unit == 'quarter'">
+                    TO_CHAR(production_date, 'YYYY-Q')
+                </when>
+                <otherwise>
+                    TO_CHAR(production_date, 'YYYY-MM')
+                </otherwise>
+            </choose>
+        ORDER BY period
+    </select>
+    
+    
+    <select id="selectProductionDetails" resultType="productionDTO">
+		        SELECT 
+			        p.production_id,
+			        p.production_date,
+			        p.unit,
+			        p.quantity,
+			
+			        i.product_count,
+			        i.product_price,
+			        i.sku_type,
+			        i.create_date,
+			        i.sku_id,
+			        s.sku_name,
+			
+			        (p.quantity * i.product_price) AS production_value
+			
+			    FROM p_production p
+			    LEFT JOIN p_product_in_out i ON p.ib_id = i.ib_id
+			    LEFT JOIN p_sku s ON i.sku_id = s.sku_id
+			    WHERE i.sku_type = 'In' 
+			    ORDER BY p.production_date DESC
+			</select>
+    
+    <select id="selectAllFinancial" resultType="financialDTO">
+        SELECT * FROM p_financial ORDER BY report_date DESC
+    </select>
 
+    <select id="selectFinancialByPeriod" resultType="financialDTO">
+        SELECT * FROM p_financial
+        WHERE report_date BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD') AND TO_DATE(#{endDate}, 'YYYY-MM-DD')
+        ORDER BY report_date
+    </select>
 
+	<select id="selectDefectRateByUnit" resultType="defectDTO"
+		parameterType="map">
+		SELECT
+		period AS defect_date,
+		ROUND(NVL(defect_count, 0) / NULLIF(NVL(production_count, 0), 0) * 100, 2) AS defect_rate
+		FROM (
+		SELECT
+		<choose>
+			<when test="unit == 'week'">
+				TO_CHAR(d.defect_date, 'IYYY-IW')
+			</when>
+			<when test="unit == 'month'">
+				TO_CHAR(d.defect_date, 'YYYY-MM')
+			</when>
+			<when test="unit == 'quarter'">
+				TO_CHAR(d.defect_date, 'YYYY-Q')
+			</when>
+			<otherwise>
+				TO_CHAR(d.defect_date, 'YYYY-MM')
+			</otherwise>
+		</choose>
+		AS period,
+		SUM(d.defect_count) AS defect_count,
+		(
+		SELECT SUM(p.quantity)
+		FROM p_production p
+		WHERE
+		<choose>
+			<when test="unit == 'week'">
+				TO_CHAR(p.production_date, 'IYYY-IW') = TO_CHAR(d.defect_date, 'IYYY-IW')
+			</when>
+			<when test="unit == 'month'">
+				TO_CHAR(p.production_date, 'YYYY-MM') = TO_CHAR(d.defect_date, 'YYYY-MM')
+			</when>
+			<when test="unit == 'quarter'">
+				TO_CHAR(p.production_date, 'YYYY-Q') = TO_CHAR(d.defect_date, 'YYYY-Q')
+			</when>
+			<otherwise>
+				TO_CHAR(p.production_date, 'YYYY-MM') = TO_CHAR(d.defect_date, 'YYYY-MM')
+			</otherwise>
+		</choose>
+		) AS production_count
+		FROM p_defect d
+		GROUP BY
+		<choose>
+			<when test="unit == 'week'">
+				TO_CHAR(d.defect_date, 'IYYY-IW')
+			</when>
+			<when test="unit == 'month'">
+				TO_CHAR(d.defect_date, 'YYYY-MM')
+			</when>
+			<when test="unit == 'quarter'">
+				TO_CHAR(d.defect_date, 'YYYY-Q')
+			</when>
+			<otherwise>
+				TO_CHAR(d.defect_date, 'YYYY-MM')
+			</otherwise>
+		</choose>
+		)
+		ORDER BY period
+	</select>
+
+    
 </mapper>

@@ -25,7 +25,7 @@ public class DefectController {
 		System.out.println("work 페이지 진입");
 
 		ModelAndView select_MV = new ModelAndView();
-		select_MV.setViewName("defect");
+		select_MV.setViewName("defect.tiles");
 
 		List<DefectDTO> sku_select = DefectServiceImpl.code_select(dto);
 		select_MV.addObject("select", sku_select);
@@ -53,7 +53,7 @@ public class DefectController {
 
 		int insert = DefectServiceImpl.insert(dto);
 
-		return "/defect";
+		return "/defect.tiles";
 	}
 
 }

@@ -21,7 +21,7 @@ public class disableController {
 	public ModelAndView disableEnter(@ModelAttribute disableDTO dto) {
 		
 		ModelAndView select_MV = new ModelAndView();
-		select_MV.setViewName("disposal_refurb");
+		select_MV.setViewName("disposal_refurb.tiles");
 		
 		List<disableDTO> select = service.select(dto);
 		select_MV.addObject("select", select);

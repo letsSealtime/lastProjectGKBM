@@ -558,7 +558,6 @@ span {
 		</form>
 		<!-- 페이지 넘길때 쓸 버튼들 -->
 		<div class="pagination">
-			<!-- <c:url>을 사용하여 동적으로 URL을 생성 -->
 			<c:url var="pagingUrl" value="bill">
 				<c:param name="c_d" value="${param.c_d}" />
 				<c:param name="c_c" value="${param.c_c}" />
@@ -628,6 +627,7 @@ span {
 			<!-- >> 버튼 (마지막 페이지로 이동) -->
 			<a href="${pagingUrl}&page=${lastPage}"><button>&gt;&gt;</button></a>
 		</div>
+	</div>
 </body>
 
 </html>

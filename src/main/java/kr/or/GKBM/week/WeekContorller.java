@@ -39,7 +39,7 @@ public class WeekContorller {
 			if ((dto.getC_c() == null) && (dto.getC_i() == null) && (dto.getC_s() == null) && (dto.getC_y() == null)
 					&& (dto.getC_w() == null)) {
 				List<WeekDTO> select = WeekServiceImpl.selectALL(dto);
-				select_MV.setViewName("week");
+				select_MV.setViewName("week.tiles");
 				select_MV.addObject("select", select);
 				select_MV.addObject("line", dto.getLine());
 				select_MV.addObject("lastpage", dto.getLine() / dto.getViewCount());
@@ -49,7 +49,7 @@ public class WeekContorller {
 				select_MV.addObject("end", dto.getEnd());
 			} else {
 				List<WeekDTO> select = WeekServiceImpl.select(dto);
-				select_MV.setViewName("week");
+				select_MV.setViewName("week.tiles");
 				select_MV.addObject("select", select);
 				select_MV.addObject("line", dto.getLine());
 				select_MV.addObject("lastpage", dto.getLine() / dto.getViewCount());
@@ -61,7 +61,7 @@ public class WeekContorller {
 
 		} else {
 			List<WeekDTO> select = WeekServiceImpl.selectALL(dto);
-			select_MV.setViewName("week");
+			select_MV.setViewName("week.tiles");
 			select_MV.addObject("select", select);
 			select_MV.addObject("line", dto.getLine());
 			select_MV.addObject("lastpage", dto.getLine() / dto.getViewCount());

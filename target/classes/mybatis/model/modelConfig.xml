@@ -33,6 +33,11 @@
 		<typeAlias type="kr.or.GKBM.board.BoardDTO" alias="boardDTO" />
 		<typeAlias type="kr.or.GKBM.board.BoardFileDTO" alias="boardFileDTO" />
 		<typeAlias type="kr.or.GKBM.board.BoardCommentDTO" alias="commentDTO" />
+		<!-- 리포트 -->
+		<typeAlias type="kr.or.GKBM.report.DefectDTO" alias="defectDTO" />
+		<typeAlias type="kr.or.GKBM.report.FinancialDTO" alias="financialDTO" />
+		<typeAlias type="kr.or.GKBM.report.ProductionDTO" alias="productionDTO" />
+		
 		
 	</typeAliases>
 

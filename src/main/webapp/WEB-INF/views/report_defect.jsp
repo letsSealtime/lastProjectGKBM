@@ -18,7 +18,7 @@
 </head>
 <body>
 
-    <h2>⚠불량률 추이 리포트</h2>
+    <h2>불량률 추이 리포트</h2>
 
     <!-- 단위 선택 필터 -->
     <label for="unitSelect">단위 선택: </label>

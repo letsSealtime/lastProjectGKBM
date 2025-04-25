@@ -74,10 +74,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function renderChart(data) {
-        const labels = data.map(d => d.reportDate?.substring(0, 7));
-        const sales = data.map(d => d.totalSales);
-        const opProfit = data.map(d => d.operatingProfit);
-        const netProfit = data.map(d => d.netProfit);
+        const labels = data.map(d => d.report_date);
+        const sales = data.map(d => d.total_sales);
+        const opProfit = data.map(d => d.operating_profit);
+        const netProfit = data.map(d => d.net_profit);
 
         if (chart) chart.destroy();
 
@@ -120,11 +120,11 @@ document.addEventListener("DOMContentLoaded", function () {
         data.forEach(d => {
             const row = document.createElement("tr");
             row.innerHTML = `
-                <td>${d.reportDate?.substring(0, 7) || "N/A"}</td>
-                <td>${d.totalSales}</td>
-                <td>${d.operatingProfit}</td>
-                <td>${d.netProfit}</td>
-                <td>${d.reportDate?.substring(0, 10) || "N/A"}</td>
+                <td>${d.report_date}</td>
+                <td>${d.total_sales}</td>
+                <td>${d.operating_profit}</td>
+                <td>${d.net_profit}</td>
+                <td>${d.report_date}</td>
             `;
             tbody.appendChild(row);
         });

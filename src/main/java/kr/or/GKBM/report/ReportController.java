@@ -26,19 +26,19 @@ public class ReportController {
     // 리포팅 : 기본 경영 실적 페이지 
     @GetMapping("")
     public String ReportPage() {
-        return "report_financial.tiles";
+        return "report_financial";
     }
     
     // 생산 실적 페이지
     @GetMapping("/production/page")
     public String showProductionPage() {
-        return "report_production.tiles"; 
+        return "report_production"; 
     }
     
     // 불량품 추이 페이지
     @GetMapping("/defect/page")
     public String showDefectPage() {
-        return "report_defect.tiles"; 
+        return "report_defect"; 
     }
     
     // 경영 실적

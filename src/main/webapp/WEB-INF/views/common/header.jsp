@@ -4,10 +4,12 @@
 <div id="container">
 	<div id="top_section">
 		<div id="logo">
-			<img
-				src="${pageContext.request.contextPath}/resources/img/GKBM_logo.png"
+			<a href="${pageContext.request.contextPath}/mainpage">
+			<img src="${pageContext.request.contextPath}/resources/img/GKBM_logo.png"
 				alt="GKBM MES SYSTEM" id="logo-image">
+			</a>
 		</div>
+		<div></div>
 
 		<div id="main_menu">
 			<div class="menu_item" data-menu="1">기준정보</div>

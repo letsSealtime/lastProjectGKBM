@@ -6,7 +6,8 @@
 <html lang="ko">
 <head>
 <title>GKBM MES SYSTEM</title>
-<link rel="icon" href="${pageContext.request.contextPath}/resources/img/GKBMfavicon.png/">
+<link rel="icon"
+	href="${pageContext.request.contextPath}/resources/img/GKBMfavicon.png/">
 
 <style>
 * {
@@ -48,8 +49,8 @@ body {
 }
 
 #logo img {
-	width: 150%;
-	height: 150%;
+	width: 200%;
+	height: 200%;
 	object-fit: contain;
 }
 
@@ -232,6 +233,7 @@ h3 {
 	justify-content: space-between;
 	padding: 10px 20px;
 	background-color: white;
+	gap: 30px;
 }
 
 #user_section {

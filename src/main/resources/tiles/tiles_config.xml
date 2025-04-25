@@ -9,23 +9,15 @@
 		template="/WEB-INF/views/layout/mainpageLayout.jsp">
 		<put-attribute name="header"
 			value="/WEB-INF/views/common/header.jsp" />
-		<!-- <put-attribute name="side" value="/WEB-INF/views/common/side.jsp" 
-			/> -->
+
 		<put-attribute name="footer"
 			value="/WEB-INF/views/common/footer.jsp" />
+			
 		<put-attribute name="content"
 			value="/WEB-INF/views/common/content.jsp" />
 	</definition>
 
-	<!-- 메인페이지 데시보드 -->
-	<!-- <definition name="main.dashboard" extends="mainLayout"> <put-attribute 
-		name="content" value="/WEB-INF/views/main_dashboard.jsp"/> </definition> 
-		<definition name="p_bom" extends="mainLayout"> <put-attribute name="content" 
-		value="/WEB-INF/views/p_bom.jsp"/> </definition> -->
 
-	<!-- <definition name="*.content" extends="mainpageLayout"> -->
-	<!-- <put-attribute name="content" value="/WEB-INF/views/{1}.jsp"/> -->
-	<!-- </definition> -->
 
 	<definition name="*.tiles" extends="mainpageLayout">
 		<put-attribute name="content"

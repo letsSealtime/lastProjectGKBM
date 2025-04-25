@@ -26,9 +26,16 @@ public class WorkController {
 		ModelAndView select_MV = new ModelAndView();
 		select_MV.setViewName("work");
 
-		Map map = WorkServiceImpl.code_select();
+		Map map = WorkServiceImpl.code_select(dto);
 		select_MV.addObject("select", map.get("code_select"));
 		select_MV.addObject("select_1", map.get("select"));
+		
+		select_MV.addObject("line", dto.getLine());
+		select_MV.addObject("lastpage", dto.getLine() / dto.getViewCount());
+		select_MV.addObject("viewCount", dto.getViewCount());
+		select_MV.addObject("page", dto.getPage());
+		select_MV.addObject("begin", dto.getBegin());
+		select_MV.addObject("end", dto.getEnd());
 
 		return select_MV;
 	}

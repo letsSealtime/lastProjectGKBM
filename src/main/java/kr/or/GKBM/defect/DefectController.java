@@ -20,19 +20,26 @@ public class DefectController {
 	DefectService DefectServiceImpl;
 
 	@RequestMapping(value = "/defect", method= {RequestMethod.GET})
-	public String defectEnter(@ModelAttribute DefectDTO dto) {
+	public ModelAndView defectEnter(@ModelAttribute DefectDTO dto) {
 
 		System.out.println("work 페이지 진입");
 
 		ModelAndView select_MV = new ModelAndView();
-		select_MV.setViewName("work");
+		select_MV.setViewName("defect");
 
 		List<DefectDTO> sku_select = DefectServiceImpl.code_select(dto);
 		select_MV.addObject("select", sku_select);
 
 		System.out.println(sku_select);
+		
+		select_MV.addObject("line", dto.getLine());
+		select_MV.addObject("lastpage", dto.getLine() / dto.getViewCount());
+		select_MV.addObject("viewCount", dto.getViewCount());
+		select_MV.addObject("page", dto.getPage());
+		select_MV.addObject("begin", dto.getBegin());
+		select_MV.addObject("end", dto.getEnd());
 
-		return "/defect";
+		return select_MV;
 	}
 	
 	@ResponseBody

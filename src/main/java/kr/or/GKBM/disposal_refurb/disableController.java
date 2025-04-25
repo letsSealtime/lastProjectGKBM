@@ -20,13 +20,19 @@ public class disableController {
 	@RequestMapping(value="/disable", method = RequestMethod.GET)
 	public ModelAndView disableEnter(@ModelAttribute disableDTO dto) {
 		
-		ModelAndView disable = new ModelAndView();
-		disable.setViewName("disposal_refurb");
+		ModelAndView select_MV = new ModelAndView();
+		select_MV.setViewName("disposal_refurb");
 		
 		List<disableDTO> select = service.select(dto);
-		disable.addObject("select", select);
+		select_MV.addObject("select", select);
+		select_MV.addObject("line", dto.getLine());
+		select_MV.addObject("lastpage", dto.getLine() / dto.getViewCount());
+		select_MV.addObject("viewCount", dto.getViewCount());
+		select_MV.addObject("page", dto.getPage());
+		select_MV.addObject("begin", dto.getBegin());
+		select_MV.addObject("end", dto.getEnd());
 		
 		
-		return disable;
+		return select_MV;
 	}
 }

@@ -20,10 +20,10 @@ import kr.or.GKBM.p_CMB.P_consumregDTO;
 public class P_disposalController {
 
 	@Autowired
-	P_disposalDAO disposalDAO;
+	private P_disposalDAO disposalDAO;
 
 	@Autowired
-	P_consumregDAO p_conDAO;
+	private P_consumregDAO p_conDAO;
 
 	// [전체조회] 폐기 목록 + 검색 + 페이징
 	@RequestMapping(value = "/p_CPG", method = RequestMethod.GET)
@@ -50,7 +50,7 @@ public class P_disposalController {
 		List<P_consumregDTO> consumregList = p_conDAO.selectAllConsumreg();
 		model.addAttribute("consumregList", consumregList);
 
-		return "/p_CPG";
+		return "p_CPG.tiles";
 	}
 
 	// [등록] 폐기 처리

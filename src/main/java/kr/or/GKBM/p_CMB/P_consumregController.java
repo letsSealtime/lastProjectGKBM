@@ -44,7 +44,7 @@ public class P_consumregController {
         // 검색 초기화
 //        model.addAttribute("searchKeyword", "");
 
-        return "p_CMB";
+        return "p_CMB.tiles";
     }
 
     // 등록

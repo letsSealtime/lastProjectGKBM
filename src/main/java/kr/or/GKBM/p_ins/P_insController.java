@@ -56,7 +56,7 @@ public class P_insController {
 		List facilityList = equipregDAO.selectAllFacilities();
 		model.addAttribute("facilityList", facilityList);
 
-		return "p_ins";
+		return "p_ins.tiles";
 	}
 
 	// 설비점검 등록

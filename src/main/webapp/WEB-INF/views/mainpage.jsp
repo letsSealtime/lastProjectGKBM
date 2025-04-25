@@ -273,7 +273,8 @@ h3 {
 	border: 1px solid black;
 	width: 60px;
 	height: 60px;
-	background-image: url('${pageContext.request.contextPath}/resources/img/chatbot.png');
+	background-image:
+		url('${pageContext.request.contextPath}/resources/img/chatbot.png');
 	background-repeat: no-repeat;
 	background-size: contain;
 	cursor: pointer;
@@ -346,7 +347,8 @@ h3 {
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	z-index: 1000; width : 90%;
+	z-index: 1000;
+	width: 90%;
 	max-width: 550px;
 	height: 90%;
 	max-height: 700px;
@@ -502,7 +504,8 @@ h3 {
 	background-color: #fff;
 	box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 	border-radius: 8px;
-	background-image: url("${pageContext.request.contextPath}/resources/img/동포초등학교 교가.png");
+	background-image:
+		url("${pageContext.request.contextPath}/resources/img/동포초등학교 교가.png");
 	background-repeat: no-repeat;
 	background-size: contain;
 	text-align: center;
@@ -652,12 +655,11 @@ h3 {
 		width: 100px;
 		height: 50px;
 		padding: 0px;
-
 		font-size: 13px;
 		text-align: center;
 		line-height: 50px;
 	}
-	#user_section > span{
+	#user_section>span {
 		font-size: 13px;
 	}
 	#logo {
@@ -670,7 +672,9 @@ h3 {
 	<div id="container">
 		<div id="top_section">
 			<div id="logo">
-				<img src="${pageContext.request.contextPath}/resources/img/GKBM_logo.png"" alt="GKBM MES SYSTEM" id="logo-image">
+				<img
+					src="${pageContext.request.contextPath}/resources/img/GKBM_logo.png"
+					alt="GKBM MES SYSTEM" id="logo-image">
 			</div>
 			<div class="mm"></div>
 			<div id="main_menu">
@@ -679,7 +683,9 @@ h3 {
 				<div class="menu_item" data-menu="3">생산관리</div>
 				<div class="menu_item" data-menu="4">재고관리</div>
 				<div class="menu_item" data-menu="5">설비관리</div>
-				<div class="menu_item" data-menu="6">소모품관리</div>
+				<c:if test="${user.grade == 1}">
+					<div class="menu_item" data-menu="6">소모품관리</div>
+				</c:if>
 				<div class="menu_item" data-menu="7">품질관리</div>
 				<div class="menu_item" data-menu="8">커뮤니티</div>
 			</div>
@@ -690,7 +696,9 @@ h3 {
 						<c:when test="${user.grade == 1}">관리자</c:when>
 						<c:otherwise>작업자</c:otherwise>
 					</c:choose>] ${user.emp_name}님 환영합니다.
-				</span> <img src="${pageContext.request.contextPath}/resources/img/usericon.png" alt="usericon" id="user_icon">
+				</span> <img
+					src="${pageContext.request.contextPath}/resources/img/usericon.png"
+					alt="usericon" id="user_icon">
 
 				<!-- 사용자 정보 팝업 -->
 				<div class="user_popup" id="user_popup">
@@ -704,24 +712,20 @@ h3 {
 	</div>
 
 
-	</div>
+
 	<div id="content_section">
 		<div id="sub_menu"></div>
 		<div id="main_content">
 			<div class="graph_container">
 				<div class="graph_section">
 					<!-- 경영리포팅 그래프가 들어갈 공간 -->
-					<iframe id="content-frame" src="main_dashboard.jsp" width="100%"
-						height="100%" frameborder="0"></iframe>
+					<tiles:insertAttribute name="content" />
 				</div>
 			</div>
 		</div>
 	</div>
-	</div>
 
-	<div id="overlay" class="overlay" style="display: none;"></div>
 
-	<div class="chatbot"></div>
 
 	<div class="user_container">
 		<div class="header">
@@ -750,6 +754,11 @@ h3 {
 		</div>
 	</div>
 
+
+	<div id="overlay" class="overlay" style="display: none;"></div>
+
+	<div class="chatbot"></div>
+	
 	<div class="gemini-popup" id="geminiPopup">
 		<div class="header">
 			<h1>GKBM 1:1 상담</h1>
@@ -862,7 +871,7 @@ h3 {
         '2': ['거래처 정보관리', '거래명세서'],
         '3': ['생산계획관리', '작업지시관리'],
         '4': ['원자재 입고관리', '원자재 출고관리', '원자재 현황', '완제품 입고관리', '완제품 출고관리'],
-        '5': ['설비등록', '설비점검', '설비수리'],
+        '5': [ '설비점검', '설비수리'],
         '6': ['소모품 관리', '소모품 수불관리', '소모품 폐기'],
         '7': ['부적합관리', '리퍼브/폐기'],
         '8': ['게시판']		
@@ -933,6 +942,12 @@ h3 {
         // ----- 커뮤니티 -----
         '게시판': 'board',
     };
+    var userGrade = ${user.grade};
+    if (userGrade == 1) {
+        subMenuData['5'].unshift('설비등록');
+    }
+    console.log("userGrade", userGrade);
+
 
     // ===================================================
     // 2. 메뉴 데이터 검증 및 초기화
@@ -964,7 +979,7 @@ h3 {
     // ===================================================
     // 3. 메인 이벤트 리스너 및 초기화
     // ===================================================
-    document.addEventListener('DOMContentLoaded', function () {
+    
         const logoImage = document.getElementById('logo-image');
         const mainMenuItems = document.querySelectorAll('.menu_item');
 
@@ -999,7 +1014,7 @@ h3 {
                 const menuId = this.getAttribute('data-menu');
                 handleMainMenuClick(this, menuId);
             });
-        });
+       
 
         // ===================================================
         // 4. 메뉴 동작 관련 함수들

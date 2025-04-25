@@ -62,7 +62,7 @@ public class P_repairController {
         List<P_equipregDTO> facilityList = equipregDAO.selectAllFacilities();
         model.addAttribute("facilityList", facilityList);
 
-        return "p_repair";
+        return "p_repair.tiles";
     }
 
     // 등록

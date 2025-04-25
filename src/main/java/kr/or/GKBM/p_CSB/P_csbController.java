@@ -51,7 +51,7 @@ public class P_csbController {
 		List<P_consumregDTO> consumregList = p_conDAO.selectAllConsumreg();
 		model.addAttribute("consumregList", consumregList);
 
-		return "p_CSB";
+		return "p_CSB.tiles";
 	}
 
 	// [등록] 수불 기록 (POST)

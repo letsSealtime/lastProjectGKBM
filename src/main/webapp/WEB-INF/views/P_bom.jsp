@@ -151,11 +151,15 @@ span {
 </style>
 </head>
 <body>
+
 	<h1>◎ BOM</h1>
+	
 	<span>* 모두 기입</span>
+	
 	<form method="post" action="p_bom" class="form"
 		enctype="multipart/form-data">
 		<div class="form-fields">
+		
 			<div class="form-row">
 				<label for="완제품 필요한 원자재">완제품 필요한 원자재<span>*</span></label> <input
 					type="text" name="sku_id_material"
@@ -163,52 +167,40 @@ span {
 				<input type="text" name="consumption"
 					value="${select20.consumption}">
 			</div>
+			
 			<div class="form-row">
 				 <label for="작업표준서">작업표준서<span>*</span></label> <input type="text"
 					name="work_method" value="${select20.work_method}">  
 				 <label for="상품고유번호">상품고유번호<span>*</span></label> <input type="text"
 					name="sku_id" value="${select20.sku_id}"> 
-				
-
-
-
-
 			</div>
-
 
 			<div class="form-row">
 				<label for="sku_code">상품 코드 + 상품명 으로 조회</label> <input type="text"
 					id="skuCodeInput" name="sku_code">
 			</div>
-
-
 		</div>
 
 		<div>
-
 			<input type="submit" value="등록" class="buttons" id="insertBtn">
-			</br>
+			<br>
 			<button type="button" class="buttons" onclick="searchBySkuCode()"
 				id="searchBtn">조회</button>
-			</br>
+			<br>
 			<button type="button" class="buttons" id="editSelectedButton"
 				onclick="handleEdit()">수정</button>
-			</br>
+			<br>
 			<button type="button" class="buttons" onclick="submitDelete()"
 				id="deleteBtn">삭제</button>
-			</br>
+			<br>
 
 			<!-- 수정 모드 버튼 -->
 			<input type="submit" value="수정완료" class="buttons" id="updateBtn"
-				style="display: none;" onclick="setFormAction('update')"></br>
+				style="display: none;" onclick="setFormAction('update')"><br>
 			<button type="button" class="buttons" id="cancelUpdateBtn"
 				style="display: none;" onclick="cancelUpdate()">수정취소</button>
-
 		</div>
-
 	</form>
-
-
 
 	<!-- 이건 부분조회 -->
 	<!-- /searchBySkuCode -->

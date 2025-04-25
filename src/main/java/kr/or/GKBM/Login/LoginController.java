@@ -44,11 +44,11 @@ public class LoginController {
 		}
 	}
 
-	// 로그인 성공시 메인페이지로 이동
-	@RequestMapping(value = "/mainpage", method = RequestMethod.GET)
-	public String mainPage() {
-		return "mainpage";
-	}
+	// 로그인 성공시 메인페이지로 이동 - > 메인페이지 컨트롤러에서 조작할 예정
+//	@RequestMapping(value = "/mainpage", method = RequestMethod.GET)
+//	public String mainPage() {
+//		return "mainpage";
+//	}
 	
 	// 로그아웃시 세션 무효화
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)

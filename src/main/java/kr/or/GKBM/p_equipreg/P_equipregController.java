@@ -57,7 +57,7 @@ public class P_equipregController {
 //        model.addAttribute("searchKeyword", "");
 
 
-        return "p_equipreg";
+        return "p_equipreg.tiles";
     }
 
     

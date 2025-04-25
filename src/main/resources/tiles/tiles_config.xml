@@ -3,24 +3,33 @@
 "-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
 "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
 <tiles-definitions>
-	
-	<definition name="baseLayout" template="/WEB-INF/views/layout/layout.jsp">
-	<!-- name : 갖다 쓰는 Id -->
-		<put-attribute name="header" value="/WEB-INF/views/common/header.jsp"/>
-		<put-attribute name="side" value="/WEB-INF/views/common/side.jsp"/>
-		<put-attribute name="footer" value="/WEB-INF/views/common/footer.jsp"/>
+
+	<!-- 메인페이지 layout -->
+	<definition name="mainpageLayout"
+		template="/WEB-INF/views/layout/mainpageLayout.jsp">
+		<put-attribute name="header"
+			value="/WEB-INF/views/common/header.jsp" />
+		<!-- <put-attribute name="side" value="/WEB-INF/views/common/side.jsp" 
+			/> -->
+		<put-attribute name="footer"
+			value="/WEB-INF/views/common/footer.jsp" />
+		<put-attribute name="content"
+			value="/WEB-INF/views/common/content.jsp" />
 	</definition>
-	<!-- 가져다 쓰는 템플릿 요소들. 들어오는 곳이 아니다. -->
-	
-	
-	
-	
-	
-	<definition name="*.tiles" extends="baseLayout">
-		<put-attribute name="content" value="/WEB-INF/views/{1}.jsp"/>
+
+	<!-- 메인페이지 데시보드 -->
+	<!-- <definition name="main.dashboard" extends="mainLayout"> <put-attribute 
+		name="content" value="/WEB-INF/views/main_dashboard.jsp"/> </definition> 
+		<definition name="p_bom" extends="mainLayout"> <put-attribute name="content" 
+		value="/WEB-INF/views/p_bom.jsp"/> </definition> -->
+
+	<!-- <definition name="*.content" extends="mainpageLayout"> -->
+	<!-- <put-attribute name="content" value="/WEB-INF/views/{1}.jsp"/> -->
+	<!-- </definition> -->
+
+	<definition name="*.tiles" extends="mainpageLayout">
+		<put-attribute name="content"
+			value="/WEB-INF/views/{1}.jsp" />
 	</definition>
-	<!-- 주소가 모든것.tiles 일 때, *(와일드카드)에 있는 것을 {}에 넣는다. -->
-	
-	
 
 </tiles-definitions>

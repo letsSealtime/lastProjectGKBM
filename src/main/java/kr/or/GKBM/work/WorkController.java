@@ -24,7 +24,7 @@ public class WorkController {
 		System.out.println("work 페이지 진입");
 
 		ModelAndView select_MV = new ModelAndView();
-		select_MV.setViewName("work");
+		select_MV.setViewName("work.tiles");
 
 		Map map = WorkServiceImpl.code_select(dto);
 		select_MV.addObject("select", map.get("code_select"));
@@ -42,30 +42,40 @@ public class WorkController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/work", method = { RequestMethod.POST })
-	public List<WorkDTO> detail(@RequestBody WorkDTO dto) {
+	public ModelAndView detail(@RequestBody WorkDTO dto) {
 
 		System.out.println("work 세부조건 조회");
 
+		ModelAndView select_MV = new ModelAndView();
+		select_MV.setViewName("work.tiles");
+		
 		List<WorkDTO> select = WorkServiceImpl.detail_select(dto);
+		
+		select_MV.addObject("select", select);
 		
 		System.out.println(select);
 
-		return select;
+		return select_MV;
 	}
 	
 	@ResponseBody
 	@RequestMapping(value = "/work", method = { RequestMethod.PUT })
-	public int insert(@RequestBody WorkDTO dto) {
+	public ModelAndView insert(@RequestBody WorkDTO dto) {
 		
 		System.out.println("work 삽입 조회");
+		
+		ModelAndView select_MV = new ModelAndView();
+		select_MV.setViewName("work.tiles");
 		
 		System.out.println("dto.getC_pn(): " + dto.getC_pn());
 		System.out.println("dto.getC_b(): " + dto.getC_b());
 		System.out.println("dto.getC_d(): " + dto.getC_d());		
 
-		int insert = WorkServiceImpl.insert(dto);
+		int select = WorkServiceImpl.insert(dto);
 		
-		return insert;
+		select_MV.addObject("select", select);
+		
+		return select_MV;
 	}
 
 }

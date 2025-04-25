@@ -35,7 +35,7 @@ public class VendorController {
 					&& (dto.getC_a() == null || dto.getC_a().trim().isEmpty())
 					&& (dto.getC_i() == null || dto.getC_i().trim().isEmpty())) {
 				List<VendorDTO> select = VendorServiceImpl.selectALL(dto);
-				select_MV.setViewName("vendor");
+				select_MV.setViewName("vendor.tiles");
 				select_MV.addObject("select", select);
 				select_MV.addObject("line", dto.getLine());
 				select_MV.addObject("lastpage", dto.getLine() / dto.getViewCount());
@@ -45,7 +45,7 @@ public class VendorController {
 				select_MV.addObject("end", dto.getEnd());
 			} else {
 				List<VendorDTO> select = VendorServiceImpl.select(dto);
-				select_MV.setViewName("vendor");
+				select_MV.setViewName("vendor.tiles");
 				select_MV.addObject("select", select);
 				select_MV.addObject("line", dto.getLine());
 				select_MV.addObject("lastpage", dto.getLine() / dto.getViewCount());
@@ -57,7 +57,7 @@ public class VendorController {
 
 		} else {
 			List<VendorDTO> select = VendorServiceImpl.selectALL(dto);
-			select_MV.setViewName("vendor");
+			select_MV.setViewName("vendor.tiles");
 			select_MV.addObject("select", select);
 			select_MV.addObject("line", dto.getLine());
 			select_MV.addObject("lastpage", dto.getLine() / dto.getViewCount());

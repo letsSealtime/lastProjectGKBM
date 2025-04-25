@@ -38,7 +38,7 @@ public class BillController {
 				
 				List<BillDTO> select = BillServiceImpl.selectALL(dto);
 				
-				select_MV.setViewName("bill");
+				select_MV.setViewName("bill.tiles");
 				select_MV.addObject("select", select);
 				select_MV.addObject("line", dto.getLine());
 				select_MV.addObject("lastpage", dto.getLine() / dto.getViewCount());
@@ -49,7 +49,7 @@ public class BillController {
 			} else {
 				List<BillDTO> select = BillServiceImpl.select(dto);
 				
-				select_MV.setViewName("bill");
+				select_MV.setViewName("bill.tiles");
 				select_MV.addObject("select", select);
 				select_MV.addObject("line", dto.getLine());
 				select_MV.addObject("lastpage", dto.getLine() / dto.getViewCount());
@@ -62,7 +62,7 @@ public class BillController {
 		} else {
 			List<BillDTO> select = BillServiceImpl.selectALL(dto);
 			
-			select_MV.setViewName("bill");
+			select_MV.setViewName("bill.tiles");
 			select_MV.addObject("select", select);
 			select_MV.addObject("line", dto.getLine());
 			select_MV.addObject("lastpage", dto.getLine() / dto.getViewCount());

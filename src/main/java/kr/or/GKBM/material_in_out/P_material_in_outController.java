@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import kr.or.GKBM.material_in_out2.P_material_in_outDTO2;
+
 
 
 @Controller
@@ -84,5 +86,20 @@ public class P_material_in_outController {
 					}
 					return "redirect:material_in_out2";
 				}
+				
+				
+				// 수정을위한 업데이트
+				@RequestMapping(value = "/p_material_in_outudpateList", method = { RequestMethod.GET, RequestMethod.POST })
+				public String udpateList(@ModelAttribute P_material_in_outDTO mioDTO) {
+					// 실제 업데이트
+					System.out.println(mioDTO);
+					int select20 = miodao.udpate_2_1(mioDTO);
+					System.out.println("select20" + select20);
+
+					// 전체목록으로 리턴
+
+					return "redirect:material_in_out2";
+				}
+
 	
 }

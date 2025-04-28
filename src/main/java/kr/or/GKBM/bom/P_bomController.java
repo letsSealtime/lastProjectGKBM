@@ -1,6 +1,5 @@
 package kr.or.GKBM.bom;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -14,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 
@@ -82,6 +82,8 @@ public class P_bomController {
 		// 추가
 		@RequestMapping(value = "/p_bom", method = { RequestMethod.GET, RequestMethod.POST })
 		public String addition(@ModelAttribute P_bomDTO bDTO) {
+			
+			
 			System.out.println(bDTO);
 			int select20 = wmdao.addition_2_7(bDTO);
 
@@ -117,22 +119,40 @@ public class P_bomController {
 					return "redirect:bom2";
 				}
 				
+				
 				// 상세보기
 				@RequestMapping(value = "/P_work_method_View_details1", method = { RequestMethod.GET, RequestMethod.POST })
 				public String empOne99(HttpServletRequest request, Model model) {
-				    String contentType = request.getParameter("type");
-				    model.addAttribute("contentType", contentType);
-				    return "P_work_method_View_details.tiles";
-				}
-				// 원자재상세보기
-				@RequestMapping(value = "/P_bom_View_details", method = { RequestMethod.GET, RequestMethod.POST })
-				public String empOne00(HttpServletRequest request, Model model, P_bomDTO bDTO) {
 					String contentType = request.getParameter("type");
 					model.addAttribute("contentType", contentType);
-					
-					 
-					return "P_bom_View_details.tiles";
+					return "P_work_method_View_details.tiles";
 				}
+				
+				// 완제품 필요한 원자재
+				@RequestMapping(value = "/P_bom_View_details", method = { RequestMethod.GET, RequestMethod.POST })
+				public String empOne00(
+				    HttpServletRequest request, 
+				    Model model, 
+				    @RequestParam("consumption") int consumption //  consumption 파라미터 추가
+				) {
+				    String contentType = request.getParameter("type");
+				    model.addAttribute("contentType", contentType);
+
+				    // 원자재별 곱셈 계산
+				    int bristle = consumption;   // 칫솔모
+				    int handle = consumption;    // 칫솔대
+				    int rubber = consumption * 2; // 고무
+
+				    model.addAttribute("bristle", bristle);
+				    model.addAttribute("handle", handle);
+				    model.addAttribute("rubber", rubber);
+
+				    return "P_bom_View_details.tiles";
+				}
+
+
+
+
 				
 				
 

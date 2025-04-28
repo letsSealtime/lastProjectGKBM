@@ -1,534 +1,171 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper
-	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="gkbm.emp">
-
-	<!-- 최수완 -->
-
-	<!-- VENDOR 전체 조회 -->
-	<select id="selectVendorAll_1"
-		resultType="kr.or.GKBM.vendor.VendorDTO">
-
-		SELECT COUNT(*) AS line
-		FROM P_VENDOR
-
-	</select>
-
-	<!-- 페이징 전체 조회 -->
-	<select id="selectVendor_All_1"
-		parameterType="kr.or.GKBM.vendor.VendorDTO"
-		resultType="kr.or.GKBM.vendor.VendorDTO">
-
-		SELECT RNUM, c_c, c_n, c_m, c_p, c_a, c_i
-		FROM ( SELECT ROWNUM AS
-		RNUM,
-		c_c, c_n, c_m, c_p, c_a, c_i
-		FROM ( SELECT VENDOR_ID AS
-		c_c, VENDOR_NAME
-		AS c_n, MGR AS c_m,
-		VENDOR_PHONE AS c_p, EMAIL AS c_a,
-		SKU_ID AS c_i
-		FROM P_VENDOR
-		ORDER BY c_n))
-		WHERE RNUM <![CDATA[ >= ]]>
-		${indexStart} AND RNUM <![CDATA[ <= ]]>
-		${indexEnd}
-
-	</select>
-
-	<!-- VENDOR 부분 조회 -->
-	<select id="selectVendorPart_1"
-		parameterType="kr.or.GKBM.vendor.VendorDTO"
-		resultType="kr.or.GKBM.vendor.VendorDTO">
-		SELECT COUNT(*) AS line
-		FROM P_VENDOR
-		<where>
-			<if test="c_c != null and c_c != ''">
-				AND VENDOR_ID = #{c_c}
-			</if>
-			<if test="c_n != null and c_n != ''">
-				AND UPPER(VENDOR_NAME) LIKE '%' || UPPER(#{c_n}) || '%'
-			</if>
-			<if test="c_m != null and c_m != ''">
-				AND UPPER(MGR) LIKE '%' || UPPER(#{c_m}) || '%'
-			</if>
-			<if test="c_p != null and c_p != ''">
-				AND VENDOR_PHONE = #{c_p}
-			</if>
-			<if test="c_a != null and c_a != ''">
-				AND UPPER(EMAIL) LIKE '%' || UPPER(#{c_a}) || '%'
-			</if>
-			<if test="c_i != null and c_i != ''">
-				AND SKU_ID = #{c_i}
-			</if>
-		</where>
-
-	</select>
-
-	<!-- 페이징 부분 조회 -->
-	<select id="selectVendor_Part_1"
-		parameterType="kr.or.GKBM.vendor.VendorDTO"
-		resultType="kr.or.GKBM.vendor.VendorDTO">
-		SELECT RNUM, c_c, c_n, c_m, c_p, c_a, c_i
-		FROM (
-		SELECT ROWNUM AS RNUM,
-		c_c, c_n, c_m, c_p, c_a, c_i
-		FROM (
-		SELECT
-		VENDOR_ID AS c_c,
-		VENDOR_NAME
-		AS c_n,
-		MGR AS c_m,
-		VENDOR_PHONE AS c_p,
-		EMAIL AS c_a,
-		SKU_ID AS c_i
-		FROM
-		P_VENDOR
-		<where>
-			<if test="c_c != null and c_c != ''">
-				AND VENDOR_ID = #{c_c}
-			</if>
-			<if test="c_n != null and c_n != ''">
-				AND UPPER(VENDOR_NAME) LIKE '%' || UPPER(#{c_n}) || '%'
-			</if>
-			<if test="c_m != null and c_m != ''">
-				AND UPPER(MGR) LIKE '%' || UPPER(#{c_m}) || '%'
-			</if>
-			<if test="c_p != null and c_p != ''">
-				AND VENDOR_PHONE = #{c_p}
-			</if>
-			<if test="c_a != null and c_a != ''">
-				AND UPPER(EMAIL) LIKE '%' || UPPER(#{c_a}) || '%'
-			</if>
-			<if test="c_i != null and c_i != ''">
-				AND SKU_ID = #{c_i}
-			</if>
-		</where>
-
-		ORDER BY VENDOR_NAME))
-		WHERE RNUM <![CDATA[ >= ]]>
-		${indexStart}
-		AND RNUM <![CDATA[ <= ]]>
-		${indexEnd}
-	</select>
-
-	<!-- 데이터 기입 -->
-
-	<insert id="insertVendor_1"
-		parameterType="kr.or.GKBM.vendor.VendorDTO">
-
-		INSERT INTO P_VENDOR
-		VALUES(SEQ.NEXTVAL, #{c_n}, #{c_m},
-		#{c_p}, #{c_a}, #{c_i})
-
-	</insert>
-
-	<delete id="deleteVendor_1"
-		parameterType="kr.or.GKBM.vendor.VendorDTO">
-
-		DELETE FROM P_VENDOR
-		WHERE VENDOR_ID IN
-		<foreach item="delete" collection="check" open="(" close=")"
-			separator=",">
-			#{delete}
-		</foreach>
-
-	</delete>
-
-	<update id="updateVendor_1"
-		parameterType="kr.or.GKBM.vendor.VendorDTO">
-
-		UPDATE P_VENDOR
-		SET VENDOR_NAME = #{c_n},
-		MGR = #{c_m},
-		VENDOR_PHONE = #{c_p},
-		EMAIL = #{c_a},
-		SKU_ID = #{c_i}
-		WHERE VENDOR_ID =
-		#{c_c}
-
-	</update>
-
-	<!-- BILL 전체 조회 -->
-	<select id="selectBillAll_1"
-		resultType="kr.or.GKBM.bill.BillDTO">
-
-		SELECT COUNT(*) AS line
-		FROM P_VENDOR
-
-	</select>
-
-	<!-- 페이징 전체 조회 -->
-	<select id="selectBill_All_1"
-		parameterType="kr.or.GKBM.bill.BillDTO"
-		resultType="kr.or.GKBM.bill.BillDTO">
-
-		SELECT RNUM, c_c, c_n, c_m, c_p, c_a, c_i
-		FROM ( SELECT ROWNUM AS
-		RNUM,
-		c_c, c_n, c_m, c_p, c_a, c_i
-		FROM ( SELECT VENDOR_ID AS
-		c_c, VENDOR_NAME
-		AS c_n, MGR AS c_m,
-		VENDOR_PHONE AS c_p, EMAIL AS c_a,
-		SKU_ID AS c_i
-		FROM P_VENDOR
-		ORDER BY c_n))
-		WHERE RNUM <![CDATA[ >= ]]>
-		${indexStart} AND RNUM <![CDATA[ <= ]]>
-		${indexEnd}
-
-	</select>
-
-	<!-- BILL 부분 조회 -->
-	<select id="selectBillPart_1"
-		parameterType="kr.or.GKBM.bill.BillDTO"
-		resultType="kr.or.GKBM.bill.BillDTO">
-		SELECT COUNT(*) AS line
-		FROM P_VENDOR
-		<where>
-			<if test="c_c != null and c_c != ''">
-				AND VENDOR_ID = #{c_c}
-			</if>
-			<if test="c_n != null and c_n != ''">
-				AND UPPER(VENDOR_NAME) LIKE '%' || UPPER(#{c_n}) || '%'
-			</if>
-			<if test="c_m != null and c_m != ''">
-				AND UPPER(MGR) LIKE '%' || UPPER(#{c_m}) || '%'
-			</if>
-			<if test="c_p != null and c_p != ''">
-				AND VENDOR_PHONE = #{c_p}
-			</if>
-			<if test="c_a != null and c_a != ''">
-				AND UPPER(EMAIL) LIKE '%' || UPPER(#{c_a}) || '%'
-			</if>
-			<if test="c_i != null and c_i != ''">
-				AND SKU_ID = #{c_i}
-			</if>
-		</where>
-
-	</select>
-
-	<!-- 페이징 부분 조회 -->
-	<select id="selectBill_Part_1"
-		parameterType="kr.or.GKBM.bill.BillDTO"
-		resultType="kr.or.GKBM.bill.BillDTO">
-		SELECT RNUM, c_c, c_n, c_m, c_p, c_a, c_i
-		FROM (
-		SELECT ROWNUM AS RNUM,
-		c_c, c_n, c_m, c_p, c_a, c_i
-		FROM (
-		SELECT
-		VENDOR_ID AS c_c,
-		VENDOR_NAME
-		AS c_n,
-		MGR AS c_m,
-		VENDOR_PHONE AS c_p,
-		EMAIL AS c_a,
-		SKU_ID AS c_i
-		FROM
-		P_VENDOR
-		<where>
-			<if test="c_c != null and c_c != ''">
-				AND VENDOR_ID = #{c_c}
-			</if>
-			<if test="c_n != null and c_n != ''">
-				AND UPPER(VENDOR_NAME) LIKE '%' || UPPER(#{c_n}) || '%'
-			</if>
-			<if test="c_m != null and c_m != ''">
-				AND UPPER(MGR) LIKE '%' || UPPER(#{c_m}) || '%'
-			</if>
-			<if test="c_p != null and c_p != ''">
-				AND VENDOR_PHONE = #{c_p}
-			</if>
-			<if test="c_a != null and c_a != ''">
-				AND UPPER(EMAIL) LIKE '%' || UPPER(#{c_a}) || '%'
-			</if>
-			<if test="c_i != null and c_i != ''">
-				AND SKU_ID = #{c_i}
-			</if>
-		</where>
-
-		ORDER BY VENDOR_NAME))
-		WHERE RNUM <![CDATA[ >= ]]>
-		${indexStart}
-		AND RNUM <![CDATA[ <= ]]>
-		${indexEnd}
-	</select>
-
-	<!-- 데이터 기입 -->
-
-	<insert id="insertBill_1"
-		parameterType="kr.or.GKBM.bill.BillDTO">
-
-		INSERT INTO P_VENDOR
-		VALUES(SEQ.NEXTVAL, #{c_n}, #{c_m},
-		#{c_p}, #{c_a}, #{c_i})
-
-	</insert>
-
-	<delete id="deleteBill_1"
-		parameterType="kr.or.GKBM.bill.BillDTO">
-
-		DELETE FROM P_VENDOR
-		WHERE VENDOR_ID IN
-		<foreach item="delete" collection="check" open="(" close=")"
-			separator=",">
-			#{delete}
-		</foreach>
-
-	</delete>
-
-	<update id="updateBill_1"
-		parameterType="kr.or.GKBM.bill.BillDTO">
-
-		UPDATE P_VENDOR
-		SET VENDOR_NAME = #{c_n},
-		MGR = #{c_m},
-		VENDOR_PHONE = #{c_p},
-		EMAIL = #{c_a},
-		SKU_ID = #{c_i}
-		WHERE VENDOR_ID =
-		#{c_c}
-
-	</update>
-
-	<!-- 이주희 -->
-	<!-- 상품정보관리 페이징된 목록 -->
-	<select id="fulltable_2" parameterType="skuDTO"
-		resultType="skuDTO">
-		SELECT * FROM ( SELECT p.*, ROW_NUMBER() OVER (ORDER BY sku_id DESC)
-		AS rn FROM p_sku p
-		<where>
-			<if test="sku_code != null and sku_code != ''"> AND upper(sku_code) like upper('%' || #{sku_code} ||
-				'%') </if>
-		</where>
-		) WHERE rn BETWEEN #{startRow} AND #{endRow}
-	</select>
-	<!-- 상품정보관리 조건에 맞는 전체 데이터 수 가져오기 -->
-	<select id="Count_2" parameterType="skuDTO" resultType="int">
-		SELECT COUNT(*) FROM p_sku
-		<where>
-			<if test="sku_code != null and sku_code != ''"> AND upper(sku_code) like upper('%' || #{sku_code} ||
-				'%') </if>
-		</where>
-	</select>
-	<!-- 상품정보관리 등록 -->
-	<insert id="addition_2" parameterType="skuDTO"> insert into p_sku VALUES
-		(#{sku_id}, #{sku_code}, #{sku_name}, #{sku_size}, #{vendor_name},
-		#{price}, SYSDATE, #{modify_date}, #{sku_category}) </insert>
-	<!-- 상품정보관리 삭제 -->
-	<delete id="delete_2" parameterType="skuDTO"> delete from p_sku where
-		sku_id = #{sku_id} </delete>
-	<!-- 상품정보관리 수정 -->
-	<update id="udpate_2" parameterType="skuDTO"> update p_sku set sku_code =
-		#{sku_code}, sku_name = #{sku_name}, sku_size = #{sku_size},
-		vendor_name = #{vendor_name}, price = #{price}, modify_date = SYSDATE,
-		sku_category = #{sku_category} where sku_id = #{sku_id} </update>
-	<!-- 원자재입고관리 -->
-	<!-- 전체조회 -->
-	<!-- <select id="fulltable_2_1" resultType="mioDTO" parameterType="mioDTO"> 
-		SELECT pmio.*, ps.sku_code, ps.sku_name, ps.sku_size FROM P_MATERIAL_IN_OUT 
-		pmio LEFT JOIN P_SKU ps ON pmio.sku_id = ps.sku_id WHERE pmio.sku_type = 
-		'In' </select> -->
-	<!-- 원자재입고 페이징된 목록 -->
-	<select id="fulltable_2_1" parameterType="mioDTO"
-		resultType="mioDTO">
-		SELECT * FROM ( SELECT pmio.*, ps.sku_code, ps.sku_name, ps.sku_size,
-		ROW_NUMBER() OVER (ORDER BY pmio.ib_id DESC) AS rn FROM
-		P_MATERIAL_IN_OUT pmio LEFT JOIN P_SKU ps ON pmio.sku_id = ps.sku_id
-		<!-- WHERE pmio.sku_type = 'In' -->
-		<where>
-			pmio.sku_type = 'In'
-			<if test="sku_code != null and sku_code != ''"> AND upper(ps.sku_code) like upper('%' || #{sku_code} ||
-				'%') </if>
-		</where>
-		) WHERE rn BETWEEN #{startRow} AND #{endRow}
-	</select>
-	<!-- 원자재입고관리 전체 데이터 수 조회 -->
-	<select id="Count_2_1" parameterType="mioDTO" resultType="int">
-		SELECT COUNT(*) FROM P_MATERIAL_IN_OUT pmio LEFT JOIN P_SKU ps ON
-		pmio.sku_id = ps.sku_id
-		<!-- WHERE pmio.sku_type = 'In' -->
-		<where>
-			pmio.sku_type = 'In'
-			<if test="sku_code != null and sku_code != ''"> AND upper(ps.sku_code) like upper('%' || #{sku_code} ||
-				'%') </if>
-		</where>
-	</select>
-	<!-- 원자재입고관리 등록 -->
-	<insert id="addition_2_1" parameterType="mioDTO"> insert into
-		p_material_in_out VALUES (#{ib_id}, #{material_count},
-		#{material_price}, #{sku_type}, SYSDATE, #{modify_date}, #{remarks},
-		#{sku_id}, #{bill_id}) </insert>
-	<!-- 원자재입고관리 삭제 -->
-	<delete id="delete_2_1" parameterType="mioDTO"> delete from
-		p_material_in_out where ib_id = #{ib_id} </delete>
-
-
-	<!-- ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ 이준규 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ -->
-
-
-	<!-- 로그인 정보 전체조회 -->
-
-	<select id="selectEmp_3" resultType="kr.or.GKBM.Login.LoginDTO">
-		select * from p_emp
-	</select>
-
-	<!-- 설비등록 전체조회 and 검색 -->
-	<select id="selectP_equipreg"
-		resultType="kr.or.GKBM.p_equipreg.equipregDTO" parameterType="map">
-		SELECT * FROM p_facility
-		where
-		upper(facility_code) like upper('%' || #{facility_code} || '%')
-		or
-		upper(facility_name) like upper('%' || #{facility_name} || '%')
-	</select>
-
-
-	<!-- 설비등록 DB에 추가 -->
-	<insert id="insertP_eq"
-		parameterType="kr.or.GKBM.p_equipreg.equipregDTO">
-		insert into p_facility
-		values
-		(#{facility_code},
-		#{facility_manager},
-		#{installation_date},
-		#{facility_name},
-		#{facility_location},
-		#{inspection_cycle},
-		#{remarks})
-	</insert>
-
-	<!-- 설비등록 삭제 -->
-	<delete id="deleteP_eq3"
-		parameterType="kr.or.GKBM.p_equipreg.equipregDTO">
-		delete from p_facility
-		where
-		facility_code = #{facility_code}
-	</delete>
-
-	<!-- 설비등록 수정 -->
-	<update id="updateP_eq3"
-		parameterType="kr.or.GKBM.p_equipreg.equipregDTO">
-		update p_facility
-		set
-		facility_manager = #{facility_manager},
-		installation_date = #{installation_date},
-		facility_name = #{facility_name},
-		facility_location = #{facility_location},
-		inspection_cycle =
-		#{inspection_cycle},
-		remarks = #{remarks}
-		where facility_code = #{facility_code}
-	</update>
-
-
-	<!-- 김도희 -->
-
-	<select id="getBoardDetail" resultType="boardDTO"
-		parameterType="boardDTO">
-
-		select * from p_board
-		where board_id = #{board_id}
-
-	</select>
-
-	<update id="udpateBoard" parameterType="boardDTO">
-
-		update p_board
-		set title =
-		#{title},
-		board_content = #{board_content},
-		notice =
-		#{notice},
-		reserve_date = sysdate
-		where board_id = #{board_id}
-	</update>
-
-	<select id="insertBoard" parameterType="boardDTO">
-
-		insert into p_board
-		(board_id, empno, title, board_content, notice, create_date,
-		reserve_date, views)
-		VALUES (
-		board_id_seq.NEXTVAL,
-		#{empno},
-		#{title},
-		#{board_content},
-		#{notice},
-		sysdate, null, 0)
-	</select>
-
-	<delete id="deleteBoard" parameterType="boardDTO">
-
-		delete from p_board
-		where
-		board_id = #{board_id}
-	</delete>
-
-	<update id="viewsUpdateBoard" parameterType="boardDTO">
-
-		update p_board
-		set
-		views = (
-		select views+1 from p_board
-		where board_id = #{board_id}
-		)
-		where board_id = #{board_id}
-	</update>
-
-	<select id="selectPageBoard" resultType="boardDTO">
-		select *
-		from (select rownum as rnum, inner_table.*
-		from (select * from
-		p_board
-		order by board_id
-		) inner_table
-		)
-	<![CDATA[
-		where rnum >= #{indexStart} and rnum <= #{indexEnd}
-	]]>
-	</select>
-
-	<select id="totalBoardPage" resultType="int">
-		select count (*) from
-		p_board
-	</select>
-
-	<select id="searchPageBoard" resultType="boardDTO"
-		parameterType="boardDTO">
-		select *
-		from (select rownum as rnum, inner_table.*
-		from (select * from p_board
-
-		<where>
-			<choose>
-				<when
-					test="type == 'empno' and  (keyword != '' and keyword != null)">
-					and empno = #{empno}
-				</when>
-				<when
-					test="type == 'title' and  (keyword != '' and keyword != null)">
-					and title like '%' || #{title} || '%'
-				</when>
-				<when
-					test="type == 'board_content' and  (keyword != '' and keyword != null)">
-					and board_content like '%' || #{board_content} || '%'
-				</when>
-			</choose>
-
-			<!-- 추후 String으로 수정 시, 해당 sql문 사용 and upper(empno) like upper('%' || #{ename} 
-				|| '%') -->
-		</where>
-		order by board_id asc
-		) inner_table
-		)
-	<![CDATA[
-		where rnum >= #{indexStart} and rnum <= #{indexEnd}
-	]]>
-	</select>
-
-
-</mapper>
+<!--   상품정보관리 페이징된 목록   -->
+<select id="fulltable_2" parameterType="skuDTO" resultType="skuDTO">
+SELECT * FROM ( SELECT p.*, ROW_NUMBER() OVER (ORDER BY sku_id DESC) AS rn FROM p_sku p
+<where>
+<if test="searchKeyword != null and searchKeyword != ''"> AND ( UPPER(sku_code) LIKE UPPER('%' || #{searchKeyword} || '%') OR UPPER(sku_name) LIKE UPPER('%' || #{searchKeyword} || '%') )</if>
+</where>
+) WHERE rn BETWEEN #{startRow} AND #{endRow}
+</select>
+<!--   상품정보관리 조건에 맞는 전체 데이터 수 가져오기   -->
+<select id="Count_2" parameterType="skuDTO" resultType="int">
+SELECT COUNT(*) FROM p_sku
+<where>
+<if test="searchKeyword != null and searchKeyword != ''"> AND ( UPPER(sku_code) LIKE UPPER('%' || #{searchKeyword} || '%') OR UPPER(sku_name) LIKE UPPER('%' || #{searchKeyword} || '%') )</if>
+</where>
+</select>
+<!--   상품정보관리 등록   -->
+<insert id="addition_2" parameterType="skuDTO"> insert into p_sku VALUES (seq_p_sku.nextval, #{sku_code}, #{sku_name}, #{sku_size}, #{vendor_name}, #{price}, SYSDATE, #{modify_date}, #{sku_category}) </insert>
+<!--   상품정보관리 삭제   -->
+<delete id="delete_2" parameterType="skuDTO"> delete from p_sku where sku_id = #{sku_id} </delete>
+<!--   상품정보관리 수정   -->
+<update id="udpate_2" parameterType="skuDTO"> update p_sku set sku_code = #{sku_code}, sku_name = #{sku_name}, sku_size = #{sku_size}, vendor_name = #{vendor_name}, price = #{price}, modify_date = SYSDATE, sku_category = #{sku_category} where sku_id = #{sku_id} </update>
+<!--   원자재입고관리   -->
+<!--   원자재입고 페이징된 목록   -->
+<select id="fulltable_2_1" parameterType="mioDTO" resultType="mioDTO">
+SELECT * FROM ( SELECT pmio.*, ps.sku_code, ps.sku_name, ps.sku_size, ROW_NUMBER() OVER (ORDER BY pmio.ib_id DESC) AS rn FROM P_MATERIAL_IN_OUT pmio LEFT JOIN P_SKU ps ON pmio.sku_id = ps.sku_id
+<where>
+pmio.sku_type = 'In'
+<if test="searchKeyword != null and searchKeyword != ''"> AND ( UPPER(ps.sku_code) LIKE UPPER('%' || #{searchKeyword} || '%') OR UPPER(ps.sku_name) LIKE UPPER('%' || #{searchKeyword} || '%') ) </if>
+</where>
+) WHERE rn BETWEEN #{startRow} AND #{endRow}
+</select>
+<!--   원자재입고관리 전체 데이터 수 조회   -->
+<select id="Count_2_1" parameterType="mioDTO" resultType="int">
+SELECT COUNT(*) FROM P_MATERIAL_IN_OUT pmio LEFT JOIN P_SKU ps ON pmio.sku_id = ps.sku_id
+<where>
+pmio.sku_type = 'In'
+<if test="searchKeyword != null and searchKeyword != ''"> AND ( UPPER(ps.sku_code) LIKE UPPER('%' || #{searchKeyword} || '%') OR UPPER(ps.sku_name) LIKE UPPER('%' || #{searchKeyword} || '%') ) </if>
+</where>
+</select>
+<!--   원자재입고관리 등록   -->
+<insert id="addition_2_1" parameterType="mioDTO"> insert into p_material_in_out VALUES (seq_p_material_in_out.nextval, #{material_count}, #{material_price}, #{sku_type}, SYSDATE, #{modify_date}, #{remarks}, #{sku_id}, #{bill_id}) </insert>
+<!--   원자재입고관리 삭제   -->
+<delete id="delete_2_1" parameterType="mioDTO"> delete from p_material_in_out where ib_id = #{ib_id} </delete>
+<!--   원자재입고관리 수정   -->
+<update id="udpate_2_1" parameterType="mioDTO"> update p_material_in_out set material_count = #{material_count}, material_price = #{material_price}, sku_type = #{sku_type}, remarks = #{remarks}, modify_date = SYSDATE, sku_id = #{sku_id}, bill_id = #{bill_id} where ib_id = #{ib_id} </update>
+<!--   원자재출고관리 페이징된 목록   -->
+<select id="fulltable_2_2" parameterType="mioDTO2" resultType="mioDTO">
+SELECT * FROM ( SELECT pmio.*, ps.sku_code, ps.sku_name, ps.sku_size, ROW_NUMBER() OVER (ORDER BY pmio.ib_id DESC) AS rn FROM P_MATERIAL_IN_OUT pmio LEFT JOIN P_SKU ps ON pmio.sku_id = ps.sku_id
+<where>
+pmio.sku_type = 'Out'
+<if test="searchKeyword != null and searchKeyword != ''"> AND ( UPPER(ps.sku_code) LIKE UPPER('%' || #{searchKeyword} || '%') OR UPPER(ps.sku_name) LIKE UPPER('%' || #{searchKeyword} || '%') ) </if>
+</where>
+) WHERE rn BETWEEN #{startRow} AND #{endRow}
+</select>
+<!--   원자재출고관리 전체 데이터 수 조회   -->
+<select id="Count_2_2" parameterType="mioDTO2" resultType="int">
+SELECT COUNT(*) FROM P_MATERIAL_IN_OUT pmio LEFT JOIN P_SKU ps ON pmio.sku_id = ps.sku_id
+<where>
+pmio.sku_type = 'Out'
+<if test="searchKeyword != null and searchKeyword != ''"> AND ( UPPER(ps.sku_code) LIKE UPPER('%' || #{searchKeyword} || '%') OR UPPER(ps.sku_name) LIKE UPPER('%' || #{searchKeyword} || '%') ) </if>
+</where>
+</select>
+<!--   원자재출고관리 등록   -->
+<insert id="addition_2_2" parameterType="mioDTO2"> insert into p_material_in_out VALUES (seq_p_material_in_out.nextval, #{material_count}, #{material_price}, #{sku_type}, SYSDATE, #{modify_date}, #{remarks}, #{sku_id}, #{bill_id}) </insert>
+<!--   원자재출고관리 삭제   -->
+<delete id="delete_2_2" parameterType="mioDTO2"> delete from p_material_in_out where ib_id = #{ib_id} </delete>
+<!--   원자재출고관리 수정   -->
+<update id="udpate_2_2" parameterType="mioDTO2"> update p_material_in_out set material_count = #{material_count}, material_price = #{material_price}, sku_type = #{sku_type}, remarks = #{remarks}, modify_date = SYSDATE, sku_id = #{sku_id}, bill_id = #{bill_id} where ib_id = #{ib_id} </update>
+<!--   원자재현황 페이징된 목록   -->
+<select id="fulltable_2_3" parameterType="mioDTO3" resultType="mioDTO">
+SELECT * FROM ( SELECT pmio.*, ps.sku_code, ps.sku_name, ps.sku_size, ROW_NUMBER() OVER (ORDER BY pmio.ib_id DESC) AS rn FROM P_MATERIAL_IN_OUT pmio LEFT JOIN P_SKU ps ON pmio.sku_id = ps.sku_id
+<where>
+<if test="searchKeyword != null and searchKeyword != ''"> AND ( UPPER(ps.sku_code) LIKE UPPER('%' || #{searchKeyword} || '%') OR UPPER(ps.sku_name) LIKE UPPER('%' || #{searchKeyword} || '%') ) </if>
+</where>
+) WHERE rn BETWEEN #{startRow} AND #{endRow}
+</select>
+<!--   원자재현황 전체 데이터 수 조회   -->
+<select id="Count_2_3" parameterType="mioDTO3" resultType="int">
+SELECT COUNT(*) FROM P_MATERIAL_IN_OUT pmio LEFT JOIN P_SKU ps ON pmio.sku_id = ps.sku_id
+<where>
+<if test="searchKeyword != null and searchKeyword != ''"> AND ( UPPER(ps.sku_code) LIKE UPPER('%' || #{searchKeyword} || '%') OR UPPER(ps.sku_name) LIKE UPPER('%' || #{searchKeyword} || '%') ) </if>
+</where>
+</select>
+<!--   완제품입고관리 페이징된 목록   -->
+<select id="fulltable_2_4" parameterType="pioDTO" resultType="pioDTO">
+SELECT * FROM ( SELECT pmio.*, ps.sku_code, ps.sku_name, ps.sku_size, ROW_NUMBER() OVER (ORDER BY pmio.ib_id DESC) AS rn FROM P_PRODUCT_IN_OUT pmio LEFT JOIN P_SKU ps ON pmio.sku_id = ps.sku_id
+<where>
+pmio.sku_type = 'In'
+<if test="searchKeyword != null and searchKeyword != ''"> AND ( UPPER(ps.sku_code) LIKE UPPER('%' || #{searchKeyword} || '%') OR UPPER(ps.sku_name) LIKE UPPER('%' || #{searchKeyword} || '%') ) </if>
+</where>
+) WHERE rn BETWEEN #{startRow} AND #{endRow}
+</select>
+<!--   완제품입고관리 전체 데이터 수 조회   -->
+<select id="Count_2_4" parameterType="pioDTO" resultType="int">
+SELECT COUNT(*) FROM P_PRODUCT_IN_OUT pmio LEFT JOIN P_SKU ps ON pmio.sku_id = ps.sku_id
+<where>
+pmio.sku_type = 'In'
+<if test="searchKeyword != null and searchKeyword != ''"> AND ( UPPER(ps.sku_code) LIKE UPPER('%' || #{searchKeyword} || '%') OR UPPER(ps.sku_name) LIKE UPPER('%' || #{searchKeyword} || '%') ) </if>
+</where>
+</select>
+<!--   완제품입고관리 등록   -->
+<insert id="addition_2_4" parameterType="pioDTO"> insert into P_PRODUCT_IN_OUT VALUES (SEQ_P_PRODUCT_IN_OUT.nextval, #{product_count}, #{product_price}, #{sku_type}, SYSDATE, #{modify_date}, #{remarks}, #{sku_id}, #{empno}) </insert>
+<!--   완제품입고관리 삭제   -->
+<delete id="delete_2_4" parameterType="pioDTO"> delete from P_PRODUCT_IN_OUT where ib_id = #{ib_id} </delete>
+<!--   완제품입고관리 수정   -->
+<update id="udpate_2_4" parameterType="pioDTO"> update P_PRODUCT_IN_OUT set product_count = #{product_count}, product_price = #{product_price}, sku_type = #{sku_type}, remarks = #{remarks}, modify_date = SYSDATE, sku_id = #{sku_id}, empno = #{empno} where ib_id = #{ib_id} </update>
+<!--   완제품출고관리 페이징된 목록   -->
+<select id="fulltable_2_5" parameterType="pioDTO2" resultType="pioDTO">
+SELECT * FROM ( SELECT pmio.*, ps.sku_code, ps.sku_name, ps.sku_size, ROW_NUMBER() OVER (ORDER BY pmio.ib_id DESC) AS rn FROM P_PRODUCT_IN_OUT pmio LEFT JOIN P_SKU ps ON pmio.sku_id = ps.sku_id
+<where>
+pmio.sku_type = 'Out'
+<if test="searchKeyword != null and searchKeyword != ''"> AND ( UPPER(ps.sku_code) LIKE UPPER('%' || #{searchKeyword} || '%') OR UPPER(ps.sku_name) LIKE UPPER('%' || #{searchKeyword} || '%') ) </if>
+</where>
+) WHERE rn BETWEEN #{startRow} AND #{endRow}
+</select>
+<!--   완제품출고관리 전체 데이터 수 조회   -->
+<select id="Count_2_5" parameterType="pioDTO2" resultType="int">
+SELECT COUNT(*) FROM P_PRODUCT_IN_OUT pmio LEFT JOIN P_SKU ps ON pmio.sku_id = ps.sku_id
+<where>
+pmio.sku_type = 'Out'
+<if test="searchKeyword != null and searchKeyword != ''"> AND ( UPPER(ps.sku_code) LIKE UPPER('%' || #{searchKeyword} || '%') OR UPPER(ps.sku_name) LIKE UPPER('%' || #{searchKeyword} || '%') ) </if>
+</where>
+</select>
+<!--   완제품출고관리 등록   -->
+<insert id="addition_2_5" parameterType="pioDTO2"> insert into P_PRODUCT_IN_OUT VALUES (SEQ_P_PRODUCT_IN_OUT.nextval, #{product_count}, #{product_price}, #{sku_type}, SYSDATE, #{modify_date}, #{remarks}, #{sku_id}, #{empno}) </insert>
+<!--   완제품출고관리 삭제   -->
+<delete id="delete_2_5" parameterType="pioDTO2"> delete from P_PRODUCT_IN_OUT where ib_id = #{ib_id} </delete>
+<!--   완제품출고관리 수정   -->
+<update id="udpate_2_5" parameterType="pioDTO2"> update P_PRODUCT_IN_OUT set product_count = #{product_count}, product_price = #{product_price}, sku_type = #{sku_type}, remarks = #{remarks}, modify_date = SYSDATE, sku_id = #{sku_id}, empno = #{empno} where ib_id = #{ib_id} </update>
+<!--   작업표준서 페이징된 목록   -->
+<select id="fulltable_2_6" parameterType="wmDTO" resultType="wmDTO">
+SELECT * FROM ( SELECT pmio.*, ps.sku_code, ps.sku_name, ps.sku_size, ROW_NUMBER() OVER (ORDER BY pmio.work_method DESC) AS rn FROM P_work_method pmio LEFT JOIN P_SKU ps ON pmio.sku_id = ps.sku_id
+<where>
+<if test="searchKeyword != null and searchKeyword != ''"> AND ( UPPER(ps.sku_code) LIKE UPPER('%' || #{searchKeyword} || '%') OR UPPER(ps.sku_name) LIKE UPPER('%' || #{searchKeyword} || '%') ) </if>
+</where>
+) WHERE rn BETWEEN #{startRow} AND #{endRow}
+</select>
+<!--   작업표준서 전체 데이터 수 조회   -->
+<select id="Count_2_6" parameterType="wmDTO" resultType="int">
+SELECT COUNT(*) FROM P_work_method pmio LEFT JOIN P_SKU ps ON pmio.sku_id = ps.sku_id
+<where>
+<if test="searchKeyword != null and searchKeyword != ''"> AND ( UPPER(ps.sku_code) LIKE UPPER('%' || #{searchKeyword} || '%') OR UPPER(ps.sku_name) LIKE UPPER('%' || #{searchKeyword} || '%') ) </if>
+</where>
+</select>
+<!--   작업표준서 등록   -->
+<insert id="addition_2_6" parameterType="wmDTO"> insert into P_work_method VALUES (seq_p_work_method.nextval, #{work}, #{consumption}, #{sku_id}, #{work_file}, SYSDATE, #{modify_date}) </insert>
+<!--   작업표준서 삭제   -->
+<delete id="delete_2_6" parameterType="wmDTO"> delete from P_work_method where work_method = #{work_method} </delete>
+<!--   작업표준서 수정   -->
+<update id="udpate_2_6" parameterType="wmDTO"> update P_work_method set work = #{work}, consumption = #{consumption}, sku_id = #{sku_id}, work_file = #{work_file}, modify_date = SYSDATE where work_method = #{work_method} </update>
+<!--   BOM 페이징 목록   -->
+<select id="fulltable_2_7" parameterType="bDTO" resultType="bDTO">
+SELECT * FROM ( SELECT pb.*, ps.sku_code, ps.sku_name, ps.sku_size, pwm.work, pwm.work_file, ROW_NUMBER() OVER (ORDER BY pb.bom_id DESC) AS rn FROM p_bom pb LEFT JOIN p_sku ps ON pb.sku_id = ps.sku_id LEFT JOIN p_work_method pwm ON pb.work_method = pwm.work_method
+<where>
+<if test="searchKeyword != null and searchKeyword != ''"> AND ( UPPER(ps.sku_code) LIKE UPPER('%' || #{searchKeyword} || '%') OR UPPER(ps.sku_name) LIKE UPPER('%' || #{searchKeyword} || '%') ) </if>
+</where>
+) WHERE rn BETWEEN #{startRow} AND #{endRow}
+</select>
+<!--   BOM 데이터 수 조회   -->
+<select id="Count_2_7" parameterType="bDTO" resultType="int">
+SELECT COUNT(*) FROM p_bom pb LEFT JOIN p_sku ps ON pb.sku_id = ps.sku_id LEFT JOIN p_work_method pwm ON pb.work_method = pwm.work_method
+<where>
+<if test="searchKeyword != null and searchKeyword != ''"> AND ( UPPER(ps.sku_code) LIKE UPPER('%' || #{searchKeyword} || '%') OR UPPER(ps.sku_name) LIKE UPPER('%' || #{searchKeyword} || '%') ) </if>
+</where>
+</select>
+<!--   bom 등록   -->
+<insert id="addition_2_7" parameterType="bDTO"> insert into p_bom VALUES (seq_p_bom.nextval, #{sku_id_material}, #{consumption}, #{sku_id}, #{work_method}, SYSDATE, #{modify_date}) </insert>
+<!--   bom 삭제   -->
+<delete id="delete_2_7" parameterType="bDTO"> delete from p_bom where bom_id = #{bom_id} </delete>
+<!--   bom 수정   -->
+<update id="udpate_2_7" parameterType="bDTO"> update p_bom set sku_id_material = #{sku_id_material}, consumption = #{consumption}, sku_id = #{sku_id}, work_method = #{work_method}, modify_date = SYSDATE where bom_id = #{bom_id} </update>

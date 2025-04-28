@@ -25,7 +25,7 @@ public class P_product_in_outDTO2 {
  	int endRow;			 //끝
  	
  	
-	
+ 	private String searchKeyword; 
      
      
 }

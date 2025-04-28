@@ -7,90 +7,95 @@
 <meta charset="UTF-8">
 <title>작업표준서</title>
 <style>
+* {
+  box-sizing: border-box;
+}
+
 body {
-	margin: 0;
-	padding: 0;
-	
-	font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
 }
 
 .container {
-	width: 95%;
-	margin: auto;
-	background: white;
-	padding: 20px;
-	
+  width: 95%;
+  margin: auto;
+  background: white;
+  padding: 20px;
 }
 
 h1 {
-	margin-bottom: 20px;
-	border: 1px solid black;
-	padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid black;
+  padding: 10px;
 }
 
 .form {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 20px;
-	margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 20px;
 }
 
 .form-fields {
-	flex: 1;
-	display: flex;
-	flex-direction: column;
-	gap: 15px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 .form-row {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	gap: 10px;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 
 label {
-	min-width: 80px;
+  min-width: 120px;
+  flex: 0 0 120px;
 }
 
-input {
-	padding: 8px;
-	border: 1px solid #ccc;
-	border-radius: 5px;
-	flex: 1;
-}
-
-.buttons {
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
+input, select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  flex: 1;
+  height: 38px;
 }
 
 .buttons {
-	padding: 10px 15px;
-	background-color: #4a90e2;
-	color: white;
-	border: none;
-	border-radius: 5px;
-	cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px 15px;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .buttons:hover {
-	background-color: #0056b3;
+  background-color: #0056b3;
 }
 
 button {
-	padding: 10px 15px;
-	background-color: #4a90e2;
-	color: white;
-	border: none;
-	border-radius: 5px;
-	cursor: pointer;
+  padding: 10px 15px;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 button:hover {
-	background-color: #0056b3;
+  background-color: #0056b3;
 }
+
+
+
 
 table {
 	width: 100%;
@@ -167,20 +172,32 @@ span {
 					name="sku_id" value="${select20.sku_id}"> <label
 					for="작업양식사진">작업양식사진<span>*</span></label> <input type="file"
 					name="work_file" value="${select20.work_file}">
-				
+					<input type="hidden" name="existing_file" id="existingFileField">
+    				<input type="hidden" name="work_method" id="workMethodField">
+					
+
 
 			</div>
 
 
 			<div class="form-row">
-				<label for="sku_code">상품 코드+ 상품명 으로 조회</label> <input type="text"
-					id="skuCodeInput" name="sku_code">
+				<label for="sku_code">상품 코드 + <br>상품명 으로 조회</label> <input type="text"
+					id="searchKeyword" name="searchKeyword"
+					placeholder="상품코드 또는 상품명 입력">
 			</div>
+
 
 
 		</div>
 
 		<div>
+		<!-- 작업자 -->
+		<c:if test="${user.grade == 2}"> 
+		<button type="button" class="buttons" onclick="searchBySkuCode()"
+				id="searchBtn">조회</button>
+		</c:if>
+		<!-- 개발자 -->
+		<c:if test="${user.grade == 1}"> 
 			<!-- onclick="setFormAction('insert')" -->
 			<!-- 기존 버튼들 -->
 			<input type="submit" value="등록" class="buttons" id="insertBtn">
@@ -200,7 +217,7 @@ span {
 				style="display: none;" onclick="setFormAction('update')"></br>
 			<button type="button" class="buttons" id="cancelUpdateBtn"
 				style="display: none;" onclick="cancelUpdate()">수정취소</button>
-
+		</c:if>
 		</div>
 
 	</form>
@@ -244,9 +261,16 @@ span {
 						<td>${wmDTO.modify_date}</td>
 						<td>${wmDTO.sku_id}</td>
 						<td><c:if test="${not empty wmDTO.work_file}">
-								<img src="${pageContext.request.contextPath}${wmDTO.work_file}"
+								<img src="${pageContext.request.contextPath}/downloadWorkFile?filePath=${wmDTO.work_file}"
 									alt="작업양식사진" style="width: 80px; height: auto;">
+								<br>
+								<a
+									href="${pageContext.request.contextPath}/downloadWorkFile?filePath=${wmDTO.work_file}">
+									다운로드 </a>
 							</c:if></td>
+
+
+
 
 
 					</tr>
@@ -316,19 +340,20 @@ span {
     }
 	
 	// 조회
-     function searchBySkuCode() {
-    	 const skuCode = document.getElementById("skuCodeInput").value.trim(); // 공백 제거
+      function searchBySkuCode() {
+    const searchKeyword = document.getElementById("searchKeyword").value.trim();
 
-    	    if (skuCode == "") {
+
+    if (searchKeyword == "") {
     	        // 아무것도 입력 안 했을 때 → 전체 조회
     	        location.href = "work_method2"; 
     	    } else {
     	        // sku_code 값으로 조회
-    	        location.href = "work_method2?sku_code=" + encodeURIComponent(skuCode); 
+    	        location.href = "work_method2?searchKeyword=" + encodeURIComponent(searchKeyword);
+
     	    }
     	 
-    		/*  // 조회 후 입력란을 비우기
-    	    skuCodeInput.value = "";  */
+    		
     	}
 	
   	 // 수정 버튼 클릭 시 - 체크된 항목의 데이터를 입력란에 채우고 버튼 상태 변경
@@ -357,11 +382,13 @@ span {
          document.querySelector('input[name="work"]').value = cells[6].textContent.trim();
          document.querySelector('input[name="consumption"]').value = cells[7].textContent.trim();
          document.querySelector('input[name="sku_id"]').value = cells[10].textContent.trim();
-         document.querySelector('input[name="work_file"]').value = cells[11].textContent.trim();
+         /* document.querySelector('input[name="work_file"]').value = cells[11].textContent.trim(); */
+         document.getElementById('existingFileField').value = cells[11].textContent.trim(); // 파일 경로 셀
+         document.getElementById('workMethodField').value = cells[2].textContent.trim();    // work_method 셀
          
 
          // 숨겨진 work_method 필드 처리 (없으면 생성해서 폼에 추가)
-         let hidden = document.querySelector('input[name="work_method"]');
+          let hidden = document.querySelector('input[name="work_method"]');
          if (!hidden) {
              hidden = document.createElement("input");
              hidden.type = "hidden";
@@ -369,7 +396,9 @@ span {
              document.querySelector("form.form").appendChild(hidden);
          }
          hidden.value = cells[2].textContent.trim();
-     }
+     } 
+  
+
 
      // 수정취소 버튼 클릭 시 - 입력란 초기화 및 버튼 상태 원래대로
      function cancelUpdate() {

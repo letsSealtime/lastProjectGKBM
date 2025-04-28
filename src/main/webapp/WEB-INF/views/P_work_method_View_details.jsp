@@ -101,5 +101,6 @@
 	<%
 	}
 	%>
+	<button type="button" onclick="history.back()">이전으로</button>
 </body>
 </html>

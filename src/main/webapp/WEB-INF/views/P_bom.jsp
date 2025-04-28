@@ -7,90 +7,95 @@
 <meta charset="UTF-8">
 <title>BOM</title>
 <style>
+* {
+  box-sizing: border-box;
+}
+
 body {
-	margin: 0;
-	padding: 0;
-	
-	font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
 }
 
 .container {
-	width: 95%;
-	margin: auto;
-	background: white;
-	padding: 20px;
-	
+  width: 95%;
+  margin: auto;
+  background: white;
+  padding: 20px;
 }
 
 h1 {
-	margin-bottom: 20px;
-	border: 1px solid black;
-	padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid black;
+  padding: 10px;
 }
 
 .form {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 20px;
-	margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 20px;
 }
 
 .form-fields {
-	flex: 1;
-	display: flex;
-	flex-direction: column;
-	gap: 15px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 .form-row {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	gap: 10px;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 
 label {
-	min-width: 80px;
+  min-width: 120px;
+  flex: 0 0 120px;
 }
 
-input {
-	padding: 8px;
-	border: 1px solid #ccc;
-	border-radius: 5px;
-	flex: 1;
-}
-
-.buttons {
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
+input, select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  flex: 1;
+  height: 38px;
 }
 
 .buttons {
-	padding: 10px 15px;
-	background-color: #4a90e2;
-	color: white;
-	border: none;
-	border-radius: 5px;
-	cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px 15px;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .buttons:hover {
-	background-color: #0056b3;
+  background-color: #0056b3;
 }
 
 button {
-	padding: 10px 15px;
-	background-color: #4a90e2;
-	color: white;
-	border: none;
-	border-radius: 5px;
-	cursor: pointer;
+  padding: 10px 15px;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 button:hover {
-	background-color: #0056b3;
+  background-color: #0056b3;
 }
+
+
+
 
 table {
 	width: 100%;
@@ -151,56 +156,68 @@ span {
 </style>
 </head>
 <body>
-
 	<h1>◎ BOM</h1>
-	
 	<span>* 모두 기입</span>
-	
 	<form method="post" action="p_bom" class="form"
 		enctype="multipart/form-data">
 		<div class="form-fields">
-		
 			<div class="form-row">
-				<label for="완제품 필요한 원자재">완제품 필요한 원자재<span>*</span></label> <input
+				<label for="완제품 필요한 원자재">완제품 필요한 <br>원자재<span>*</span></label> <input
 					type="text" name="sku_id_material"
 					value="${select20.sku_id_material}"> <label for="소모량">소모량<span>*</span></label>
 				<input type="text" name="consumption"
 					value="${select20.consumption}">
 			</div>
-			
 			<div class="form-row">
-				 <label for="작업표준서">작업표준서<span>*</span></label> <input type="text"
-					name="work_method" value="${select20.work_method}">  
-				 <label for="상품고유번호">상품고유번호<span>*</span></label> <input type="text"
-					name="sku_id" value="${select20.sku_id}"> 
+				<label for="작업표준서">작업표준서<span>*</span></label> <input type="text"
+					name="work_method" value="${select20.work_method}"> <label
+					for="상품고유번호">상품고유번호<span>*</span></label> <input type="text"
+					name="sku_id" value="${select20.sku_id}">
+
 			</div>
 
+
 			<div class="form-row">
-				<label for="sku_code">상품 코드 + 상품명 으로 조회</label> <input type="text"
-					id="skuCodeInput" name="sku_code">
+				<label for="sku_code">상품 코드 +  <br>상품명 으로 조회</label> <input type="text"
+					id="searchKeyword" name="searchKeyword"
+					placeholder="상품코드 또는 상품명 입력">
 			</div>
+
+
 		</div>
 
 		<div>
+			<!-- 작업자 -->
+			 <c:if test="${user.grade == 2}"> 
+			 <button type="button" class="buttons" onclick="searchBySkuCode()"
+				id="searchBtn">조회</button>
+				</c:if>
+				
+			<!-- 개발자 -->
+			 <c:if test="${user.grade == 1}"> 
 			<input type="submit" value="등록" class="buttons" id="insertBtn">
-			<br>
+			</br>
 			<button type="button" class="buttons" onclick="searchBySkuCode()"
 				id="searchBtn">조회</button>
-			<br>
+			</br>
 			<button type="button" class="buttons" id="editSelectedButton"
 				onclick="handleEdit()">수정</button>
-			<br>
+			</br>
 			<button type="button" class="buttons" onclick="submitDelete()"
 				id="deleteBtn">삭제</button>
-			<br>
+			</br>
 
 			<!-- 수정 모드 버튼 -->
 			<input type="submit" value="수정완료" class="buttons" id="updateBtn"
-				style="display: none;" onclick="setFormAction('update')"><br>
+				style="display: none;" onclick="setFormAction('update')"></br>
 			<button type="button" class="buttons" id="cancelUpdateBtn"
 				style="display: none;" onclick="cancelUpdate()">수정취소</button>
+			</c:if>
 		</div>
+
 	</form>
+
+
 
 	<!-- 이건 부분조회 -->
 	<!-- /searchBySkuCode -->
@@ -234,8 +251,10 @@ span {
 						<td>${bDTO.sku_code}</td>
 						<td>${bDTO.sku_name}</td>
 						<td>${bDTO.sku_size}</td>
-						<td><a href="P_bom_View_details?type=${bDTO.sku_id_material}">${bDTO.sku_id_material}</a>
-						</td>
+						<%-- <td><a href="P_bom_View_details?type=${bDTO.sku_id_material}">${bDTO.sku_id_material}</a>
+						</td> --%>
+						<td><a href="P_bom_View_details?type=${bDTO.sku_id_material}
+						&consumption=${bDTO.consumption}"> ${bDTO.sku_id_material} </a></td>
 						<td>${bDTO.consumption}</td>
 						<td>${bDTO.create_date}</td>
 						<td>${bDTO.modify_date}</td>
@@ -244,9 +263,17 @@ span {
 						<td><a href="P_work_method_View_details1?type=${bDTO.work}">${bDTO.work}</a>
 						</td>
 						<td><c:if test="${not empty bDTO.work_file}">
-								<img src="${pageContext.request.contextPath}${bDTO.work_file}"
+								<!-- 이미지 출력: /downloadWorkFile 컨트롤러 경로 사용 -->
+								<img
+									src="${pageContext.request.contextPath}/downloadWorkFile?filePath=${bDTO.work_file}"
 									alt="작업양식사진" style="width: 80px; height: auto;">
+								<br>
+								<!-- 다운로드 링크: 동일 컨트롤러 경로 사용 -->
+								<a
+									href="${pageContext.request.contextPath}/downloadWorkFile?filePath=${bDTO.work_file}">
+									다운로드 </a>
 							</c:if></td>
+
 
 
 					</tr>
@@ -317,19 +344,17 @@ span {
 	
 	// 조회
      function searchBySkuCode() {
-    	 const skuCode = document.getElementById("skuCodeInput").value.trim(); // 공백 제거
+    const searchKeyword = document.getElementById("searchKeyword").value.trim();
 
-    	    if (skuCode == "") {
-    	        // 아무것도 입력 안 했을 때 → 전체 조회
-    	        location.href = "bom2"; 
-    	    } else {
-    	        // sku_code 값으로 조회
-    	        location.href = "bom2?sku_code=" + encodeURIComponent(skuCode); 
-    	    }
-    	 
-    		/*  // 조회 후 입력란을 비우기
-    	    skuCodeInput.value = "";  */
-    	}
+    if (searchKeyword == "") {
+        // 아무것도 입력 안 했을 때 → 전체 조회
+        location.href = "bom2";
+    } else {
+        // searchKeyword 값으로 조회
+        location.href = "bom2?searchKeyword=" + encodeURIComponent(searchKeyword);
+    }
+}
+
 	
   	 // 수정 버튼 클릭 시 - 체크된 항목의 데이터를 입력란에 채우고 버튼 상태 변경
      function handleEdit() {

@@ -27,16 +27,10 @@
 	<div class="content-div" id="bristle-content">
 		<h3>칫솔 완제품 필요한 원자재</h3>
 		<!-- 칫솔 내용 -->
-		[원자재] 칫솔모 : 1개 칫솔대 : 1개 고무 : 2개
-		<form method="get" action="P_bom_View_details1">
-			<table border="1">
-				<c:forEach var="bDTO" items="${list00}">
-					<tr>
-						<td>${bDTO.sku_name}</td>
-					</tr>
-				</c:forEach>
-			</table>
-		</form>
+		<div class="content-div" id="bristle-content">
+    	[원자재] 칫솔모 : ${bristle}개 칫솔대 : ${handle}개 고무 : ${rubber}개
+</div>
+		
 
 	</div>
 
@@ -49,5 +43,6 @@
 	<%
 	}
 	%>
+	<button type="button" onclick="history.back()">이전으로</button>
 </body>
 </html>

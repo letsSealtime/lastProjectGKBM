@@ -11,5 +11,7 @@ public List<P_material_in_outDTO> fulltableList2_1(P_material_in_outDTO mioDTO);
 	public int addition_2_1(P_material_in_outDTO mioDTO);
 	//삭제
 	public int delete_2_1(P_material_in_outDTO mioDTO);
+	//수정
+	public int udpate_2_1(P_material_in_outDTO mioDTO);
 	
 }

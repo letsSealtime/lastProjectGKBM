@@ -8,90 +8,95 @@
 <meta charset="UTF-8">
 <title>완제품입고관리</title>
 <style>
+* {
+  box-sizing: border-box;
+}
+
 body {
-	margin: 0;
-	padding: 0;
-	
-	font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
 }
 
 .container {
-	width: 95%;
-	margin: auto;
-	background: white;
-	padding: 20px;
-	
+  width: 95%;
+  margin: auto;
+  background: white;
+  padding: 20px;
 }
 
 h1 {
-	margin-bottom: 20px;
-	border: 1px solid black;
-	padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid black;
+  padding: 10px;
 }
 
 .form {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 20px;
-	margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 20px;
 }
 
 .form-fields {
-	flex: 1;
-	display: flex;
-	flex-direction: column;
-	gap: 15px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 .form-row {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	gap: 10px;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 
 label {
-	min-width: 80px;
+  min-width: 120px;
+  flex: 0 0 120px;
 }
 
-input {
-	padding: 8px;
-	border: 1px solid #ccc;
-	border-radius: 5px;
-	flex: 1;
-}
-
-.buttons {
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
+input, select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  flex: 1;
+  height: 38px;
 }
 
 .buttons {
-	padding: 10px 15px;
-	background-color: #4a90e2;
-	color: white;
-	border: none;
-	border-radius: 5px;
-	cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px 15px;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .buttons:hover {
-	background-color: #0056b3;
+  background-color: #0056b3;
 }
 
 button {
-	padding: 10px 15px;
-	background-color: #4a90e2;
-	color: white;
-	border: none;
-	border-radius: 5px;
-	cursor: pointer;
+  padding: 10px 15px;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 button:hover {
-	background-color: #0056b3;
+  background-color: #0056b3;
 }
+
+
+
 
 table {
 	width: 100%;
@@ -175,14 +180,23 @@ span {
 			</div>
 
 			<div class="form-row">
-				<label for="sku_code">상품 코드+ 상품명 으로 조회</label> <input type="text"
-					id="skuCodeInput" name="sku_code">
+				<label for="sku_code">상품 코드 + <br>상품명 으로 조회</label> <input type="text"
+					id="searchKeyword" name="searchKeyword"
+					placeholder="상품코드 또는 상품명 입력">
 			</div>
+
 
 
 		</div>
 
 		<div>
+		<c:if test="${user.grade == 2}"> 
+		<button type="button" class="buttons" onclick="searchBySkuCode()"
+				id="searchBtn">조회</button>
+		</c:if>
+		
+		<!-- 개발자 -->
+		<c:if test="${user.grade == 1}"> 
 			<!-- onclick="setFormAction('insert')" -->
 			<!-- 기존 버튼들 -->
 			<input type="submit" value="등록" class="buttons" id="insertBtn">
@@ -202,7 +216,7 @@ span {
 				style="display: none;" onclick="setFormAction('update')"></br>
 			<button type="button" class="buttons" id="cancelUpdateBtn"
 				style="display: none;" onclick="cancelUpdate()">수정취소</button>
-
+		</c:if>
 		</div>
 
 	</form>
@@ -318,15 +332,17 @@ span {
     }
 	
 	// 조회
-     function searchBySkuCode() {
-    	 const skuCode = document.getElementById("skuCodeInput").value.trim(); // 공백 제거
+      function searchBySkuCode() {
+    const searchKeyword = document.getElementById("searchKeyword").value.trim();
 
-    	    if (skuCode == "") {
+
+    if (searchKeyword == "") {
     	        // 아무것도 입력 안 했을 때 → 전체 조회
     	        location.href = "product_in_out2"; 
     	    } else {
     	        // sku_code 값으로 조회
-    	        location.href = "product_in_out2?sku_code=" + encodeURIComponent(skuCode); 
+    	        location.href = "product_in_out2?searchKeyword=" + encodeURIComponent(searchKeyword);
+
     	    }
     	 
     		/*  // 조회 후 입력란을 비우기

@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
 
 
 
+
+
 @Repository
 public class P_material_in_outDAOImpl implements P_material_in_outDAO{
 	
@@ -42,4 +44,15 @@ public class P_material_in_outDAOImpl implements P_material_in_outDAO{
 				return dto;
 			}
 	
+			//수정
+			@Override
+			public int udpate_2_1(P_material_in_outDTO mioDTO) {
+				int countUpdate = sqlSession.update("gkbm.emp.udpate_2_1", mioDTO);
+				return countUpdate;
+			}
+	
+			
+			
+			
+			
 }

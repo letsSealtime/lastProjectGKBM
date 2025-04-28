@@ -26,6 +26,9 @@ public class P_bomDTO {
 	int endRow;			// 끝
 	
 	
+	private String searchKeyword; 
+	
+	
 	
 	
 	

@@ -86,7 +86,11 @@ public class P_skuController {
 	// dao에서 가져온 추가
 		@RequestMapping(value = "/p_sku", method = { RequestMethod.GET, RequestMethod.POST })
 		public String addition(@ModelAttribute P_skuDTO skuDTO) {
-			System.out.println(skuDTO);
+			if (skuDTO.getSku_code() != null) {
+		        skuDTO.setSku_code(skuDTO.getSku_code().trim().replaceAll(",$", ""));
+		    }
+		    System.out.println(skuDTO);
+			System.out.println(skuDTO);						
 			int select20 = empdao.addition(skuDTO);
 
 			return "redirect:p_sku2";
@@ -113,6 +117,11 @@ public class P_skuController {
 		// 수정을위한 업데이트
 		@RequestMapping(value = "/udpateList", method = { RequestMethod.GET, RequestMethod.POST })
 		public String udpateList(@ModelAttribute P_skuDTO skuDTO) {
+			
+			if (skuDTO.getSku_code() != null) {
+		        skuDTO.setSku_code(skuDTO.getSku_code().trim().replaceAll(",$", ""));
+		    }
+		    System.out.println(skuDTO);
 			// 실제 업데이트
 			System.out.println(skuDTO);
 			int select20 = empdao.udpate(skuDTO);

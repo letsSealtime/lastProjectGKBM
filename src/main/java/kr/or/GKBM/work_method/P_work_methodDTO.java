@@ -23,6 +23,7 @@ public class P_work_methodDTO {
 	int startRow;      //시작
 	int endRow;			// 끝
 	
+	private String searchKeyword; 
 	
 	
 	

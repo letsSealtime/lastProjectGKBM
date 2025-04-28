@@ -23,6 +23,8 @@ public class P_material_in_outDTO3 {
      
      int startRow;       //시작
  	int endRow;			  // 끝
+ 	
+ 	private String searchKeyword; 
      
 	
      

@@ -178,7 +178,7 @@ table th, table td {
 
 				<div class="form-row">
 					<label for="log_count">수량<span class="별"> *</span></label> <input
-						type="text" id="log_count"> <label
+						type="number" id="log_count" min="0" required> <label
 						for="receipt_payment_date">수불일자<span class="별"> *</span></label> <input
 						type="date" id="receipt_payment_date">
 				</div>
@@ -376,26 +376,46 @@ table th, table td {
 		        }
 		    });
 		});
+	    
+	    // log_count 입력 시 음수 및 최대값 검증
+	    document.getElementById('log_count').addEventListener('input', function() {
+	        let value = parseInt(this.value, 10);
+	        if (isNaN(value)) value = 0;
 
-	    // 수정 버튼 이벤트
+	        // 음수 입력 방지
+	        if (value < 0) {
+	            this.value = 0;
+	            alert("음수는 입력할 수 없습니다.");
+	            return;
+	        }
+
+	        // 최대 재고량 검증 (수정 시)
+	        const selectedOption = document.getElementById('consumables_name').selectedOptions[0];
+	        if (!selectedOption) return;
+	        const currentStock = parseInt(selectedOption.dataset.stock, 10);
+
+	        if (value > currentStock) {
+	            this.value = currentStock;
+	            alert(`최대 ${currentStock}개까지 입력 가능합니다.`);
+	        }
+	    });
+
+	 // 수정 버튼 이벤트
 	    document.querySelector('.update1').addEventListener('click', function() {
 	        const selectedChecks = document.querySelectorAll('input[name="check"]:checked');
 	        if (selectedChecks.length !== 1) {
-	            alert(selectedChecks.length > 1 ? 
-	                "수정 시 하나의 항목만 선택해주세요." : 
-	                "수정할 항목을 선택해주세요.");
+	            alert(selectedChecks.length > 1 ? "수정 시 하나의 항목만 선택해주세요." : "수정할 항목을 선택해주세요.");
 	            return;
 	        }
 
 	        // 선택된 행 데이터 추출
 	        const selectedRow = selectedChecks[0].closest('tr');
 	        const cells = selectedRow.cells;
-	        
-	     // 소모품명 select의 value(=소모품코드)로 맞추기
+
+	        // 소모품명 select의 value(=소모품코드)로 맞추기
 	        const codeToSelect = cells[2].textContent.trim();
 	        const selectBox = document.getElementById('consumables_name');
 	        selectBox.value = codeToSelect;
-	        // 만약 value가 안 맞으면 아래 루프로 강제 선택
 	        if (selectBox.value !== codeToSelect) {
 	            Array.from(selectBox.options).forEach(opt => {
 	                if (opt.value === codeToSelect) opt.selected = true;
@@ -424,14 +444,41 @@ table th, table td {
 
 	        document.querySelector('.buttons').append(completeBtn, cancelBtn);
 
-	        // 수정완료 이벤트
+	        // 수정완료 이벤트 (여기에 검증 추가)
 	        completeBtn.addEventListener('click', function() {
+			    const logCountInput = document.getElementById('log_count');
+			    const logCount = parseInt(logCountInput.value, 10);
+			    const selectedOption = document.getElementById('consumables_name').selectedOptions[0];
+			    const currentStock = parseInt(selectedOption.dataset.stock, 10);
+			    
+			    // 원본 트랜잭션 수량 추출
+			    const originalLogCount = parseInt(
+			        selectedChecks[0].closest('tr').cells[6].textContent.trim(), 10
+			    );
+			    const delta = originalLogCount - logCount; // 차이 계산
+			
+			    // 음수 검증
+			    if (isNaN(logCount) || logCount < 0) {
+			        alert("수량은 0 이상 입력해야 합니다.");
+			        logCountInput.focus();
+			        return;
+			    }
+			
+			    // 재고 가용성 검증 (현재 재고 + 원본 트랜잭션 복구 후 차감)
+			    if ((currentStock + originalLogCount) < logCount) {
+			        const maxAllowed = currentStock + originalLogCount;
+			        alert(`최대 ${maxAllowed}개까지 입력 가능합니다. (현재 재고: ${currentStock}개)`);
+			        logCountInput.value = maxAllowed;
+			        logCountInput.focus();
+			        return;
+			    }
+
 	            const data = {
 	                receipt_payment_id: selectedChecks[0].value,
 	                consumables_code: document.getElementById('consumables_code').value,
 	                requester: document.getElementById('requester').value,
 	                importer: document.getElementById('importer').value,
-	                log_count: parseInt(document.getElementById('log_count').value),
+	                log_count: logCount,
 	                receipt_payment_date: document.getElementById('receipt_payment_date').value,
 	                remarks: document.getElementById('remarks').value
 	            };

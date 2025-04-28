@@ -39,7 +39,7 @@ public class DefectController {
 		select_MV.addObject("begin", dto.getBegin());
 		select_MV.addObject("end", dto.getEnd());
 
-		return "/defect.tiles";
+		return "defect.tiles";
 	}
 	
 	@ResponseBody
@@ -53,7 +53,7 @@ public class DefectController {
 
 		int insert = DefectServiceImpl.insert(dto);
 
-		return "/defect.tiles";
+		return "defect.tiles";
 	}
 
 }

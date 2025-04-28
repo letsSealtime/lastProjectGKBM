@@ -45,12 +45,11 @@ body {
 	align-items: center;
 	justify-content: center;
 	border-radius: 4px;
-	margin-left: 20px;
 }
 
 #logo img {
-	width: 200%;
-	height: 200%;
+	width: 150%;
+	height: 150%;
 	object-fit: contain;
 }
 
@@ -233,7 +232,7 @@ h3 {
 	justify-content: space-between;
 	padding: 10px 20px;
 	background-color: white;
-	gap: 30px;
+	gap: 20px;
 }
 
 #user_section {
@@ -800,17 +799,6 @@ rotate(
 // 로딩 오버레이
 window.addEventListener('load', hideLoadingOverlay);
 
-//페이지 진입 시 히스토리 상태 추가
-history.pushState(null, '', location.href);
-
-history.pushState(null, '', location.href);
-window.addEventListener('popstate', function(event) {
-  alert('해당 페이지는 뒤로가기 키는 사용이 금지 되어 있습니다.');
-  history.pushState(null, '', location.href);
-});
-
-
-	
 //===================================================
 //1. 메뉴 데이터 정의
 //===================================================

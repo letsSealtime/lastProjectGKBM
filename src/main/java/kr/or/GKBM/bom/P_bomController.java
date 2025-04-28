@@ -15,24 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
-
-
-
-
-
-
-
-
-
 @Controller
 public class P_bomController {
 	@Autowired
-	P_bomDAO wmdao;
-	
-	
-	
-	
+	P_bomDAO wmdao;	
 	
 	// 테이블 전체리스트
 		

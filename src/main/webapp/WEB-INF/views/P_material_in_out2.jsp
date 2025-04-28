@@ -222,7 +222,7 @@ span {
 
 	</form>
 
-
+<span>원자재의 상품코드는 001~036입니다</span>
 
 	<!-- 이건 부분조회 -->
 	<!-- /searchBySkuCode -->
@@ -230,7 +230,7 @@ span {
 		<table border="1">
 			<thead>
 				<tr>
-					<th>checkbox</th>
+					<th><input type="checkbox"></th>
 					<th>No.</th>
 					<th>원자재관리번호</th>
 					<th>원자재수량</th>
@@ -294,7 +294,10 @@ span {
         <form method="get" >
             <input type="hidden" name="currentPage" value="${allpages}" />
             <input type="hidden" name="sku_code" value="${mioDTO2.sku_code}" />
-            <button type="submit">${allpages}</button>
+            <button type="submit"
+                    style="${allpages == currentPage ? 'font-weight:bold; background-color:#0056b3;' : ''}">
+                ${allpages}
+            </button>
         </form>
     </c:forEach>
 

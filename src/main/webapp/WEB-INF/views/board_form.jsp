@@ -82,7 +82,7 @@ a:hover {
 	text-decoration: underline;
 }
 
-.button {
+button {
 	padding: 10px 15px;
 	background-color: #4a90e2;
 	color: white;
@@ -159,7 +159,7 @@ a:hover {
 			</c:if>
 		</form>
 
-		<a href="board" class="input">목록으로</a>
+		<a href="board" class="input"><button>목록으로</button></a>
 	</div>
 
 	<script>

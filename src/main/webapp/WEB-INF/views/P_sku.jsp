@@ -153,6 +153,11 @@ table th, table td {
 span {
 	color: red;
 }
+
+a {
+  text-decoration: none;
+  color : #4a90e2;
+}
 </style>
 </head>
 <body>
@@ -214,15 +219,15 @@ span {
 		
 	</form>
 	
+	<span>원자재의 상품코드는 001~036이고 완제품의 상품코드는 101~112까지입니다</span>
 	
-
 	<!-- 이건 부분조회 -->
 	<!-- /searchBySkuCode -->
 	<form method="get" action="p_sku2">
 		<table border="1">
 			<thead>
 				<tr>
-					<th>checkbox</th>
+					<th><input type="checkbox"></th>
 					<th>No.</th>
 					<th>상품고유번호</th>
 					<th>상품코드</th>
@@ -280,7 +285,7 @@ span {
             <input type="hidden" name="currentPage" value="${allpages}" />
             <input type="hidden" name="sku_code" value="${skuDTO.sku_code}" />
             <button type="submit"
-                    style="${allpages == currentPage ? 'font-weight:bold; background-color:#eee;' : ''}">
+                    style="${allpages == currentPage ? 'font-weight:bold; background-color:#0056b3;' : ''}">
                 ${allpages}
             </button>
         </form>

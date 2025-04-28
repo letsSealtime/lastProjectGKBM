@@ -153,6 +153,11 @@ table th, table td {
 span {
 	color: red;
 }
+
+a {
+  text-decoration: none;
+  color : #4a90e2;
+}
 </style>
 </head>
 <body>
@@ -186,7 +191,7 @@ span {
 					placeholder="상품코드 또는 상품명 입력">
 			</div>
 
-
+	<span>원자재의 상품코드는 001~036이고 완제품의 상품코드는 101~112까지입니다</span>
 
 		</div>
 
@@ -230,7 +235,7 @@ span {
 		<table border="1">
 			<thead>
 				<tr>
-					<th>checkbox</th>
+					<th><input type="checkbox"></th>
 					<th>No.</th>
 					<th>작업표준서</th>
 					<th>상품코드</th>
@@ -301,7 +306,10 @@ span {
 			<form method="get">
 				<input type="hidden" name="currentPage" value="${allpages}" /> <input
 					type="hidden" name="sku_code" value="${wmDTO.sku_code}" />
-				<button type="submit">${allpages}</button>
+				<button type="submit"
+                    style="${allpages == currentPage ? 'font-weight:bold; background-color:#0056b3;' : ''}">
+                ${allpages}
+            </button>
 			</form>
 		</c:forEach>
 

@@ -93,7 +93,6 @@ button:hover {
 	border-radius: 5px;
 	cursor: pointer;
 	font-size: 14px;
-	transition: background-color 0.2s ease;
 }
 
 .button-group .action-btn:hover {
@@ -147,6 +146,142 @@ input[type="text"] {
 	border: 1px solid #ccc;
 	border-radius: 4px;
 }
+
+<!-- 덧글 CSS -->
+.comment_item {
+	background: #eef5ff;
+	border: 1px solid #c9e0ff;
+	border-radius: 8px;
+	padding: 12px;
+	margin-top: 10px;
+	box-shadow: 0 2px 6px rgba(74, 144, 226, 0.2);
+	position: relative;
+	transition: background 0.3s ease;
+}
+
+.comment_item:hover {
+	background: #d9eaff;
+}
+
+.comment-body {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.writer_name {
+	font-weight: 700;
+	color: #004a99;
+	font-size: 14px;
+}
+
+.comment_content {
+	font-size: 14px;
+	color: #333;
+	word-break: break-word;
+}
+
+.comment-buttons {
+	display: flex;
+	gap: 8px;
+	margin-top: 8px;
+}
+
+.comment-buttons button {
+	padding: 4px 8px;
+	background-color: #4a90e2;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 12px;
+	color: #fff;
+}
+
+.comment-buttons button:hover {
+	background-color: #0056b3;
+}
+
+.more_comment {
+	display: none;
+	margin-top: 6px;
+}
+
+.more_comment.active {
+	display: flex;
+	gap: 6px;
+	padding-top: 5px;
+}
+
+.more_comment button {
+	padding: 4px 8px;
+	background-color: #4a90e2;
+	color: #fff;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 12px;
+}
+
+.more_comment button:hover {
+	background-color: #0056b3;
+}
+
+.edit_form, .reply_form {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	margin-top: 8px;
+}
+
+.edit_text, #reply_text {
+	flex: 1;
+	padding: 6px 10px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	font-size: 13px;
+}
+
+.edit_submit, .reply_submit {
+	padding: 6px 10px;
+	background-color: #4a90e2;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 13px;
+}
+
+.edit_submit:hover, .reply_submit:hover {
+	background-color: #0056b3;
+}
+
+
+<!-- 토글 CSS -->
+
+.more_comment {
+	display: none;
+}
+.more_comment.active {
+	display: flex;
+	padding-top: 5px;
+}
+
+.reply_form {
+	display: none;
+}
+.reply_form.active {
+	display: flex;
+	padding-top: 5px;
+}
+
+.edit_form {
+	display: none;
+}
+.edit_form.active {
+	display: flex;
+	padding-top: 5px;
+}
+
 </style>
 </head>
 <body>
@@ -209,7 +344,7 @@ input[type="text"] {
 	</div>
 
 	<!-- 덧글 양식 -->
-	<div id="commentTemplate">
+	<div id="commentTemplate" style="display:none">
 		<div class="comment_item" data-comment-id="" data-comment-depth="">
 			<div id="comment_body" class="comment-body">
 				<span class="writer_name"></span> <span class="comment_content"></span>
@@ -221,25 +356,24 @@ input[type="text"] {
 
 
 			<!-- 더보기 메뉴 -->
-			<div class="more_comment" style="display: none">
+			<div class="more_comment">
 				<button class="edit_btn">수정</button>
 				<button id="delete_btn">삭제</button>
 			</div>
 
 			<!-- 수정창 -->
-			<div class="edit_form" style="display: none">
+			<div class="edit_form">
 				<input type="text" class="edit_text" />
 				<button class="edit_submit">수정완료</button>
 			</div>
 
 			<!-- 답글 입력창 -->
-			<div class="reply_form" style="display: none">
+			<div class="reply_form">
 				<input type="text" id="reply_text" placeholder="답글을 입력하세요." />
 				<button class="reply_submit">등록</button>
 			</div>
 
 		</div>
-	</div>
 	</div>
 
 	<div class="button-group">
@@ -304,16 +438,19 @@ input[type="text"] {
 		    template.dataset.commentId = comment.comment_id;
 		    template.dataset.depth = comment.depth;
 		    template.querySelector('.writer_name').textContent = comment.writer_name;
-		    template.querySelector('.comment_content').textContent = comment.is_deleted ? "이 댓글은 삭제되었습니다" : comment.content;
+		    
+		    const isDeleted = comment.is_deleted == 1 || comment.is_deleted === "1";
+		    template.querySelector('.comment_content').textContent = isDeleted ? "이 댓글은 삭제되었습니다" : comment.content;
 			
-		    const indentUnit = 24; // px 단위 들여쓰기 간격
+		    const indentUnit = 40; // px 단위 들여쓰기 간격
 		    const marginLeft = comment.depth * indentUnit;
 
-		    template.querySelector('#comment_body').style.marginLeft = `${marginLeft}px`;
+		    template.querySelector('#comment_body').style.marginLeft = `\${marginLeft}px`;
 		
 		    // 더보기
 		    template.querySelector('.more_btn').addEventListener('click', function () {
-		      template.querySelector('.more_comment').style.display = 'block';
+		      	const more = template.querySelector('.more_comment');
+		      	more.classList.toggle("active");
 		    });
 		
 		    // 수정 버튼
@@ -343,7 +480,9 @@ input[type="text"] {
 		
 		    // 답글 폼 열기
 		    template.querySelector('.reply_btn').addEventListener('click', function () {
-		      template.querySelector('.reply_form').style.display = 'block';
+		    	const reply = template.querySelector('.reply_form');
+		      	reply.classList.toggle("active");
+		      	
 		    });
 		
 		    // 답글 등록
@@ -357,7 +496,7 @@ input[type="text"] {
 		          empno: empno,
 		          content: replyContent,
 		          parent_id: comment.comment_id,
-		          depth: comment.depth + 1
+		          depth: 1
 		        })
 		      }).then(() => loadComments());
 		    });

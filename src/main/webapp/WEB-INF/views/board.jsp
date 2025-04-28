@@ -158,7 +158,7 @@ button:hover {
 	<c:forEach var="i" begin="<%= begin %>" end="<%= end %>">
 		<c:choose>
 			<c:when test="${i == dto.page}">
-				<a href="board?page=${i}"><button style="color:red;">${i}</button></a>
+				<a href="board?page=${i}"><button>${i}</button></a>
 			</c:when>
 			<c:otherwise>
 				<a href="board?page=${i}"><button>${i}</button></a>
@@ -171,7 +171,7 @@ button:hover {
 </div>
 
 
-	<button><a href="board_form">새 글 작성</a></button>
+	<a href="board_form"><button style="color:white">새 글 작성</button></a>
 
 </div>
 </body>

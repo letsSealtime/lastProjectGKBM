@@ -28,12 +28,6 @@ public class ReportController {
         return "report_financial.tiles";
     }
     
-    // 메인 대시 페이지
-    @GetMapping("/main")
-    public String showMainDashBoard() {
-        return "mainpage_dashboard.tiles"; 
-    }
-    
     // 경영 실적 페이지
     @GetMapping("/page")
     public String showReportPage() {

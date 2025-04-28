@@ -10,7 +10,7 @@
     <title>불량률 리포트</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
+        body { font-family: Arial, sans-serif;}
         h1, h2 { margin-top: 30px; }
         table { border-collapse: collapse; width: 100%; margin-top: 20px; }
         th, td { border: 1px solid #aaa; padding: 8px; text-align: center; }

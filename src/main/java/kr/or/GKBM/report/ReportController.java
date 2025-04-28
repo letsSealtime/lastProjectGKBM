@@ -22,29 +22,34 @@ public class ReportController {
     @Autowired
     private DefectDAO defectDAO;
     
-    
     // 리포팅 : 기본 경영 실적 페이지 
     @GetMapping("")
     public String ReportPage() {
-        return "report_financial";
+        return "report_financial.tiles";
+    }
+    
+    // 메인 대시 페이지
+    @GetMapping("/main")
+    public String showMainDashBoard() {
+        return "mainpage_dashboard.tiles"; 
     }
     
     // 경영 실적 페이지
     @GetMapping("/page")
     public String showReportPage() {
-        return "report_financial";
+        return "report_financial.tiles";
     }
     
     // 생산 실적 페이지
     @GetMapping("/production/page")
     public String showProductionPage() {
-        return "report_production"; 
+        return "report_production.tiles"; 
     }
     
     // 불량품 추이 페이지
     @GetMapping("/defect/page")
     public String showDefectPage() {
-        return "report_defect"; 
+        return "report_defect.tiles"; 
     }
     
     // 경영 실적
@@ -61,11 +66,7 @@ public class ReportController {
         return financialDAO.selectAll();
     }
     
-    // 메인 대시 페이지
-    @GetMapping("/main")
-    public String showMainDashBoard() {
-        return "mainpage_dashboard"; 
-    }
+
     
     // 생산 실적
     @GetMapping("/production")

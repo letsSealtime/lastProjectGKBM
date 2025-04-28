@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<c:set var="grade" value="${sessionScope.grade}" />
 <!DOCTYPE html>
 <html>
 <head>
@@ -128,13 +129,16 @@ a:hover {
 					<th>내용</th>
 					<td><textarea id="board_content" name="board_content">${boardDTO.board_content}</textarea></td>
 				</tr>
-				<tr>
-					<th>공지사항</th>
-					<td><select id="notice" name="notice">
+				<c:if test="${grade == 1}">
+					<div>
+						<!-- 공지사항 선택 부분 -->
+						<label for="notice">공지사항 여부 :</label> <select name="notice"
+							id="notice">
 							<option value="0" ${boardDTO.notice == 0 ? 'selected' : ''}>일반</option>
 							<option value="1" ${boardDTO.notice == 1 ? 'selected' : ''}>공지</option>
-					</select></td>
-				</tr>
+						</select>
+					</div>
+				</c:if>
 				<tr>
 					<th>파일첨부</th>
 					<td><c:forEach var="file" items="${fileList}">

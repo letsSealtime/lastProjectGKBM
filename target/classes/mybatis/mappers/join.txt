@@ -1,0 +1,9 @@
+	<insert id="memberjoin"
+		parameterType="kr.or.GKBM.memberJoin.memberDTO">
+
+		INSERT INTO p_emp
+		VALUES(SEQ.NEXTVAL, #{id},
+		#{name},
+		#{pw}, #{email}, #{phone}, #{grade})
+
+	</insert>

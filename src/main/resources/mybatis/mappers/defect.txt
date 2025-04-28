@@ -17,3 +17,53 @@
 		WHERE WORK_ORDER_ID = #{wi}
 
 	</update>
+	
+	<!-- defect 조회 -->
+	<select id="selectDefectAll_1"
+		resultType="kr.or.GKBM.defect.DefectDTO">
+
+		SELECT COUNT(*) AS line
+		FROM p_week_plan pw
+		left
+		join p_sku ps
+		on pw.sku_id = ps.sku_id
+		left join p_work_order pwo on
+		pw.week_plan_id =
+		pwo.week_plan_id
+		left join p_defect pd on
+		pwo.work_order_id =
+		pd.work_order_id
+		left join p_vendor pv on ps.sku_id
+		= pv.sku_id
+		ORDER BY
+		PW.WEEK_PLAN_ID
+	</select>
+
+	<!-- 페이징 전체 조회 -->
+	<select id="selectDefect_All_1"
+		parameterType="kr.or.GKBM.defect.DefectDTO"
+		resultType="kr.or.GKBM.defect.DefectDTO">
+
+		SELECT RNUM, c_d, c_p, c_j, c_type, c_m, un
+		FROM ( SELECT ROWNUM AS
+		RNUM,
+		c_d, c_p, c_j, c_type, c_m, un
+		FROM ( SELECT pd.defect_id as c_d,
+		ps.sku_code as c_p, ps.sku_name as c_j, ps.sku_category as c_type,
+		pv.vendor_name as c_m,
+		pd.defect_count as un
+		FROM p_week_plan pw
+		left
+		join p_sku ps on pw.sku_id = ps.sku_id
+		left join p_work_order pwo on
+		pw.week_plan_id = pwo.week_plan_id
+		left join p_defect pd on
+		pwo.work_order_id = pd.work_order_id
+		left join p_vendor pv on ps.sku_id
+		= pv.sku_id
+		ORDER BY PW.WEEK_PLAN_ID))
+		WHERE RNUM <![CDATA[ >= ]]>
+		${indexStart} AND RNUM <![CDATA[ <= ]]>
+		${indexEnd}
+
+	</select>

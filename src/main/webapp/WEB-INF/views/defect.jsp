@@ -181,6 +181,7 @@ select option, input[type='number'], input[type=text]:hover {
 			c_m: document.getElementById("c_m").value
 		};
 
+			let xhr = new XMLHttpRequest();
 
 			xhr.open("GET", "defect");
 			xhr.setRequestHeader("Content-Type",

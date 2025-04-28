@@ -14,7 +14,8 @@ public class FinancialDAO {
     private SqlSession sqlSession;
 
     public List<FinancialDTO> selectAll() {
-        return sqlSession.selectList("gkbm.emp.selectAllFinancial");
+    	List<FinancialDTO> selectList = sqlSession.selectList("gkbm.emp.selectAllFinancial");
+    	return selectList;
     }
 
     public List<FinancialDTO> selectByPeriod(Map<String, String> dateRange) {

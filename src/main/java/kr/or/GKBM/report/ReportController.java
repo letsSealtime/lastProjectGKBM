@@ -26,19 +26,25 @@ public class ReportController {
     // 리포팅 : 기본 경영 실적 페이지 
     @GetMapping("")
     public String ReportPage() {
-        return "report_financial.tiles";
+        return "report_financial";
+    }
+    
+    // 경영 실적 페이지
+    @GetMapping("/page")
+    public String showReportPage() {
+        return "report_financial";
     }
     
     // 생산 실적 페이지
     @GetMapping("/production/page")
     public String showProductionPage() {
-        return "report_production.tiles"; 
+        return "report_production"; 
     }
     
     // 불량품 추이 페이지
     @GetMapping("/defect/page")
     public String showDefectPage() {
-        return "report_defect.tiles"; 
+        return "report_defect"; 
     }
     
     // 경영 실적
@@ -55,11 +61,17 @@ public class ReportController {
         return financialDAO.selectAll();
     }
     
+    // 메인 대시 페이지
+    @GetMapping("/main")
+    public String showMainDashBoard() {
+        return "mainpage_dashboard"; 
+    }
+    
     // 생산 실적
-    @GetMapping("production")
+    @GetMapping("/production")
     @ResponseBody
-    public List<ProductionDTO> getProductionData() {
-        return productionDAO.selectProductionByUnit(null); // 전체 불러오기용 (필요 시 파라미터 전달)
+    public List<ProductionDTO> getProductionData(@RequestParam Map<String, String> param) {
+    	return productionDAO.selectProductionByUnit(param); // 전체 불러오기용 (필요 시 파라미터 전달)
     }
     
     // 생산 실적 (상세)

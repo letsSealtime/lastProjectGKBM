@@ -10,7 +10,6 @@ import lombok.Data;
 public class FinancialDTO {
 
 	int financial_id;
-	@JsonFormat(pattern = "yyyy-MM-dd")
 	Date report_date;
 	int total_sales;
 	int operating_profit;

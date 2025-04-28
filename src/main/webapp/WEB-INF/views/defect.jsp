@@ -188,9 +188,6 @@ select option, input[type='number'], input[type=text]:hover {
 			xhr.onload = function() {
 				console.log("Response:", xhr.responseText);
 
-				let json = JSON.parse(xhr.responseText);
-				
-				console.log(json);
 				
 				let id = document.querySelector("#c_d");
 				let code = document.querySelector("#c_p");
@@ -224,7 +221,7 @@ select option, input[type='number'], input[type=text]:hover {
 				});
 				
 
-			};
+			});
 		
 	}
 </script>
@@ -290,16 +287,15 @@ select option, input[type='number'], input[type=text]:hover {
 
 				<!-- 데이터가 추가됩니다 -->
 				<tbody id="table-body">
-					<c:if test="${not empty resultset}">
-						<c:forEach var="list" items="${ resultset }">
+					<c:if test="${not empty select}">
+						<c:forEach var="list" items="${ select }">
 
-							<tr data=${ list.id }>
-								<td>${ list.id }</td>
-								<td>${ list.code }</td>
-								<td>${ list.name }</td>
-								<td>${ list.count }</td>
-								<td>${ list.type }</td>
-								<td>${ list.vendor }</td>
+							<tr data=${ list.c_d }>
+								<td>${ list.c_d }</td>
+								<td>${ list.c_p }</td>
+								<td>${ list.c_j }</td>
+								<td>${ list.un }</td>
+								<td>${ list.c_type }</td>
 							</tr>
 						</c:forEach>
 					</c:if>
@@ -309,45 +305,101 @@ select option, input[type='number'], input[type=text]:hover {
 		</form>
 		<!-- 페이지 넘길때 쓸 버튼들 -->
 		<div class="pagination">
+			<!-- 전체 페이지 수, 이전/다음 페이지 계산 -->
 			<c:set var="pageCount"
 				value="${(line mod viewCount == 0) ? (line div viewCount) : (line div viewCount + 1)}" />
 			<c:set var="prevPage" value="${page - viewCount}" />
 			<c:set var="nextPage" value="${page + viewCount}" />
+			<c:set var="lastPage" value="${pageCount}" />
 
-			<a href="defect?page=1"><button>&lt;&lt;</button></a> <a
-				href="defect?page=${prevPage}"><button>&lt;</button></a>
+			<!-- << 첫 페이지 -->
+			<c:url var="firstUrl" value="defect">
+				<c:param name="page" value="1" />
+				<c:param name="c_d" value="${param.c_d}" />
+				<c:param name="c_p" value="${param.c_p}" />
+				<c:param name="c_j" value="${param.c_j}" />
+				<c:param name="c_type" value="${param.c_type}" />
+				<c:param name="c_m" value="${param.c_m}" />
+			</c:url>
+			<a href="${firstUrl}"><button>&lt;&lt;</button></a>
 
+			<!-- < 이전 페이지 -->
+			<c:url var="prevUrl" value="defect">
+				<c:param name="page" value="${prevPage}" />
+				<c:param name="c_d" value="${param.c_d}" />
+				<c:param name="c_p" value="${param.c_p}" />
+				<c:param name="c_j" value="${param.c_j}" />
+				<c:param name="c_type" value="${param.c_type}" />
+				<c:param name="c_m" value="${param.c_m}" />
+			</c:url>
+			<a href="${prevUrl}"><button>&lt;</button></a>
+
+			<!-- 숫자 페이지 -->
 			<c:choose>
-				<c:when test="${ page == pageCount }">
-					<c:forEach var="i" begin="${ page - (viewCount - 1) }"
-						end="${ page }">
+				<c:when test="${page == pageCount}">
+					<c:forEach var="i" begin="${page - (viewCount -1)}" end="${page}">
+						<c:url var="numUrl" value="defect">
+							<c:param name="page" value="${i}" />
+							<c:param name="c_d" value="${param.c_d}" />
+							<c:param name="c_p" value="${param.c_p}" />
+							<c:param name="c_j" value="${param.c_j}" />
+							<c:param name="c_type" value="${param.c_type}" />
+							<c:param name="c_m" value="${param.c_m}" />
+						</c:url>
 						<c:choose>
-							<c:when test="${ i == page }">
-								<strong><a style="color: red;" href="?page=${i}"><button>${ i }</button></a></strong>
+							<c:when test="${i == page}">
+								<strong><a style="color: red" href="${numUrl}"><button>${i}</button></a></strong>
 							</c:when>
 							<c:otherwise>
-								<a href="?page=${i}"><button>${ i }</button></a>
+								<a href="${numUrl}"><button>${i}</button></a>
 							</c:otherwise>
 						</c:choose>
 					</c:forEach>
 				</c:when>
 				<c:otherwise>
-					<c:forEach var="i" begin="${ begin }" end="${ end }">
+					<c:forEach var="i" begin="${begin}" end="${end}">
+						<c:url var="numUrl" value="defect">
+							<c:param name="page" value="${i}" />
+							<c:param name="c_d" value="${param.c_d}" />
+							<c:param name="c_p" value="${param.c_p}" />
+							<c:param name="c_j" value="${param.c_j}" />
+							<c:param name="c_type" value="${param.c_type}" />
+							<c:param name="c_m" value="${param.c_m}" />
+						</c:url>
 						<c:choose>
-							<c:when test="${ i == page }">
-								<strong><a style="color: red;" href="?page=${i}"><button>${ i }</button></a></strong>
+							<c:when test="${i == page}">
+								<strong><a style="color: red" href="${numUrl}"><button>${i}</button></a></strong>
 							</c:when>
 							<c:otherwise>
-								<a href="?page=${i}"><button>${ i }</button></a>
+								<a href="${numUrl}"><button>${i}</button></a>
 							</c:otherwise>
 						</c:choose>
 					</c:forEach>
 				</c:otherwise>
 			</c:choose>
-			<a href="vendor?page=${nextPage}"><button>&gt;</button> </a> <a
-				href="vendor?page=${lastPage}"><button>&gt;&gt;</button> </a>
+
+			<!-- > 다음 페이지 -->
+			<c:url var="nextUrl" value="defect">
+				<c:param name="page" value="${nextPage}" />
+				<c:param name="c_d" value="${param.c_d}" />
+				<c:param name="c_p" value="${param.c_p}" />
+				<c:param name="c_j" value="${param.c_j}" />
+				<c:param name="c_type" value="${param.c_type}" />
+				<c:param name="c_m" value="${param.c_m}" />
+			</c:url>
+			<a href="${nextUrl}"><button>&gt;</button></a>
+
+			<!-- >> 마지막 페이지 -->
+			<c:url var="lastUrl" value="defect">
+				<c:param name="page" value="${lastPage}" />
+				<c:param name="c_d" value="${param.c_d}" />
+				<c:param name="c_p" value="${param.c_p}" />
+				<c:param name="c_j" value="${param.c_j}" />
+				<c:param name="c_type" value="${param.c_type}" />
+				<c:param name="c_m" value="${param.c_m}" />
+			</c:url>
+			<a href="${lastUrl}"><button>&gt;&gt;</button></a>
 		</div>
-	</div>
 </body>
 
 </html>

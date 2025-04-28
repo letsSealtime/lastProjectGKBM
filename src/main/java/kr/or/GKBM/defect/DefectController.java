@@ -19,8 +19,9 @@ public class DefectController {
 	@Autowired
 	DefectService DefectServiceImpl;
 
+	@ResponseBody
 	@RequestMapping(value = "/defect", method= {RequestMethod.GET})
-	public String defectEnter(@ModelAttribute DefectDTO dto) {
+	public ModelAndView defectEnter(@ModelAttribute DefectDTO dto) {
 
 		System.out.println("work 페이지 진입");
 
@@ -39,7 +40,7 @@ public class DefectController {
 		select_MV.addObject("begin", dto.getBegin());
 		select_MV.addObject("end", dto.getEnd());
 
-		return "defect.tiles";
+		return select_MV;
 	}
 	
 	@ResponseBody

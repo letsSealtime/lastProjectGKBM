@@ -569,6 +569,8 @@ select option, input[type='number'], input[type=text]:hover {
 				value="${(line mod viewCount == 0) ? (line div viewCount) : (line div viewCount + 1)}" />
 			<c:set var="prevPage" value="${page - 1}" />
 			<c:set var="nextPage" value="${page + 1}" />
+			<c:set var="safeBegin" value="${begin}" />
+			<c:set var="safeEnd" value="${end lt begin ? begin : end}" />
 
 			<!-- << 버튼 (첫 페이지로 이동) -->
 			<c:url var="firstPageUrl" value="work">
@@ -648,7 +650,7 @@ select option, input[type='number'], input[type=text]:hover {
 					</c:forEach>
 				</c:when>
 				<c:otherwise>
-					<c:forEach var="i" begin="${begin}" end="${end}">
+					<c:forEach var="i" begin="${safeBegin}" end="${safeEnd}">
 						<c:url var="pageUrl" value="work">
 							<c:param name="page" value="${i}" />
 							<c:param name="c_y" value="${param.c_y}" />

@@ -21,6 +21,9 @@ public class DefectDAOImpl implements DefectDAO {
 
 		List<DefectDTO> select = sqlSession.selectList("gkbm.emp.selectDefect_All_1", dto);
 		DefectDTO line = sqlSession.selectOne("gkbm.emp.selectDefectAll_1");
+		
+		System.out.println(select);
+		System.out.println(line);
 
 		dto.setLine(line.getLine());
 

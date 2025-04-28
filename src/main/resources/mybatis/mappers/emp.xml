@@ -638,6 +638,7 @@
 		pwo.work_order_id = pd.work_order_id
 		left join p_vendor pv on ps.sku_id
 		= pv.sku_id
+		where pd.defect_id is not null
 		ORDER BY PW.WEEK_PLAN_ID))
 		WHERE RNUM <![CDATA[ >= ]]>
 		${indexStart} AND RNUM <![CDATA[ <= ]]>

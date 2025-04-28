@@ -1,0 +1,10 @@
+diff a/src/main/resources/mybatis/mappers/emp.xml b/src/main/resources/mybatis/mappers/emp.xml	(rejected hunks)
+@@ -647,6 +647,8 @@
+ 
+ 	</select>
+ 
++=======
++>>>>>>> 14a80afd7c1dc17348a52ff225a0dff6ea1f72d6
+ 	<!-- Defect 삽입 -->
+ 
+ 	<insert id="insertDefect"

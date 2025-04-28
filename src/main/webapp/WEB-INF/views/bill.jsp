@@ -658,7 +658,7 @@ span {
 			<a href="${nextUrl}"><button>&gt;</button></a>
 
 			<!-- >> 버튼 (마지막 페이지) -->
-			<c:url var="lastUrl" value="bill">
+			<c:url var="hidden" value="bill">
 				<c:param name="page" value="${pageCount}" />
 				<c:param name="c_d" value="${param.c_d}" />
 				<c:param name="c_c" value="${param.c_c}" />
@@ -672,6 +672,7 @@ span {
 			</c:url>
 			<a href="${lastUrl}"><button>&gt;&gt;</button></a>
 		</div>
+	</div>
 </body>
 
 </html>

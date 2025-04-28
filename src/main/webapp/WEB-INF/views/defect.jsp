@@ -281,7 +281,6 @@ select option, input[type='number'], input[type=text]:hover {
 						<th>제품명</th>
 						<th>수량</th>
 						<th>원자재/완제품</th>
-						<th>회사명</th>
 					</tr>
 				</thead>
 

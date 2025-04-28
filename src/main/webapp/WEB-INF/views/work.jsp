@@ -274,8 +274,6 @@ select option, input[type='number'], input[type=text]:hover {
 		// 생산계획번호 선택 시
 		let id = document.getElementById("c_pn");
 		id.addEventListener("change", (event) => {
-			let plan_id = document.querySelector("#c_p");
-			let bom_id = document.querySelector("#c_b");
 			let sku_code = document.querySelector("#c_c");
 			let sku_name = document.querySelector("#c_m");
 			let plan_count = document.querySelector("#c_cc");
@@ -283,8 +281,6 @@ select option, input[type='number'], input[type=text]:hover {
 			let self = document.querySelector("#c_d");
 			let remain = document.querySelector("#c_r");
 
-			plan_id.value = "";
-			bom_id.value = "";
 			sku_code.value = "";
 			sku_name.value = "";
 			plan_count.value = "";
@@ -309,8 +305,6 @@ select option, input[type='number'], input[type=text]:hover {
 				console.log(json);
 
 				json.forEach((value) => {
-					plan_id.value = value.c_p;
-					bom_id.value = value.c_b;
 					sku_code.value = value.c_c;
 					sku_name.value = value.c_n;
 					plan_count.value = value.c_cc;

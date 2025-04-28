@@ -42,7 +42,7 @@ public class WorkController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/work", method = { RequestMethod.POST })
-	public ModelAndView detail(@RequestBody WorkDTO dto) {
+	public List<WorkDTO> detail(@RequestBody WorkDTO dto) {
 
 		System.out.println("work 세부조건 조회");
 
@@ -55,7 +55,7 @@ public class WorkController {
 		
 		System.out.println(select);
 
-		return select_MV;
+		return select;
 	}
 	
 	@ResponseBody

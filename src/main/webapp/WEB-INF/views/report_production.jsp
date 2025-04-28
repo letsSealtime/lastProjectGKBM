@@ -33,6 +33,8 @@ th, td {
 
 #productionChart {
 	margin-top: 40px;
+	display: block;
+    margin: 0 auto;
 }
 </style>
 </head>
@@ -53,7 +55,7 @@ th, td {
 	<!-- 차트 -->
 	<section>
 		<h2>생산량 차트</h2>
-		<canvas id="productionChart" width="800" height="400"></canvas>
+		<canvas id="productionChart" width=400" height="400"></canvas>
 	</section>
 
 	<!-- 테이블 -->
@@ -111,7 +113,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }]
             },
             options: {
-                responsive: true,
+                responsive: false,
                 plugins: {
                     legend: { position: 'bottom' }
                 }

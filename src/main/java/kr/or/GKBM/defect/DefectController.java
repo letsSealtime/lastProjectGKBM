@@ -19,7 +19,6 @@ public class DefectController {
 	@Autowired
 	DefectService DefectServiceImpl;
 
-	@ResponseBody
 	@RequestMapping(value = "/defect", method= {RequestMethod.GET})
 	public String defectEnter(@ModelAttribute DefectDTO dto) {
 

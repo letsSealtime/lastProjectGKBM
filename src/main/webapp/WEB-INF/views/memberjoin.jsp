@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>MemberJoin</title>
 <style>
 body {
 	/* 배경색 설정 */

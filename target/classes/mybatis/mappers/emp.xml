@@ -1591,7 +1591,6 @@
 
 
 	<!-- @@@@@@@@@@@@김도희@@@@@@@@@@@@@ -->
-
 	<select id="getBoardDetail" resultType="boardDTO"
 		parameterType="boardDTO">
 
@@ -1783,125 +1782,21 @@
 		where parent_id = #{comment_id}
 	</select>
 
-<<<<<<< HEAD
 	<select id="selectCommentList" parameterType="int"
 		resultType="commentDTO">
 		WITH comment_recu (
-		lv, comment_id, empno, writer, content,
-		create_date
+		lv, comment_id, empno, writer, content, create_date
 		) AS (
 		SELECT
 		0 AS lv,
 		c.comment_id,
 		c.empno,
-		e.emp_name AS
-		writer,
+		e.emp_name AS writer,
 		c.content,
 		c.create_date
 		FROM p_comment c
-		JOIN p_emp e ON c.empno
-		= e.empno
+		JOIN p_emp e ON c.empno = e.empno
 		WHERE c.depth = 0 AND c.board_id = #{value}
-=======
-	 <select id="selectCommentList" parameterType="int" resultType="commentDTO">
-		 WITH comment_recu (
-		    lv, comment_id, empno, writer, content, create_date
-		  ) AS (
-		    SELECT
-		      0 AS lv,
-		      c.comment_id,
-		      c.empno,
-		      e.emp_name AS writer,
-		      c.content,
-		      c.create_date
-		    FROM p_comment c
-		    JOIN p_emp e ON c.empno = e.empno
-		    WHERE c.depth = 0 AND c.board_id = #{value}
-		
-		    UNION ALL
-		
-		    SELECT
-		      cr.lv + 1,
-		      c.comment_id,
-		      c.empno,
-		      e.emp_name AS writer,
-		      c.content,
-		      c.create_date
-		    FROM comment_recu cr
-		    LEFT OUTER JOIN p_comment c ON c.parent_id = cr.comment_id
-		    LEFT OUTER JOIN p_emp e ON c.empno = e.empno
-		    WHERE c.depth > 0 AND c.board_id = #{value}
-		  )
-		  SEARCH DEPTH FIRST BY comment_id ASC SET sort_comment
-		  SELECT *
-		  FROM comment_recu
-		  ORDER BY sort_comment
-    </select>
-    
-    <select id="selectProductionByUnit" resultType="productionDTO" parameterType="map">
-        SELECT 
-            <choose>
-                <when test="unit == 'week'">
-                    TO_CHAR(production_date, 'IYYY-IW')
-                </when>
-                <when test="unit == 'month'">
-                    TO_CHAR(production_date, 'YYYY-MM')
-                </when>
-                <when test="unit == 'quarter'">
-                    TO_CHAR(production_date, 'YYYY-Q')
-                </when>
-                <otherwise>
-                    TO_CHAR(production_date, 'YYYY-MM')
-                </otherwise>
-            </choose> AS period,
-            SUM(quantity) AS total_production
-        FROM P_PRODUCTION
-        GROUP BY 
-            <choose>
-                <when test="unit == 'week'">
-                    TO_CHAR(production_date, 'IYYY-IW')
-                </when>
-                <when test="unit == 'month'">
-                    TO_CHAR(production_date, 'YYYY-MM')
-                </when>
-                <when test="unit == 'quarter'">
-                    TO_CHAR(production_date, 'YYYY-Q')
-                </when>
-                <otherwise>
-                    TO_CHAR(production_date, 'YYYY-MM')
-                </otherwise>
-            </choose>
-        ORDER BY period
-    </select>
-    
-    
-    <select id="selectProductionDetails" resultType="productionDTO">
-		        SELECT 
-			        p.production_id,
-			        p.production_date,
-			        p.unit,
-			        p.quantity,
-			
-			        i.product_count,
-			        i.product_price,
-			        i.sku_type,
-			        i.create_date,
-			        i.sku_id,
-			        s.sku_name,
-			
-			        (p.quantity * i.product_price) AS production_value
-			
-			    FROM p_production p
-			    LEFT JOIN p_product_in_out i ON p.ib_id = i.ib_id
-			    LEFT JOIN p_sku s ON i.sku_id = s.sku_id
-			    WHERE i.sku_type = 'In' 
-			    ORDER BY p.production_date DESC
-			</select>
-    
-    <select id="selectAllFinancial" resultType="financialDTO">
-        SELECT * FROM p_financial ORDER BY report_date DESC
-    </select>
->>>>>>> ba1cb0b19f0aa7a5d7d6f304a84f34a442eb250d
 
 		UNION ALL
 
@@ -1913,22 +1808,18 @@
 		c.content,
 		c.create_date
 		FROM comment_recu cr
-		LEFT OUTER JOIN p_comment c ON
-		c.parent_id = cr.comment_id
-		LEFT OUTER JOIN p_emp e ON c.empno =
-		e.empno
+		LEFT OUTER JOIN p_comment c ON c.parent_id = cr.comment_id
+		LEFT OUTER JOIN p_emp e ON c.empno = e.empno
 		WHERE c.depth > 0 AND c.board_id = #{value}
 		)
-		SEARCH DEPTH FIRST
-		BY comment_id ASC SET sort_comment
+		SEARCH DEPTH FIRST BY comment_id ASC SET sort_comment
 		SELECT *
 		FROM comment_recu
-		ORDER BY
-		sort_comment
+		ORDER BY sort_comment
 	</select>
 
 	<select id="selectProductionByUnit" resultType="productionDTO"
-		parameterType="String">
+		parameterType="map">
 		SELECT
 		<choose>
 			<when test="unit == 'week'">
@@ -1984,23 +1875,18 @@
 
 		FROM p_production p
 		LEFT JOIN p_product_in_out i ON p.ib_id = i.ib_id
-		LEFT JOIN p_sku s ON
-		i.sku_id = s.sku_id
+		LEFT JOIN p_sku s ON i.sku_id = s.sku_id
 		WHERE i.sku_type = 'In'
-		ORDER BY p.production_date
-		DESC
+		ORDER BY p.production_date DESC
 	</select>
 
 	<select id="selectAllFinancial" resultType="financialDTO">
-		SELECT * FROM
-		p_financial ORDER BY report_date DESC
+		SELECT * FROM p_financial ORDER BY report_date DESC
 	</select>
 
 	<select id="selectFinancialByPeriod" resultType="financialDTO">
-		SELECT * FROM
-		p_financial
-		WHERE report_date BETWEEN TO_DATE(#{startDate},
-		'YYYY-MM-DD') AND
+		SELECT * FROM p_financial
+		WHERE report_date BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD') AND
 		TO_DATE(#{endDate}, 'YYYY-MM-DD')
 		ORDER BY report_date
 	</select>
@@ -2071,11 +1957,5 @@
 		)
 		ORDER BY period
 	</select>
-<<<<<<< HEAD
 
-
-=======
-    
-    
->>>>>>> ba1cb0b19f0aa7a5d7d6f304a84f34a442eb250d
 </mapper>

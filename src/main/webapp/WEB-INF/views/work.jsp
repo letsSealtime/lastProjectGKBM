@@ -10,7 +10,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Document</title>
+<title>Work</title>
 <style>
 body {
 	margin: 0;
@@ -473,35 +473,23 @@ select option, input[type='number'], input[type=text]:hover {
 					<hr>
 					<div class="form-row">
 						<div class="form-column">
-							<input type="text" id="c_p" name="c_p" value=""
-								placeholder="생산계획번호" readonly="readonly">
-						</div>
-						<div class="form-column">
-							<input type="text" id="c_b" name="c_b" value=""
-								placeholder="BOM_ID" readonly="readonly">
-						</div>
-						<div class="form-column">
-							<input type="text" id="c_c" name="c_c" value=""
+							상품코드:<input type="text" id="c_c" name="c_c" value=""
 								placeholder="상품코드" readonly="readonly">
 						</div>
 						<div class="form-column">
-							<input type="text" id="c_m" name="c_m" value="" placeholder="상품명"
+							상품명:<input type="text" id="c_m" name="c_m" value="" placeholder="상품명"
 								readonly="readonly">
 						</div>
 						<div class="form-column">
-							<input type="text" id="c_cc" name="c_cc" value=""
+							주차생산계획수량:<input type="text" id="c_cc" name="c_cc" value=""
 								placeholder="주차생산계획수량" readonly="readonly">
 						</div>
 						<div class="form-column">
-							<input type="text" id="c_s" name="c_s" value=""
-								placeholder="주차잔여수량" readonly="readonly">
-						</div>
-						<div class="form-column">
-							<input type="text" id="c_d" name="c_d" value=""
+							일일지시수량*(기입필):<input type="text" id="c_d" name="c_d" value=""
 								placeholder="일일지시수량*(기입필)">
 						</div>
 						<div class="form-column">
-							<input type="text" id="c_r" name="c_r" value=""
+							주차잔여수량:<input type="text" id="c_r" name="c_r" value=""
 								placeholder="주차잔여수량" readonly="readonly">
 						</div>
 						<div class="buttons">

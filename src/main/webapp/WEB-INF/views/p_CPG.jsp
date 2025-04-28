@@ -16,7 +16,7 @@ body {
 }
 
 .container {
-	width: 95%;
+	width: 100%;
 	margin: auto;
 	background: white;
 	padding: 20px;
@@ -174,7 +174,7 @@ table th, table td {
 				<div class="form-row">
 					<label for="manager">관리자<span class="별"> *</span></label> <input
 						type="text" id="manager" required> <label for="count">수량<span
-						class="별"> *</span></label> <input type="text" id="count" required>
+						class="별"> *</span></label> <input type="number" id="count" required>
 				</div>
 
 				<div class="form-row">
@@ -277,23 +277,21 @@ table th, table td {
 	</div>
 	<script>
 	document.addEventListener('DOMContentLoaded', function() {
-		 // 항상 오늘 날짜로 하는 스크립트
+	    // 폐기일자 오늘 날짜로 초기화
 	    document.getElementById('disposal_date').value = new Date().toISOString().substring(0, 10);
-		
-		 // 소모품명 선택 시 소모품코드 자동 입력
-		document.getElementById('consumables_name').addEventListener('change', function() {
-	    	const selectedOption = this.options[this.selectedIndex];
-	   	 	document.getElementById('consumables_code').value = selectedOption.value || '';
-		});
-    
- 		// 전체 선택/해제 체크박스
-	    document.getElementById('selectAll').addEventListener('change', function() {
-	        var checkboxes = document.querySelectorAll('input[name="check"]');
-	        checkboxes.forEach(function(checkbox) {
-	            checkbox.checked = this.checked;
-	        }, this);
+
+	    // 소모품명 선택 시 소모품코드 자동 입력
+	    document.getElementById('consumables_name').addEventListener('change', function() {
+	        const selectedOption = this.options[this.selectedIndex];
+	        document.getElementById('consumables_code').value = selectedOption.value || '';
 	    });
-	 
+
+	    // 전체 선택/해제 체크박스
+	    document.getElementById('selectAll').addEventListener('change', function() {
+	        const checkboxes = document.querySelectorAll('input[name="check"]');
+	        checkboxes.forEach(checkbox => checkbox.checked = this.checked);
+	    });
+
 	    // 개별 체크박스 전체선택 동기화
 	    document.querySelectorAll('input[name="check"]').forEach(function(checkbox) {
 	        checkbox.addEventListener('change', function() {
@@ -301,11 +299,32 @@ table th, table td {
 	            document.getElementById('selectAll').checked = allChecked;
 	        });
 	    });
-	    
-		// 등록 버튼
+
+	    // 실시간 수량 입력 검증 (등록/수정 공통)
+	    document.getElementById('count').addEventListener('input', function() {
+	        let value = parseInt(this.value, 10) || 0;
+	        if (value < 0) {
+	            this.value = 0;
+	            alert("음수는 입력할 수 없습니다.");
+	            return;
+	        }
+	        // 최대값 계산
+	        const selectedOption = document.getElementById('consumables_name').selectedOptions[0];
+	        if (!selectedOption) return;
+	        const currentStock = parseInt(selectedOption.dataset.stock, 10) || 0;
+	        // 수정모드시 체크된 행의 기존 폐기수량
+	        const checkedRow = document.querySelector('input[name="check"]:checked');
+	        const originalCount = checkedRow ? parseInt(checkedRow.closest('tr').cells[5].textContent.trim(), 10) || 0 : 0;
+	        const maxAllowed = currentStock + originalCount;
+	        if (value > maxAllowed) {
+	            this.value = maxAllowed;
+	            alert(`최대 \${maxAllowed}개까지 입력 가능합니다.`);
+	        }
+	    });
+
+	    // 등록 버튼
 	    document.querySelector('.insert1').addEventListener('click', function(event) {
 	        event.preventDefault();
-	        
 	        // 필수값 검사
 	        const requiredFields = ['consumables_code', 'manager', 'count', 'disposal_reason', 'disposal_date'];
 	        for (const field of requiredFields) {
@@ -315,17 +334,13 @@ table th, table td {
 	                return;
 	            }
 	        }
-
-	        // 재고 확인
 	        const selectedOption = document.getElementById('consumables_name').selectedOptions[0];
-	        const currentStock = parseInt(selectedOption.dataset.stock);
-	        const disposalQuantity = parseInt(document.getElementById('count').value);
-			console.log(currentStock)
+	        const currentStock = parseInt(selectedOption.dataset.stock, 10) || 0;
+	        const disposalQuantity = parseInt(document.getElementById('count').value, 10) || 0;
 	        if (disposalQuantity > currentStock) {
-	            alert("폐기 수량이 현재 재고보다 많습니다. \n현재 재고: "+currentStock);
+	            alert(`폐기 수량이 현재 재고보다 많습니다.\n현재 재고: ${currentStock}`);
 	            return;
 	        }
-
 	        // 데이터 전송
 	        const data = {
 	            consumables_code: document.getElementById('consumables_code').value,
@@ -335,7 +350,6 @@ table th, table td {
 	            disposal_date: document.getElementById('disposal_date').value,
 	            remarks: document.getElementById('remarks').value
 	        };
-
 	        fetch('${pageContext.request.contextPath}/p_CPGinsert', {
 	            method: 'POST',
 	            headers: {'Content-Type': 'application/json'},
@@ -351,42 +365,39 @@ table th, table td {
 	            }
 	        });
 	    });
-		
-	 // 삭제 버튼
-	   document.querySelector('.delete1').addEventListener('click', function(e) {
-		    e.preventDefault();
-		    const selectedRows = Array.from(document.querySelectorAll('input[name="check"]:checked'))
-		                            .map(cb => {
-		                                const row = cb.closest('tr');
-		                                return {
-		                                    disposal_id: cb.value,
-		                                    consumables_code: row.cells[2].textContent.trim(),
-		                                    count: parseInt(row.cells[5].textContent.trim())
-		                                };
-		                            });
-		
-		    if (selectedRows.length === 0) {
-		        alert("삭제할 항목을 선택하세요.");
-		        return;
-		    }
-		    if (!confirm("정말 삭제하시겠습니까?")) return;
-		
 
-		    Promise.all(selectedRows.map(row => {
-		        return fetch('${pageContext.request.contextPath}/p_CPGdelete', {
-		            method: 'POST',
-		            headers: {'Content-Type': 'application/json'},
-		            body: JSON.stringify(row)
-		        }).then(res => res.text());
-		    })).then(results => {
-		        if (results.every(r => r === "success")) {
-		            alert("삭제 성공!");
-		            location.reload();
-		        } else {
-		            alert("삭제 실패!");
-		        }
-		    });
-		});
+	    // 삭제 버튼
+	    document.querySelector('.delete1').addEventListener('click', function(e) {
+	        e.preventDefault();
+	        const selectedRows = Array.from(document.querySelectorAll('input[name="check"]:checked'))
+	            .map(cb => {
+	                const row = cb.closest('tr');
+	                return {
+	                    disposal_id: cb.value,
+	                    consumables_code: row.cells[2].textContent.trim(),
+	                    count: parseInt(row.cells[5].textContent.trim(), 10) || 0
+	                };
+	            });
+	        if (selectedRows.length === 0) {
+	            alert("삭제할 항목을 선택하세요.");
+	            return;
+	        }
+	        if (!confirm("정말 삭제하시겠습니까?")) return;
+	        Promise.all(selectedRows.map(row => {
+	            return fetch('${pageContext.request.contextPath}/p_CPGdelete', {
+	                method: 'POST',
+	                headers: {'Content-Type': 'application/json'},
+	                body: JSON.stringify(row)
+	            }).then(res => res.text());
+	        })).then(results => {
+	            if (results.every(r => r === "success")) {
+	                alert("삭제 성공!");
+	                location.reload();
+	            } else {
+	                alert("삭제 실패!");
+	            }
+	        });
+	    });
 
 	    // 수정 버튼
 	    document.querySelector('.update1').addEventListener('click', function() {
@@ -400,19 +411,17 @@ table th, table td {
 	        const selectedRow = selectedChecks[0].closest('tr');
 	        const cells = selectedRow.cells;
 
-	       
-
 	        // 소모품명 select의 value(=소모품코드)로 맞추기
 	        const codeToSelect = cells[2].textContent.trim();
 	        const selectBox = document.getElementById('consumables_name');
 	        selectBox.value = codeToSelect;
-	        // 만약 value가 안 맞으면 아래 루프로 강제 선택
 	        if (selectBox.value !== codeToSelect) {
 	            Array.from(selectBox.options).forEach(opt => {
 	                if (opt.value === codeToSelect) opt.selected = true;
 	            });
 	        }
-	        // 폼에 데이터 채우기 (테이블: 체크/NO/소모품코드/소모품명/관리자/수량/사유/일자/비고)
+
+	        // 폼에 데이터 채우기
 	        document.getElementById('consumables_code').value = cells[2].textContent.trim();
 	        document.getElementById('manager').value = cells[4].textContent.trim();
 	        document.getElementById('count').value = cells[5].textContent.trim();
@@ -420,6 +429,38 @@ table th, table td {
 	        document.getElementById('disposal_date').value = cells[7].textContent.trim();
 	        document.getElementById('remarks').value = cells[8].textContent.trim();
 	        document.getElementById('consumables_code').readOnly = true;
+
+	        // 최대 수정 가능 수량 계산 및 안내문구
+	        const selectedOption = selectBox.selectedOptions[0];
+	        const currentStock = parseInt(selectedOption.dataset.stock, 10) || 0;
+	        const originalCount = parseInt(cells[5].textContent.trim(), 10) || 0;
+	        const maxAllowed = currentStock + originalCount;
+
+	        // 안내문구 생성 또는 갱신
+	        let infoSpan = document.getElementById('max-qty-info');
+	        if (!infoSpan) {
+	            infoSpan = document.createElement('span');
+	            infoSpan.id = 'max-qty-info';
+	            infoSpan.style.color = 'blue';
+	            infoSpan.style.marginLeft = '10px';
+	            document.getElementById('count').after(infoSpan);
+	        }
+	        infoSpan.textContent = `※ 최대 \${maxAllowed}개까지 수정 가능 (현재 재고: ${currentStock}, 기존 폐기수량: ${originalCount})`;
+
+	        // 실시간 입력 검증 (수정 모드)
+	        const countInput = document.getElementById('count');
+	        countInput.oninput = function() {
+	            let value = parseInt(this.value, 10) || 0;
+	            if (value < 0) {
+	                this.value = 0;
+	                alert("음수는 입력할 수 없습니다.");
+	                return;
+	            }
+	            if (value > maxAllowed) {
+	                this.value = maxAllowed;
+	                alert(`최대 \${maxAllowed}개까지 입력 가능합니다.`);
+	            }
+	        };
 
 	        // 기존 버튼 숨기기
 	        document.querySelectorAll('.buttons button').forEach(button => {
@@ -440,7 +481,7 @@ table th, table td {
 	        document.querySelector('.buttons').appendChild(completeButton);
 	        document.querySelector('.buttons').appendChild(cancelButton);
 
-	        // 수정완료 버튼 AJAX
+	        // 수정완료 버튼
 	        completeButton.addEventListener('click', function() {
 	            // 필수값 검사
 	            const requiredFields = ['consumables_code', 'manager', 'count', 'disposal_reason', 'disposal_date'];
@@ -451,12 +492,24 @@ table th, table td {
 	                    return;
 	                }
 	            }
+	            const count = parseInt(document.getElementById('count').value, 10) || 0;
+	            if (count < 0) {
+	                alert("수량은 0 이상 입력해야 합니다.");
+	                document.getElementById('count').focus();
+	                return;
+	            }
+	            if (count > maxAllowed) {
+	                alert(`최대 \${maxAllowed}개까지 입력 가능합니다.`);
+	                document.getElementById('count').value = maxAllowed;
+	                document.getElementById('count').focus();
+	                return;
+	            }
 	            // 데이터 전송
 	            const data = {
-	                disposal_id: selectedChecks[0].value, // 체크박스 value는 disposal_id
+	                disposal_id: selectedChecks[0].value,
 	                consumables_code: document.getElementById('consumables_code').value,
 	                manager: document.getElementById('manager').value,
-	                count: document.getElementById('count').value,
+	                count: count,
 	                disposal_reason: document.getElementById('disposal_reason').value,
 	                disposal_date: document.getElementById('disposal_date').value,
 	                remarks: document.getElementById('remarks').value
@@ -479,13 +532,11 @@ table th, table td {
 
 	        // 수정취소 버튼
 	        cancelButton.addEventListener('click', function() {
-	            // 체크박스 초기화
 	            document.querySelectorAll('input[name="check"]').forEach(cb => cb.checked = false);
 	            document.getElementById('consumables_code').readOnly = false;
 	            document.querySelectorAll('.buttons button').forEach(button => {
 	                button.style.display = 'inline-block';
 	            });
-	            // 폼 초기화
 	            document.getElementById('consumables_code').value = '';
 	            document.getElementById('consumables_name').value = '';
 	            document.getElementById('manager').value = '';
@@ -495,9 +546,10 @@ table th, table td {
 	            document.getElementById('remarks').value = '';
 	            completeButton.remove();
 	            cancelButton.remove();
+	            let infoSpan = document.getElementById('max-qty-info');
+	            if (infoSpan) infoSpan.remove();
 	        });
 	    });
-
 	});
 	
     </script>

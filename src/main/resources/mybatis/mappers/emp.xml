@@ -595,7 +595,6 @@
 
 	</insert>
 
-<<<<<<< HEAD
 	<!-- defect 조회 -->
 	<select id="selectDefectAll_1"
 		resultType="kr.or.GKBM.defect.DefectDTO">
@@ -647,8 +646,6 @@
 
 	</select>
 
-=======
->>>>>>> 14a80afd7c1dc17348a52ff225a0dff6ea1f72d6
 	<!-- Defect 삽입 -->
 
 	<insert id="insertDefect"

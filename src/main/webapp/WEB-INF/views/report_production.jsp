@@ -79,7 +79,9 @@ document.addEventListener("DOMContentLoaded", function () {
     let chart = null;
 
     function loadProductionData(unit = "month") {
-        fetch(`/report/production?unit=${unit}`)
+		const contextPath = "${pageContext.request.contextPath}";
+    	
+        fetch(contextPath + `/report/production?unit=month`)
             .then(res => {
                 if (!res.ok) throw new Error("서버 오류");
                 return res.json();
@@ -92,8 +94,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function renderChart(data) {
+    	console.log(data.period);
         const labels = data.map(d => d.period);
-        const values = data.map(d => d.totalProduction);
+        const values = data.map(d => d.total_production);
 
         if (chart) chart.destroy();
 
@@ -122,8 +125,8 @@ document.addEventListener("DOMContentLoaded", function () {
         data.forEach(d => {
             const row = document.createElement("tr");
             row.innerHTML = `
-                <td>${d.period}</td>
-                <td>${d.totalProduction}</td>
+                <td>\${d.period}</td>
+                <td>\${d.total_production}</td>
             `;
             tbody.appendChild(row);
         });

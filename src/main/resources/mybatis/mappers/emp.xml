@@ -1623,7 +1623,7 @@ SELECT COUNT(*) FROM p_bom pb LEFT JOIN p_sku ps ON pb.sku_id = ps.sku_id LEFT J
 		  ORDER BY sort_comment
     </select>
     
-        <select id="selectProductionByUnit" resultType="productionDTO" parameterType="String">
+    <select id="selectProductionByUnit" resultType="productionDTO" parameterType="map">
         SELECT 
             <choose>
                 <when test="unit == 'week'">
@@ -1754,6 +1754,6 @@ SELECT COUNT(*) FROM p_bom pb LEFT JOIN p_sku ps ON pb.sku_id = ps.sku_id LEFT J
 		)
 		ORDER BY period
 	</select>
-
+    
     
 </mapper>

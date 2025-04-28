@@ -10,6 +10,8 @@ public class ProductionDTO {
     private Date production_date;
     private int quantity;
     private String unit;
+    private String period;
+    private int total_production;
 
     private int product_count;
     private int product_price;

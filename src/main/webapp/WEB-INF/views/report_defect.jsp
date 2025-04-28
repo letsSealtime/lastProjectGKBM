@@ -11,7 +11,10 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body { font-family: Arial, sans-serif; padding: 20px; }
-        h2 { margin-bottom: 10px; }
+        h1, h2 { margin-top: 30px; }
+        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+        th, td { border: 1px solid #aaa; padding: 8px; text-align: center; }
+        #financialChart { margin-top: 40px; }
         #unitSelect { margin-bottom: 20px; }
         canvas { max-width: 800px; }
     </style>
@@ -28,22 +31,43 @@
         <option value="quarter">분기별</option>
     </select>
 
-    <!-- 차트 출력 -->
-    <canvas id="defectChart"></canvas>
+	<!-- 차트 출력 -->
+	<canvas id="defectChart"></canvas>
 
-    <script>
+	<!-- 테이블 영역 -->
+	<section>
+		<h2>상세 불량률 내역</h2>
+		<table>
+			<thead>
+				<tr>
+					<th>월</th>
+					<th>불량률</th>
+				</tr>
+			</thead>
+			<tbody id="defectTableBody">
+				<!-- JS로 동적 삽입 -->
+			</tbody>
+		</table>
+	</section>
+
+	<script>
     document.addEventListener("DOMContentLoaded", function () {
         const unitSelect = document.getElementById("unitSelect");
         const ctx = document.getElementById("defectChart").getContext("2d");
         let chart = null;
 
         function loadDefectData(unit = "month") {
-            fetch(`/report/defect?unit=${unit}`)
+        	const contextPath = "${pageContext.request.contextPath}";
+        	
+            fetch(contextPath + `/report/defect?unit=month`)
                 .then(res => {
                     if (!res.ok) throw new Error("네트워크 오류");
                     return res.json();
                 })
-                .then(data => renderChart(data))
+            .then(data => {
+                renderChart(data);
+                renderTable(data);
+            })
                 .catch(err => console.error("불량률 로딩 오류:", err));
         }
 
@@ -91,6 +115,20 @@
         // 초기 로딩 (월별)
         loadDefectData();
     });
+    
+    function renderTable(data) {
+        const tbody = document.getElementById("defectTableBody");
+        tbody.innerHTML = "";
+        data.forEach(d => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>\${d.defect_date}</td>
+                <td>\${d.defect_rate}</td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+    
     </script>
 
 </body>

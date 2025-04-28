@@ -1,4 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isELIgnored="false"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
@@ -57,9 +58,11 @@
 document.addEventListener("DOMContentLoaded", function () {
     const chartCtx = document.getElementById("financialChart").getContext("2d");
     let chart = null;
-
-    function fetchFinancialData(url = "/report/financial") {
-        fetch(url)
+    
+    function fetchFinancialData() {
+		const contextPath = "${pageContext.request.contextPath}";
+    	
+    	fetch(contextPath + `/report/financial`)
             .then(res => {
                 if (!res.ok) throw new Error("데이터 불러오기 실패");
                 return res.json();
@@ -74,8 +77,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function renderChart(data) {
-        const labels = data.map(d => d.report_date);
-        const sales = data.map(d => d.total_sales);
+    	const labels = data.map(d => new Date(d.report_date).toISOString().slice(0, 10));
+    	const sales = data.map(d => d.total_sales);
         const opProfit = data.map(d => d.operating_profit);
         const netProfit = data.map(d => d.net_profit);
 
@@ -117,15 +120,23 @@ document.addEventListener("DOMContentLoaded", function () {
     function renderTable(data) {
         const tbody = document.getElementById("financialTableBody");
         tbody.innerHTML = "";
+        
         data.forEach(d => {
             const row = document.createElement("tr");
+            
+            const label = new Date(d.report_date).toISOString().slice(0, 10);
+            const month = label.slice(5, 7) + "월";
+            
+            console.log("label", label, "total_sales", d.total_sales, "operating_profit", d.operating_profit, "net_profit", d.net_profit, "report_date", d.report_date);
+            
             row.innerHTML = `
-                <td>${d.report_date}</td>
-                <td>${d.total_sales}</td>
-                <td>${d.operating_profit}</td>
-                <td>${d.net_profit}</td>
-                <td>${d.report_date}</td>
+                <td>\${month}</td>
+                <td>\${d.total_sales}</td>
+                <td>\${d.operating_profit}</td>
+                <td>\${d.net_profit}</td>
+                <td>\${label}</td>
             `;
+
             tbody.appendChild(row);
         });
     }

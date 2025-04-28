@@ -699,9 +699,13 @@ keyframes spin { 0% {
 
 
 
+
+
 %
 {
 transform
+
+
 
 
 
@@ -711,7 +715,11 @@ transform
 
 
 
+
+
 translate
+
+
 
 
 (
@@ -719,12 +727,18 @@ translate
 
 
 
+
+
 -50
+
+
 
 
 %
 ,
 -50
+
+
 
 
 %
@@ -733,10 +747,16 @@ translate
 
 
 
+
+
 rotate
 
 
+
+
 (
+
+
 
 
 
@@ -746,7 +766,11 @@ rotate
 
 
 
+
+
 )
+
+
 
 
 ;
@@ -963,7 +987,7 @@ document.addEventListener('DOMContentLoaded', function () {
 //서브메뉴 클릭 이벤트 리스너 수정
 document.addEventListener('click', function(e) {
     if (e.target.classList.contains('sub_item')) {
-    	
+    	localStorage.setItem('activeSubMenu', e.target.textContent);
     	// 1. 서브메뉴 활성화 관리
         document.querySelectorAll('.sub_item').forEach(item => item.classList.remove('active'));
         e.target.classList.add('active');
@@ -984,12 +1008,21 @@ document.addEventListener('click', function(e) {
             e.target.insertAdjacentElement('afterend', detailDiv);
 
             // 상세 항목 클릭 이벤트
+         // 상세 항목 클릭 이벤트
             detailDiv.querySelectorAll('.detail-item').forEach(item => {
                 item.addEventListener('click', function(e) {
                     e.stopPropagation();
+
+                    // [추가] 상세 메뉴 활성화 정보 저장
+                    const mainMenuId = document.querySelector('.menu_item.active').getAttribute('data-menu');
+                    localStorage.setItem('activeMainMenu', mainMenuId); // 메인 메뉴
+                    localStorage.setItem('activeSubMenu', menuName);    // 1차(리포팅)
+                    localStorage.setItem('activeDetailMenu', this.getAttribute('data-detail')); // 2차(경영리포팅 등)
+
                     goMenuPage(this.getAttribute('data-detail'));
                 });
             });
+
         } else {
             // 상세 항목 없으면 바로 이동
             goMenuPage(menuName);
@@ -1030,6 +1063,47 @@ document.addEventListener('click', function(e) {
 	            }
 	        }
 	    }, /*300*/);
+	    
+	 // 상세 메뉴(2차 메뉴) 복원
+	    const savedMainMenuId = localStorage.getItem('activeMainMenu');
+	    const savedSubMenu = localStorage.getItem('activeSubMenu');
+	    const savedDetailMenu = localStorage.getItem('activeDetailMenu');
+
+	    if (savedMainMenuId) {
+	        const mainMenuItem = document.querySelector(`[data-menu="${savedMainMenuId}"]`);
+	        if (mainMenuItem) {
+	            handleMainMenuClick(mainMenuItem, savedMainMenuId);
+	        }
+	    }
+
+	    // 1차(서브) 메뉴 복원
+	    if (savedSubMenu) {
+	        document.querySelectorAll('.sub_item').forEach(item => {
+	            if (item.textContent === savedSubMenu) {
+	                item.classList.add('active');
+
+	                // [추가] 상세 메뉴가 있을 때만 상세 메뉴를 동적으로 생성
+	                const detailItems = subMenuDetails[savedSubMenu];
+	                if (detailItems && detailItems.length > 0) {
+	                    const detailDiv = document.createElement('div');
+	                    detailDiv.className = 'detail-menu';
+	                    detailDiv.innerHTML = detailItems.map(
+	                        item => `<div class="detail-item" data-detail="${item}">${item}</div>`
+	                    ).join('');
+	                    item.insertAdjacentElement('afterend', detailDiv);
+
+	                    // 2차(상세) 메뉴 복원
+	                    if (savedDetailMenu) {
+	                        detailDiv.querySelectorAll('.detail-item').forEach(detailItem => {
+	                            if (detailItem.textContent === savedDetailMenu) {
+	                                detailItem.classList.add('active');
+	                            }
+	                        });
+	                    }
+	                }
+	            }
+	        });
+	    }
 	});
 
 

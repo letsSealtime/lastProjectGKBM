@@ -6,55 +6,156 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>경영 실적 리포트</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        body { font-family: Arial, sans-serif;}
-        h1, h2 { margin-top: 30px; }
-        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
-        th, td { border: 1px solid #aaa; padding: 8px; text-align: center; }
-        #financialChart { margin-top: 40px; }
-    </style>
+<meta charset="UTF-8">
+<title>경영 실적 리포트</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+body {
+	font-family: Arial, sans-serif;
+	background-color: #f9f9f9;
+	margin: 0;
+	padding: 0;
+}
+
+h1, h2 {
+	margin: 30px 0 10px 0;
+	text-align: center;
+	color: #333;
+}
+
+section {
+	margin: 20px auto;
+	width: 90%;
+	max-width: 1200px;
+	background: #fff;
+	padding: 20px;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+	border-radius: 8px;
+}
+
+label {
+	display: inline-block;
+	margin: 10px 10px 10px 0;
+	font-weight: 500;
+}
+
+input[type="date"] {
+	padding: 5px 10px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
+
+#filterBtn {
+	padding: 6px 15px;
+	font-size: 14px;
+	font-weight: bold;
+	color: white;
+	background-color: #4CAF50;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	transition: background-color 0.2s;
+}
+
+#filterBtn:hover {
+	background-color: #45a049;
+}
+
+table {
+	border-collapse: collapse;
+	width: 100%;
+	margin-top: 20px;
+	background-color: white;
+}
+
+th, td {
+	border: 1px solid #ddd;
+	padding: 10px;
+	text-align: center;
+	font-size: 14px;
+}
+
+th {
+	background-color: #f2f2f2;
+	font-weight: bold;
+	color: #333;
+}
+
+#financialChart {
+	margin-top: 30px;
+}
+
+.report_btn_area {
+	text-align: center;
+	margin: 30px 0;
+}
+
+.report_btn {
+	display: inline-block;
+	padding: 10px 20px;
+	font-size: 15px;
+	font-weight: 500;
+	color: #333;
+	background-color: #f0f0f0;
+	border: 1px solid #ccc;
+	border-radius: 6px;
+	cursor: pointer;
+	text-decoration: none;
+	transition: background-color 0.2s, color 0.2s;
+	margin: 0 10px;
+}
+
+.report_btn:hover {
+	background-color: #e0e0e0;
+	color: #000;
+}
+</style>
 </head>
 <body>
 
-<h1>경영 실적 리포트</h1>
+	<h1>경영 실적 리포트</h1>
 
-<!-- 기간 필터 -->
-<section>
-    <h2>기간 필터</h2>
-    <label>시작일: <input type="date" id="startDate" /></label>
-    <label>종료일: <input type="date" id="endDate" /></label>
-    <button id="filterBtn">조회</button>
-</section>
+	<div class="report_btn_area">
+		<a href="${pageContext.request.contextPath}/report/page"><button class="report_btn">경영 리포트</button></a>
+		<a href="${pageContext.request.contextPath}/report/production/page"><button class="report_btn">생산 리포트</button></a>
+		<a href="${pageContext.request.contextPath}/report/defect/page"><button class="report_btn">불량률 추이</button></a>
+	</div>
 
-<!-- 차트 영역 -->
-<section>
-    <h2>월별 실적 차트</h2>
-    <canvas id="financialChart"></canvas>
-</section>
+	<!-- 기간 필터 -->
+	<section>
+		<h2>기간 필터</h2>
+		<label>시작일: <input type="date" id="startDate" /></label> <label>종료일:
+			<input type="date" id="endDate" />
+		</label>
+		<button id="filterBtn">조회</button>
+	</section>
 
-<!-- 테이블 영역 -->
-<section>
-    <h2>상세 실적 내역</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>월</th>
-                <th>매출</th>
-                <th>영업이익</th>
-                <th>순이익</th>
-                <th>등록일</th>
-            </tr>
-        </thead>
-        <tbody id="financialTableBody">
-            <!-- JS로 동적 삽입 -->
-        </tbody>
-    </table>
-</section>
+	<!-- 차트 영역 -->
+	<section>
+		<h2>월별 실적 차트</h2>
+		<canvas id="financialChart"></canvas>
+	</section>
 
-<script>
+	<!-- 테이블 영역 -->
+	<section>
+		<h2>상세 실적 내역</h2>
+		<table>
+			<thead>
+				<tr>
+					<th>월</th>
+					<th>매출</th>
+					<th>영업이익</th>
+					<th>순이익</th>
+					<th>등록일</th>
+				</tr>
+			</thead>
+			<tbody id="financialTableBody">
+				<!-- JS로 동적 삽입 -->
+			</tbody>
+		</table>
+	</section>
+
+	<script>
 document.addEventListener("DOMContentLoaded", function () {
     const chartCtx = document.getElementById("financialChart").getContext("2d");
     let chart = null;
@@ -126,14 +227,15 @@ document.addEventListener("DOMContentLoaded", function () {
             
             const label = new Date(d.report_date).toISOString().slice(0, 10);
             const month = label.slice(5, 7) + "월";
-            
-            console.log("label", label, "total_sales", d.total_sales, "operating_profit", d.operating_profit, "net_profit", d.net_profit, "report_date", d.report_date);
+            const totalSales = d.total_sales.toLocaleString();
+            const operatingProfit = d.operating_profit.toLocaleString();
+            const netProfit = d.net_profit.toLocaleString();
             
             row.innerHTML = `
                 <td>\${month}</td>
-                <td>\${d.total_sales}</td>
-                <td>\${d.operating_profit}</td>
-                <td>\${d.net_profit}</td>
+                <td>\${totalSales}</td>
+                <td>\${operatingProfit}</td>
+                <td>\${netProfit}</td>
                 <td>\${label}</td>
             `;
 

@@ -129,15 +129,15 @@ button {
 					<th>내용</th>
 					<td><textarea id="board_content" name="board_content">${boardDTO.board_content}</textarea></td>
 				</tr>
-				<c:if test="${grade == 1}">
-					<div>
-						<!-- 공지사항 선택 부분 -->
-						<label for="notice">공지사항 여부 :</label> <select name="notice"
-							id="notice">
-							<option value="0" ${boardDTO.notice == 0 ? 'selected' : ''}>일반</option>
-							<option value="1" ${boardDTO.notice == 1 ? 'selected' : ''}>공지</option>
-						</select>
-					</div>
+				<c:if test="${user.grade == 1}">
+					<tr>
+						<th>공지사항
+						</th>
+						<td><select name="notice" id="notice">
+								<option value="0" ${boardDTO.notice == 0 ? 'selected' : ''}>일반</option>
+								<option value="1" ${boardDTO.notice == 1 ? 'selected' : ''}>공지</option>
+						</select></td>
+					</tr>
 				</c:if>
 				<tr>
 					<th>파일첨부</th>

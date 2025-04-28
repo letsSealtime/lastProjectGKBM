@@ -55,6 +55,12 @@ public class BoardDAOImpl implements BoardDAO {
 		return result;
 	}
 
+	@Override
+	public int countCommentForList(int board_id) {
+		int result = sqlSession.selectOne("gkbm.emp.countCommentForList", board_id);
+		return result;
+	}
+
 
 
 }

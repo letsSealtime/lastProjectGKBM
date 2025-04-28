@@ -14,6 +14,7 @@ public interface BoardDAO {
 	public int deleteBoard(BoardDTO boardDTO);
 	public BoardDTO getBoardDetail(BoardDTO boardDTO);
 	public int viewsUpdateBoard(BoardDTO boardDTO);
+	public int countCommentForList(int board_id);
 	
 	int totalList();
 	

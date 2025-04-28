@@ -12,35 +12,105 @@
 <style>
 body {
 	font-family: Arial, sans-serif;
+	background-color: #f9f9f9;
+	margin: 0;
 	padding: 20px;
 }
 
 h1, h2 {
-	margin-top: 30px;
+	margin: 30px 0 10px 0;
+	text-align: center;
+	color: #333;
+}
+
+section {
+	margin: 20px auto;
+	width: 90%;
+	max-width: 1200px;
+	background: #fff;
+	padding: 20px;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+	border-radius: 8px;
+}
+
+label {
+	display: inline-block;
+	margin: 10px 10px 10px 0;
+	font-weight: 500;
+}
+
+select {
+	padding: 5px 10px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
 }
 
 table {
 	border-collapse: collapse;
 	width: 100%;
 	margin-top: 20px;
+	background-color: white;
 }
 
 th, td {
-	border: 1px solid #aaa;
-	padding: 8px;
+	border: 1px solid #ddd;
+	padding: 10px;
 	text-align: center;
+	font-size: 14px;
 }
 
-#productionChart {
-	margin-top: 40px;
+th {
+	background-color: #f2f2f2;
+	font-weight: bold;
+	color: #333;
+}
+
+canvas {
+	margin-top: 30px;
 	display: block;
-    margin: 0 auto;
+	margin-left: auto;
+	margin-right: auto;
+	background-color: #fff;
+	padding: 10px;
+	border-radius: 8px;
+}
+
+.report_btn_area {
+	text-align: center;
+	margin: 30px 0;
+}
+
+.report_btn {
+	display: inline-block;
+	padding: 10px 20px;
+	font-size: 15px;
+	font-weight: 500;
+	color: #333;
+	background-color: #f0f0f0;
+	border: 1px solid #ccc;
+	border-radius: 6px;
+	cursor: pointer;
+	text-decoration: none;
+	transition: background-color 0.2s, color 0.2s;
+	margin: 0 10px;
+}
+
+.report_btn:hover {
+	background-color: #e0e0e0;
+	color: #000;
 }
 </style>
 </head>
 <body>
 
 	<h1>생산 실적 리포트</h1>
+
+	<div class="report_btn_area">
+		<a href="${pageContext.request.contextPath}/report/page"><button class="report_btn">경영 리포트</button></a>
+		<a href="${pageContext.request.contextPath}/report/production/page"><button class="report_btn">생산 리포트</button></a>
+		<a href="${pageContext.request.contextPath}/report/defect/page"><button class="report_btn">불량률 추이</button></a>
+	</div>
+	
 
 	<!-- 단위 선택 -->
 	<section>

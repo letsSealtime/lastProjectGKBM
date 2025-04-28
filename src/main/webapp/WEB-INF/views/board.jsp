@@ -97,7 +97,7 @@ button:hover {
 
 	<form method="get" action="board">
 		<select name="type">
-			<option value="empno">작성자</option>
+			<option value="writer">작성자</option>
 			<option value="title">제목</option>
 			<option value="board_content">글 내용</option>
 		</select> 
@@ -109,7 +109,7 @@ button:hover {
 		<thead>
 			<tr>
 				<th>번호</th>
-				<th>사원번호</th>
+				<th>작성자</th>
 				<th>제목</th>
 				<th>공지</th>
 				<th>작성일</th>
@@ -121,12 +121,12 @@ button:hover {
 			<c:forEach var="dto" items="${map.list}">
 				<tr>
 					<td>${dto.board_id}</td>
-					<td>${dto.empno}</td>
+					<td>${dto.writer}</td>
 					<td><a href="board_detail?board_id=${dto.board_id}">${dto.title}</a></td>
 					<td>${dto.notice == 1 ? "공지" : "-"}</td>
 					<td>${dto.create_date}</td>
 					<td>${dto.views}</td>
-					<td></td>
+					<td>${dto.commentCount}</td>
 				</tr>
 			</c:forEach>
 		</tbody>

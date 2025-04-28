@@ -525,8 +525,8 @@ function init() {
 		<div class="pagination">
 			<c:set var="pageCount"
 				value="${(line mod viewCount == 0) ? (line div viewCount) : (line div viewCount + 1)}" />
-			<c:set var="prevPage" value="${page - viewCount}" />
-			<c:set var="nextPage" value="${page + viewCount}" />
+			<c:set var="prevPage" value="${page - 1}" />
+			<c:set var="nextPage" value="${page + 1}" />
 
 			<!-- << -->
 			<c:url var="firstUrl" value="vendor">
@@ -613,7 +613,7 @@ function init() {
 
 			<!-- >> -->
 			<c:url var="lastUrl" value="vendor">
-				<c:param name="page" value="${lastPage}" />
+				<c:param name="page" value="${pageCount}" />
 				<c:param name="c_c" value="${param.c_c}" />
 				<c:param name="c_n" value="${param.c_n}" />
 				<c:param name="c_m" value="${param.c_m}" />

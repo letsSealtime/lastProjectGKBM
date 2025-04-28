@@ -474,8 +474,8 @@ select option, input[type='number'], input[type=text]:hover {
 								placeholder="상품코드" readonly="readonly">
 						</div>
 						<div class="form-column">
-							상품명:<input type="text" id="c_m" name="c_m" value="" placeholder="상품명"
-								readonly="readonly">
+							상품명:<input type="text" id="c_m" name="c_m" value=""
+								placeholder="상품명" readonly="readonly">
 						</div>
 						<div class="form-column">
 							주차생산계획수량:<input type="text" id="c_cc" name="c_cc" value=""
@@ -567,11 +567,11 @@ select option, input[type='number'], input[type=text]:hover {
 			<!-- 페이지 카운트 및 이전/다음 페이지 설정 -->
 			<c:set var="pageCount"
 				value="${(line mod viewCount == 0) ? (line div viewCount) : (line div viewCount + 1)}" />
-			<c:set var="prevPage" value="${page - viewCount}" />
-			<c:set var="nextPage" value="${page + viewCount}" />
+			<c:set var="prevPage" value="${page - 1}" />
+			<c:set var="nextPage" value="${page + 1}" />
 
 			<!-- << 버튼 (첫 페이지로 이동) -->
-			<c:url var="firstPageUrl" value="vendor">
+			<c:url var="firstPageUrl" value="work">
 				<c:param name="page" value="1" />
 				<c:param name="c_y" value="${param.c_y}" />
 				<c:param name="c_w" value="${param.c_w}" />
@@ -593,7 +593,7 @@ select option, input[type='number'], input[type=text]:hover {
 			<a href="${firstPageUrl}"><button>&lt;&lt;</button></a>
 
 			<!-- < 버튼 (이전 페이지로 이동) -->
-			<c:url var="prevPageUrl" value="vendor">
+			<c:url var="prevPageUrl" value="work">
 				<c:param name="page" value="${prevPage}" />
 				<c:param name="c_y" value="${param.c_y}" />
 				<c:param name="c_w" value="${param.c_w}" />
@@ -614,104 +614,65 @@ select option, input[type='number'], input[type=text]:hover {
 			</c:url>
 			<a href="${prevPageUrl}"><button>&lt;</button></a>
 
-			<!-- 페이지 번호 선택 -->
+			<!-- 숫자 페이지 -->
 			<c:choose>
-				<c:when test="${ page == pageCount }">
-					<c:forEach var="i" begin="${ page - (viewCount - 1) }"
-						end="${ page }">
+				<c:when test="${page == pageCount}">
+					<c:forEach var="i" begin="${page - (viewCount - 1)}" end="${page}">
+						<c:url var="pageUrl" value="work">
+							<c:param name="page" value="${i}" />
+							<c:param name="c_y" value="${param.c_y}" />
+							<c:param name="c_w" value="${param.c_w}" />
+							<c:param name="c_n" value="${param.c_n}" />
+							<c:param name="c_pn" value="${param.c_pn}" />
+							<c:param name="c_p" value="${param.c_p}" />
+							<c:param name="wi" value="${param.wi}" />
+							<c:param name="c_b" value="${param.c_b}" />
+							<c:param name="c_c" value="${param.c_c}" />
+							<c:param name="c_m" value="${param.c_m}" />
+							<c:param name="c_cc" value="${param.c_cc}" />
+							<c:param name="c_s" value="${param.c_s}" />
+							<c:param name="c_d" value="${param.c_d}" />
+							<c:param name="c_r" value="${param.c_r}" />
+							<c:param name="q" value="${param.q}" />
+							<c:param name="coml" value="${param.coml}" />
+							<c:param name="modify_date" value="${param.modify_date}" />
+						</c:url>
 						<c:choose>
-							<c:when test="${ i == page }">
-								<strong> <c:url var="currentPageUrl" value="vendor">
-										<c:param name="page" value="${i}" />
-										<c:param name="c_y" value="${param.c_y}" />
-										<c:param name="c_w" value="${param.c_w}" />
-										<c:param name="c_n" value="${param.c_n}" />
-										<c:param name="c_pn" value="${param.c_pn}" />
-										<c:param name="c_p" value="${param.c_p}" />
-										<c:param name="wi" value="${param.wi}" />
-										<c:param name="c_b" value="${param.c_b}" />
-										<c:param name="c_c" value="${param.c_c}" />
-										<c:param name="c_m" value="${param.c_m}" />
-										<c:param name="c_cc" value="${param.c_cc}" />
-										<c:param name="c_s" value="${param.c_s}" />
-										<c:param name="c_d" value="${param.c_d}" />
-										<c:param name="c_r" value="${param.c_r}" />
-										<c:param name="q" value="${param.q}" />
-										<c:param name="coml" value="${param.coml}" />
-										<c:param name="modify_date" value="${param.modify_date}" />
-									</c:url> <a style="color: red;" href="${currentPageUrl}"><button>${i}</button></a>
-								</strong>
+							<c:when test="${i == page}">
+								<strong><a style="color: red" href="${pageUrl}"><button>${i}</button></a></strong>
 							</c:when>
 							<c:otherwise>
-								<c:url var="pageUrl" value="vendor">
-									<c:param name="page" value="${i}" />
-									<c:param name="c_y" value="${param.c_y}" />
-									<c:param name="c_w" value="${param.c_w}" />
-									<c:param name="c_n" value="${param.c_n}" />
-									<c:param name="c_pn" value="${param.c_pn}" />
-									<c:param name="c_p" value="${param.c_p}" />
-									<c:param name="wi" value="${param.wi}" />
-									<c:param name="c_b" value="${param.c_b}" />
-									<c:param name="c_c" value="${param.c_c}" />
-									<c:param name="c_m" value="${param.c_m}" />
-									<c:param name="c_cc" value="${param.c_cc}" />
-									<c:param name="c_s" value="${param.c_s}" />
-									<c:param name="c_d" value="${param.c_d}" />
-									<c:param name="c_r" value="${param.c_r}" />
-									<c:param name="q" value="${param.q}" />
-									<c:param name="coml" value="${param.coml}" />
-									<c:param name="modify_date" value="${param.modify_date}" />
-								</c:url>
 								<a href="${pageUrl}"><button>${i}</button></a>
 							</c:otherwise>
 						</c:choose>
 					</c:forEach>
 				</c:when>
 				<c:otherwise>
-					<c:forEach var="i" begin="${ begin }" end="${ end }">
+					<c:forEach var="i" begin="${begin}" end="${end}">
+						<c:url var="pageUrl" value="work">
+							<c:param name="page" value="${i}" />
+							<c:param name="c_y" value="${param.c_y}" />
+							<c:param name="c_w" value="${param.c_w}" />
+							<c:param name="c_n" value="${param.c_n}" />
+							<c:param name="c_pn" value="${param.c_pn}" />
+							<c:param name="c_p" value="${param.c_p}" />
+							<c:param name="wi" value="${param.wi}" />
+							<c:param name="c_b" value="${param.c_b}" />
+							<c:param name="c_c" value="${param.c_c}" />
+							<c:param name="c_m" value="${param.c_m}" />
+							<c:param name="c_cc" value="${param.c_cc}" />
+							<c:param name="c_s" value="${param.c_s}" />
+							<c:param name="c_d" value="${param.c_d}" />
+							<c:param name="c_r" value="${param.c_r}" />
+							<c:param name="q" value="${param.q}" />
+							<c:param name="coml" value="${param.coml}" />
+							<c:param name="modify_date" value="${param.modify_date}" />
+						</c:url>
 						<c:choose>
-							<c:when test="${ i == page }">
-								<strong> <c:url var="currentPageUrl" value="vendor">
-										<c:param name="page" value="${i}" />
-										<c:param name="c_y" value="${param.c_y}" />
-										<c:param name="c_w" value="${param.c_w}" />
-										<c:param name="c_n" value="${param.c_n}" />
-										<c:param name="c_pn" value="${param.c_pn}" />
-										<c:param name="c_p" value="${param.c_p}" />
-										<c:param name="wi" value="${param.wi}" />
-										<c:param name="c_b" value="${param.c_b}" />
-										<c:param name="c_c" value="${param.c_c}" />
-										<c:param name="c_m" value="${param.c_m}" />
-										<c:param name="c_cc" value="${param.c_cc}" />
-										<c:param name="c_s" value="${param.c_s}" />
-										<c:param name="c_d" value="${param.c_d}" />
-										<c:param name="c_r" value="${param.c_r}" />
-										<c:param name="q" value="${param.q}" />
-										<c:param name="coml" value="${param.coml}" />
-										<c:param name="modify_date" value="${param.modify_date}" />
-									</c:url> <a style="color: red;" href="${currentPageUrl}"><button>${i}</button></a>
-								</strong>
+							<c:when test="${i == page}">
+								<strong><a style="color: red" href="${pageUrl}"><button>${i}</button></a></strong>
 							</c:when>
 							<c:otherwise>
-								<c:url var="pageUrl" value="vendor">
-									<c:param name="page" value="${i}" />
-									<c:param name="c_y" value="${param.c_y}" />
-									<c:param name="c_w" value="${param.c.c}" />
-									<c:param name="c_n" value="${param.c_n}" />
-									<c:param name="c_pn" value="${param.c_pn}" />
-									<c:param name="c_p" value="${param.c_p}" />
-									<c:param name="wi" value="${param.wi}" />
-									<c:param name="c_b" value="${param.c_b}" />
-									<c:param name="c_c" value="${param.c_c}" />
-									<c:param name="c_m" value="${param.c_m}" />
-									<c:param name="c_cc" value="${param.c_cc}" />
-									<c:param name="c_s" value="${param.c_s}" />
-									<c:param name="c_d" value="${param.c_d}" />
-									<c:param name="c_r" value="${param.c_r}" />
-									<c:param name="q" value="${param.q}" />
-									<c:param name="coml" value="${param.coml}" />
-									<c:param name="modify_date" value="${param.modify_date}" />
-								</c:url>
 								<a href="${pageUrl}"><button>${i}</button></a>
 							</c:otherwise>
 						</c:choose>
@@ -720,7 +681,7 @@ select option, input[type='number'], input[type=text]:hover {
 			</c:choose>
 
 			<!-- > 버튼 (다음 페이지로 이동) -->
-			<c:url var="nextPageUrl" value="vendor">
+			<c:url var="nextPageUrl" value="work">
 				<c:param name="page" value="${nextPage}" />
 				<c:param name="c_y" value="${param.c_y}" />
 				<c:param name="c_w" value="${param.c_w}" />
@@ -742,8 +703,8 @@ select option, input[type='number'], input[type=text]:hover {
 			<a href="${nextPageUrl}"><button>&gt;</button></a>
 
 			<!-- >> 버튼 (마지막 페이지로 이동) -->
-			<c:url var="lastPageUrl" value="vendor">
-				<c:param name="page" value="${lastPage}" />
+			<c:url var="lastPageUrl" value="work">
+				<c:param name="page" value="${pageCount}" />
 				<c:param name="c_y" value="${param.c_y}" />
 				<c:param name="c_w" value="${param.c_w}" />
 				<c:param name="c_n" value="${param.c_n}" />

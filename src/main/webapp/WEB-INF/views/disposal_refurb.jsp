@@ -375,8 +375,8 @@ table th, table td {
 			<c:set var="prevPage" value="${page - viewCount}" />
 			<c:set var="nextPage" value="${page + viewCount}" />
 
-			<a href="vendor?page=1"><button>&lt;&lt;</button></a> <a
-				href="vendor?page=${prevPage}"><button>&lt;</button></a>
+			<a href="disposal_refurb?page=1"><button>&lt;&lt;</button></a> <a
+				href="disposal_refurb?page=${prevPage}"><button>&lt;</button></a>
 
 			<c:choose>
 				<c:when test="${ page == pageCount }">
@@ -405,8 +405,8 @@ table th, table td {
 					</c:forEach>
 				</c:otherwise>
 			</c:choose>
-			<a href="vendor?page=${nextPage}"><button>&gt;</button> </a> <a
-				href="vendor?page=${lastPage}"><button>&gt;&gt;</button> </a>
+			<a href="disposal_refurb?page=${nextPage}"><button>&gt;</button> </a> <a
+				href="disposal_refurb?page=${pageCount}"><button>&gt;&gt;</button> </a>
 		</div>
 
 		<hr>

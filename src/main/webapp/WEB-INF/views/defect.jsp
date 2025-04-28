@@ -314,8 +314,8 @@ select option, input[type='number'], input[type=text]:hover {
 			<c:set var="prevPage" value="${page - viewCount}" />
 			<c:set var="nextPage" value="${page + viewCount}" />
 
-			<a href="vendor?page=1"><button>&lt;&lt;</button></a> <a
-				href="vendor?page=${prevPage}"><button>&lt;</button></a>
+			<a href="defect?page=1"><button>&lt;&lt;</button></a> <a
+				href="defect?page=${prevPage}"><button>&lt;</button></a>
 
 			<c:choose>
 				<c:when test="${ page == pageCount }">

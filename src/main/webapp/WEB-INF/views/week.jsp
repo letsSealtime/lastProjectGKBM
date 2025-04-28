@@ -567,11 +567,10 @@ select option:hover {
 		</form>
 		<!-- 페이지 넘길때 쓸 버튼들 -->
 		<div class="pagination">
-			<!-- 페이지 카운트 및 이전/다음 페이지 설정 -->
 			<c:set var="pageCount"
 				value="${(line mod viewCount == 0) ? (line div viewCount) : (line div viewCount + 1)}" />
-			<c:set var="prevPage" value="${page - viewCount}" />
-			<c:set var="nextPage" value="${page + viewCount}" />
+			<c:set var="prevPage" value="${page - 1}" />
+			<c:set var="nextPage" value="${page + 1}" />
 
 			<!-- << 버튼 (첫 페이지로 이동) -->
 			<c:url var="firstPageUrl" value="week">
@@ -601,71 +600,49 @@ select option:hover {
 			</c:url>
 			<a href="${prevPageUrl}"><button>&lt;</button></a>
 
-			<!-- 페이지 번호 선택 -->
+			<!-- 숫자 페이지 -->
 			<c:choose>
-				<c:when test="${ page == pageCount }">
-					<c:forEach var="i" begin="${ begin }" end="${ end }">
+				<c:when test="${page == pageCount}">
+					<c:forEach var="i" begin="${page - (viewCount -1)}" end="${page}">
+						<c:url var="pageUrl" value="week">
+							<c:param name="page" value="${i}" />
+							<c:param name="c_i" value="${param.c_i}" />
+							<c:param name="c_c" value="${param.c_c}" />
+							<c:param name="c_s" value="${param.c_s}" />
+							<c:param name="c_y" value="${param.c_y}" />
+							<c:param name="c_w" value="${param.c_w}" />
+							<c:param name="c_d" value="${param.c_d}" />
+							<c:param name="c_n" value="${param.c_n}" />
+							<c:param name="c_k" value="${param.c_k}" />
+						</c:url>
 						<c:choose>
-							<c:when test="${ i == page }">
-								<strong> <c:url var="currentPageUrl" value="week">
-										<c:param name="page" value="${i}" />
-										<c:param name="c_i" value="${param.c_i}" />
-										<c:param name="c_c" value="${param.c_c}" />
-										<c:param name="c_s" value="${param.c_s}" />
-										<c:param name="c_y" value="${param.c_y}" />
-										<c:param name="c_w" value="${param.c_w}" />
-										<c:param name="c_d" value="${param.c_d}" />
-										<c:param name="c_n" value="${param.c_n}" />
-										<c:param name="c_k" value="${param.c_k}" />
-									</c:url> <a style="color: red;" href="${currentPageUrl}"><button>${i}</button></a>
-								</strong>
+							<c:when test="${i == page}">
+								<strong><a style="color: red" href="${pageUrl}"><button>${i}</button></a></strong>
 							</c:when>
 							<c:otherwise>
-								<c:url var="pageUrl" value="week">
-									<c:param name="page" value="${i}" />
-									<c:param name="c_i" value="${param.c_i}" />
-									<c:param name="c_c" value="${param.c_c}" />
-									<c:param name="c_s" value="${param.c_s}" />
-									<c:param name="c_y" value="${param.c_y}" />
-									<c:param name="c_w" value="${param.c_w}" />
-									<c:param name="c_d" value="${param.c_d}" />
-									<c:param name="c_n" value="${param.c_n}" />
-									<c:param name="c_k" value="${param.c_k}" />
-								</c:url>
 								<a href="${pageUrl}"><button>${i}</button></a>
 							</c:otherwise>
 						</c:choose>
 					</c:forEach>
 				</c:when>
 				<c:otherwise>
-					<c:forEach var="i" begin="${ begin }" end="${ end }">
+					<c:forEach var="i" begin="${begin}" end="${end}">
+						<c:url var="pageUrl" value="week">
+							<c:param name="page" value="${i}" />
+							<c:param name="c_i" value="${param.c_i}" />
+							<c:param name="c_c" value="${param.c_c}" />
+							<c:param name="c_s" value="${param.c_s}" />
+							<c:param name="c_y" value="${param.c_y}" />
+							<c:param name="c_w" value="${param.c_w}" />
+							<c:param name="c_d" value="${param.c_d}" />
+							<c:param name="c_n" value="${param.c_n}" />
+							<c:param name="c_k" value="${param.c_k}" />
+						</c:url>
 						<c:choose>
-							<c:when test="${ i == page }">
-								<strong> <c:url var="currentPageUrl" value="week">
-										<c:param name="page" value="${i}" />
-										<c:param name="c_i" value="${param.c_i}" />
-										<c:param name="c_c" value="${param.c_c}" />
-										<c:param name="c_s" value="${param.c_s}" />
-										<c:param name="c_y" value="${param.c_y}" />
-										<c:param name="c_w" value="${param.c_w}" />
-										<c:param name="c_d" value="${param.c_d}" />
-										<c:param name="c_n" value="${param.c_n}" />
-										<c:param name="c_k" value="${param.c_k}" />
-									</c:url> <a style="color: red;" href="${currentPageUrl}"><button>${i}</button></a>
-								</strong>
+							<c:when test="${i == page}">
+								<strong><a style="color: red" href="${pageUrl}"><button>${i}</button></a></strong>
 							</c:when>
 							<c:otherwise>
-								<c:url var="pageUrl" value="week">
-									<c:param name="page" value="${i}" />
-									<c:param name="c_i" value="${param.c_i}" />
-									<c:param name="c_c" value="${param.c_c}" />
-									<c:param name="c_s" value="${param.c_s}" />
-									<c:param name="c_y" value="${param.c_y}" />
-									<c:param name="c_w" value="${param.c_w}" />
-									<c:param name="c_d" value="${param.c_d}" />
-									<c:param name="c_n" value="${param.c_n}" />
-									<c:param name="c_k" value="${param.c_k}" />
-								</c:url>
 								<a href="${pageUrl}"><button>${i}</button></a>
 							</c:otherwise>
 						</c:choose>
@@ -689,7 +666,7 @@ select option:hover {
 
 			<!-- >> 버튼 (마지막 페이지로 이동) -->
 			<c:url var="lastPageUrl" value="week">
-				<c:param name="page" value="${lastPage}" />
+				<c:param name="page" value="${pageCount}" />
 				<c:param name="c_i" value="${param.c_i}" />
 				<c:param name="c_c" value="${param.c_c}" />
 				<c:param name="c_s" value="${param.c_s}" />

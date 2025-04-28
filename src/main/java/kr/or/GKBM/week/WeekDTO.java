@@ -19,7 +19,7 @@ public class WeekDTO {
 	// 주차
 	private Integer c_w;
 	// 날짜
-	private Date c_d;
+	private String c_d;
 	// 상품이름
 	private String c_n;
 	// 상품코드

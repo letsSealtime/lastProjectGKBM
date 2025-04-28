@@ -33,6 +33,13 @@ public class WeekContorller {
 
 		ModelAndView select_MV = new ModelAndView();
 		select_MV.addObject("list", sku_select);
+		
+		System.out.println(dto.getC_c());
+		System.out.println(dto.getC_n());
+		System.out.println(dto.getC_w());
+		System.out.println(dto.getC_y());
+		System.out.println(dto.getC_k());
+		System.out.println(dto.getC_i());
 
 		if ("search".equals(dto.getHidden())) {
 

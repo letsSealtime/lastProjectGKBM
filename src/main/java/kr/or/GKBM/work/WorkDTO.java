@@ -41,8 +41,8 @@ public class WorkDTO {
 	private Integer q;
 	// 완료여부
 	private String coml;
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-	private Date modify_date;
+	
+	private String modify_date;
 
 	private String hidden;
 

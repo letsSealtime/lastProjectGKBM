@@ -978,6 +978,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 //서브메뉴 클릭 이벤트 리스너 수정
+         
 document.addEventListener('click', function(e) {
     if (e.target.classList.contains('sub_item')) {
     	localStorage.setItem('activeSubMenu', e.target.textContent);

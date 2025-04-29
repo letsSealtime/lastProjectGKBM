@@ -108,8 +108,8 @@
 
 	<div class="report_btn_area">
 		<a href="${pageContext.request.contextPath}/report/page"><button class="report_btn">경영 리포트</button></a>
-		<a href="${pageContext.request.contextPath}/report/production/page"><button class="report_btn">생산 리포트</button></a>
-		<a href="${pageContext.request.contextPath}/report/defect/page"><button class="report_btn">불량률 추이</button></a>
+		<a href="${pageContext.request.contextPath}/report/production_page"><button class="report_btn">생산 리포트</button></a>
+		<a href="${pageContext.request.contextPath}/report/defect_page"><button class="report_btn">불량률 추이</button></a>
 	</div>
 
 

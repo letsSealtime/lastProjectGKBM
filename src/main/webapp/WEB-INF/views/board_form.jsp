@@ -117,7 +117,7 @@ button {
 				<c:if test="${boardDTO.board_id == null or boardDTO.board_id == 0}">
 					<tr>
 						<th>사원번호</th>
-						<td><input type="text" id="empno" name="empno"></td>
+						<td><input type="text" id="empno" name="empno" value="${sessionScope.user.empNo}"></td>
 					</tr>
 				</c:if>
 				<tr>

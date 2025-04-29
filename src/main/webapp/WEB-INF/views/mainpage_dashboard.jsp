@@ -19,7 +19,7 @@
 body {
 	width: 100%;
 	height: 100vh;
-	overflow: hidden;
+/* 	overflow: hidden; */
 	font-family: Arial, sans-serif;
 	background-color: #f5f5f5;
 	align-items: center;

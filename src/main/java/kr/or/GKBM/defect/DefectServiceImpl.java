@@ -26,9 +26,12 @@ public class DefectServiceImpl implements DefectService {
 
 		System.out.println("up: " + up);
 		System.out.println("down: " + down);
+		
+		System.out.println(dto.getLine());
+		System.out.println(dto.getViewCount());
 
 		int page;
-		if ((double) dto.getLine() / dto.getViewCount() > 0) {
+		if ((double) dto.getLine() % dto.getViewCount() > 0) {
 			page = (dto.getLine() / dto.getViewCount()) + 1;
 		} else {
 			page = (dto.getLine() / dto.getViewCount());
@@ -43,9 +46,15 @@ public class DefectServiceImpl implements DefectService {
 		} else {
 			down = (down * 10) + 1;
 		}
+		
+		System.out.println(down);
+		System.out.println(page);
 
 		dto.setBegin((int) down);
 		dto.setEnd((int) up);
+		
+		System.out.println(dto.getBegin());
+		System.out.println(dto.getEnd());
 
 		return code_select;		
 	}

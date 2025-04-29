@@ -1,3 +1,5 @@
+<%@page import="org.apache.ibatis.reflection.SystemMetaObject"%>
+<%@page import="org.apache.commons.collections.bag.SynchronizedSortedBag"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -307,9 +309,15 @@ select option, input[type='number'], input[type=text]:hover {
 			<!-- 전체 페이지 수, 이전/다음 페이지 계산 -->
 			<c:set var="pageCount"
 				value="${(line mod viewCount == 0) ? (line div viewCount) : (line div viewCount + 1)}" />
-			<c:set var="prevPage" value="${page - viewCount}" />
-			<c:set var="nextPage" value="${page + viewCount}" />
+			<c:set var="prevPage" value="${page - 1}" />
+			<c:set var="nextPage" value="${page + 1}" />
 			<c:set var="lastPage" value="${pageCount}" />
+			<c:set var="safeBegin" value="${begin lt 1 ? 1 : begin}" />
+			<c:set var="safeEnd" value="${end gt pageCount ? pageCount : end}" />
+			
+			<% Integer Begin = (int) request.getAttribute("begin"); %>
+
+			<%= "Begin의 값은:" + Begin %>
 
 			<!-- << 첫 페이지 -->
 			<c:url var="firstUrl" value="defect">
@@ -356,7 +364,7 @@ select option, input[type='number'], input[type=text]:hover {
 					</c:forEach>
 				</c:when>
 				<c:otherwise>
-					<c:forEach var="i" begin="${begin}" end="${end}">
+					<c:forEach var="i" begin="${safeBegin}" end="${safeEnd}">
 						<c:url var="numUrl" value="defect">
 							<c:param name="page" value="${i}" />
 							<c:param name="c_d" value="${param.c_d}" />
@@ -390,7 +398,7 @@ select option, input[type='number'], input[type=text]:hover {
 
 			<!-- >> 마지막 페이지 -->
 			<c:url var="lastUrl" value="defect">
-				<c:param name="page" value="${lastPage}" />
+				<c:param name="page" value="${pageCount}" />
 				<c:param name="c_d" value="${param.c_d}" />
 				<c:param name="c_p" value="${param.c_p}" />
 				<c:param name="c_j" value="${param.c_j}" />
@@ -399,6 +407,7 @@ select option, input[type='number'], input[type=text]:hover {
 			</c:url>
 			<a href="${lastUrl}"><button>&gt;&gt;</button></a>
 		</div>
+	</div>
 </body>
 
 </html>

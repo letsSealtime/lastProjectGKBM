@@ -10,7 +10,7 @@ public class LoginCheckFilter implements Filter {
 
     // 화이트리스트: 세션 검증 없이 허용할 경로
     private static final String[] WHITE_LIST = {
-        "/login", "/logout", "/resources/", "/error"
+        "/login", "/logout", "/memberjoin", "/resources/", "/error"
     };
 
     @Override
@@ -44,8 +44,10 @@ public class LoginCheckFilter implements Filter {
         // contextPath가 ""이면 /login, 아니면 /GKBM/login 형태로 비교
         String loginPath = contextPath + "/login";
         String logoutPath = contextPath + "/logout";
+        String memberjoin = contextPath + "/memberjoin";
         return requestURI.equals(loginPath)
             || requestURI.equals(logoutPath)
+            || requestURI.equals(memberjoin)
             || requestURI.startsWith(contextPath + "/resources/")
             || requestURI.equals(contextPath + "/error");
     }

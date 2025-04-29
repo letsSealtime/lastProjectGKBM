@@ -47,9 +47,9 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public Map<String, Object> getBoardSearchList(BoardDTO boardDTO) {
-		if("empno".equals(boardDTO.getType())) {
-			boardDTO.setEmpno( Integer.parseInt(boardDTO.getKeyword()) );
-		
+		if("writer".equals(boardDTO.getType())) {
+				String writer = boardDTO.getKeyword();
+				boardDTO.setWriter(writer);
 				} else if(boardDTO.getType() != null && boardDTO.getType().equals("title")) {
 					try {
 						String title = boardDTO.getKeyword();
@@ -78,6 +78,12 @@ public class BoardServiceImpl implements BoardService {
 		// 한 페이지의 내용만 있는 리스트
 		List<BoardDTO> list = boardDAO.searchPageBoard(boardDTO);
 				
+		// 덧글 개수
+		for(BoardDTO dto : list) {
+			int commentCount = boardDAO.countCommentForList(dto.getBoard_id());
+			dto.setCommentCount(commentCount);
+		}
+		
 		// 전체 글 개수
 		int total = boardDAO.totalList();
 		

@@ -296,9 +296,9 @@ input[type="text"] {
 				${board.board_id}</td>
 		</tr>
 		<tr>
-			<th>작성자(사원번호)</th>
+			<th>작성자</th>
 			<td><input type="hidden" id="empno" value="${board.empno}" />
-				${board.empno}</td>
+				${board.writer}</td>
 		</tr>
 		<tr>
 			<th>제목</th>

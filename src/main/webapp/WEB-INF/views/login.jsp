@@ -143,7 +143,7 @@ body {
 			<input type="submit" class="login" value="로그인">
 			<input type="button" class="find_id" value="아이디찾기" onclick="alert('관리자에게 문의 바랍니다.')">
 			<input type="button" class="find_pw" value="비밀번호찾기" onclick="alert('관리자에게 문의 바랍니다.')">
-			<input type="button" class="create_id" value="회원가입" onclick="alert('관리자에게 문의 바랍니다.')">
+			<input type="button" class="create_id" value="회원가입">
 
 			<c:if test="${not empty error}">
 				<p style="color: red;">${error}</p>
@@ -151,5 +151,12 @@ body {
 
 		</form>
 	</div>
+	
+	<script>
+		document.querySelector('.create_id').addEventListener('click', function() {
+		    location.href = '${pageContext.request.contextPath}/memberjoin';
+		});
+	</script>
+
 </body>
 </html>

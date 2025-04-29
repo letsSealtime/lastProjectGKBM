@@ -695,18 +695,85 @@ keyframes spin { 0% {
 }
 
 100
+
+
+
+
+
+
 %
 {
 transform
+
+
+
+
+
+
 :
-translate(
--50%
+
+
+
+
+
+
+translate
+
+
+
+
+(
+
+
+
+
+
+
+-50
+
+
+
+
+%
 ,
--50%
+-50
+
+
+
+
+%
 )
-rotate(
+
+
+
+
+
+
+rotate
+
+
+
+
+(
+
+
+
+
+
+
 360deg
-);
+
+
+
+
+
+
+)
+
+
+
+
+;
 }
 }
 @media screen and (max-width: 1455px) {
@@ -812,6 +879,32 @@ const subMenuData = {
  '8': ['게시판']
 };
 
+//서브메뉴 상세 항목 정의
+const subMenuDetails = {
+    '작업표준서': [],
+    'BOM관리': [],
+    '상품정보관리': [],
+    '거래처 정보관리': [],
+    '거래명세서': [],
+    '생산계획관리': [],
+    '작업지시관리': [],
+    '원자재 입고관리': [],
+    '원자재 출고관리': [],
+    '원자재 현황': [],
+    '완제품 입고관리': [],
+    '완제품 출고관리': [],
+    '설비등록': [],
+    '설비점검': [],
+    '설비수리': [],
+    '소모품 관리': [],
+    '소모품 수불관리': [],
+    '소모품 폐기': [],
+    '부적합관리': [],
+    '리퍼브/폐기': [],
+    '리포팅': ['경영리포팅','생산리포팅','불량률'],
+    '게시판': []
+};
+
 const subMenuFileMap = {
  // ----- 기준정보 -----
  '작업표준서': 'work_method2',
@@ -846,7 +939,9 @@ const subMenuFileMap = {
  // ----- 품질관리 -----
  '부적합관리': 'defect',
  '리퍼브/폐기': 'disable',
- '리포팅':'report',
+ '경영리포팅':'report/page',
+ '생산리포팅':'report/production/page',
+ '불량률':'report/defect/page',
 
  // ----- 커뮤니티 -----
  '게시판': 'board',
@@ -890,21 +985,51 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 //서브메뉴 클릭 이벤트 리스너 수정
- document.addEventListener('click', function(e) {
-     if (e.target.classList.contains('sub_item')) {
-         const menuName = e.target.textContent;
-         const mainMenuId = findParentMenuId(menuName); // 추가된 함수
-         const mainMenuItem = document.querySelector(`[data-menu="\${mainMenuId}"]`);
-         
-         if (mainMenuItem) {
-             handleMainMenuClick(mainMenuItem, mainMenuId);
-             localStorage.setItem('activeMainMenu', mainMenuId);
-             localStorage.setItem('activeSubMenu', menuName);
-         }
-         
-         goMenuPage(menuName);
-     }
- });
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('sub_item')) {
+    	localStorage.setItem('activeSubMenu', e.target.textContent);
+    	// 1. 서브메뉴 활성화 관리
+        document.querySelectorAll('.sub_item').forEach(item => item.classList.remove('active'));
+        e.target.classList.add('active');
+        
+        const menuName = e.target.textContent;
+        const detailItems = subMenuDetails[menuName];
+
+        // 기존 상세 메뉴 제거
+        document.querySelectorAll('.detail-menu').forEach(el => el.remove());
+
+        if (detailItems && detailItems.length > 0) {
+            // 상세 항목(2차 메뉴) 동적 생성
+            const detailDiv = document.createElement('div');
+            detailDiv.className = 'detail-menu';
+            detailDiv.innerHTML = detailItems.map(
+                item => `<div class="detail-item" data-detail="\${item}">\${item}</div>`
+            ).join('');
+            e.target.insertAdjacentElement('afterend', detailDiv);
+
+            // 상세 항목 클릭 이벤트
+         // 상세 항목 클릭 이벤트
+            detailDiv.querySelectorAll('.detail-item').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.stopPropagation();
+
+                    // [추가] 상세 메뉴 활성화 정보 저장
+                    const mainMenuId = document.querySelector('.menu_item.active').getAttribute('data-menu');
+                    localStorage.setItem('activeMainMenu', mainMenuId); // 메인 메뉴
+                    localStorage.setItem('activeSubMenu', menuName);    // 1차(리포팅)
+                    localStorage.setItem('activeDetailMenu', this.getAttribute('data-detail')); // 2차(경영리포팅 등)
+
+                    goMenuPage(this.getAttribute('data-detail'));
+                });
+            });
+
+        } else {
+            // 상세 항목 없으면 바로 이동
+            goMenuPage(menuName);
+        }
+    }
+});
+
 
  // 서브메뉴 → 부모 메뉴 ID 찾기 함수 추가
  function findParentMenuId(subMenuName) {
@@ -938,6 +1063,47 @@ document.addEventListener('DOMContentLoaded', function () {
 	            }
 	        }
 	    }, /*300*/);
+	    
+	 // 상세 메뉴(2차 메뉴) 복원
+	    const savedMainMenuId = localStorage.getItem('activeMainMenu');
+	    const savedSubMenu = localStorage.getItem('activeSubMenu');
+	    const savedDetailMenu = localStorage.getItem('activeDetailMenu');
+
+	    if (savedMainMenuId) {
+	        const mainMenuItem = document.querySelector(`[data-menu="${savedMainMenuId}"]`);
+	        if (mainMenuItem) {
+	            handleMainMenuClick(mainMenuItem, savedMainMenuId);
+	        }
+	    }
+
+	    // 1차(서브) 메뉴 복원
+	    if (savedSubMenu) {
+	        document.querySelectorAll('.sub_item').forEach(item => {
+	            if (item.textContent === savedSubMenu) {
+	                item.classList.add('active');
+
+	                // [추가] 상세 메뉴가 있을 때만 상세 메뉴를 동적으로 생성
+	                const detailItems = subMenuDetails[savedSubMenu];
+	                if (detailItems && detailItems.length > 0) {
+	                    const detailDiv = document.createElement('div');
+	                    detailDiv.className = 'detail-menu';
+	                    detailDiv.innerHTML = detailItems.map(
+	                        item => `<div class="detail-item" data-detail="${item}">${item}</div>`
+	                    ).join('');
+	                    item.insertAdjacentElement('afterend', detailDiv);
+
+	                    // 2차(상세) 메뉴 복원
+	                    if (savedDetailMenu) {
+	                        detailDiv.querySelectorAll('.detail-item').forEach(detailItem => {
+	                            if (detailItem.textContent === savedDetailMenu) {
+	                                detailItem.classList.add('active');
+	                            }
+	                        });
+	                    }
+	                }
+	            }
+	        });
+	    }
 	});
 
 

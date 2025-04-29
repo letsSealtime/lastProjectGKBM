@@ -35,13 +35,13 @@ public class ReportController {
     }
     
     // 생산 실적 페이지
-    @GetMapping("/production/page")
+    @GetMapping("/production_page")
     public String showProductionPage() {
         return "report_production.tiles"; 
     }
     
     // 불량품 추이 페이지
-    @GetMapping("/defect/page")
+    @GetMapping("/defect_page")
     public String showDefectPage() {
         return "report_defect.tiles"; 
     }

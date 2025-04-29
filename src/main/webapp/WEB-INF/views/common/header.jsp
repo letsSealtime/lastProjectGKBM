@@ -4,10 +4,10 @@
 <div id="container">
 	<div id="top_section">
 		<div id="logo">
-			<a href="${pageContext.request.contextPath}/mainpage">
-			<img src="${pageContext.request.contextPath}/resources/img/GKBM_logo.png"
-				alt="GKBM MES SYSTEM" id="logo-image">
-			</a>
+		  <a href="${pageContext.request.contextPath}/mainpage" id="logo-link">
+		    <img src="${pageContext.request.contextPath}/resources/img/GKBM_logo.png"
+		      alt="GKBM MES SYSTEM" id="logo-image">
+		  </a>
 		</div>
 		<div></div>
 

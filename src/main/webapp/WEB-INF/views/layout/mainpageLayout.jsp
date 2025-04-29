@@ -689,93 +689,15 @@ h3 {
 	transform: translate(-50%, -50%);
 }
 
-@
-keyframes spin { 0% {
-	transform: translate(-50%, -50%) rotate(0deg);
+@keyframes spin {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
 }
 
-100
-
-
-
-
-
-
-%
-{
-transform
-
-
-
-
-
-
-:
-
-
-
-
-
-
-translate
-
-
-
-
-(
-
-
-
-
-
-
--50
-
-
-
-
-%
-,
--50
-
-
-
-
-%
-)
-
-
-
-
-
-
-rotate
-
-
-
-
-(
-
-
-
-
-
-
-360deg
-
-
-
-
-
-
-)
-
-
-
-
-;
-}
-}
 @media screen and (max-width: 1455px) {
 	.menu_item {
 		width: 100px;
@@ -875,7 +797,8 @@ const subMenuData = {
  '4': ['원자재 입고관리', '원자재 출고관리', '원자재 현황', '완제품 입고관리', '완제품 출고관리'],
  '5': ['설비점검', '설비수리'],
  '6': ['소모품 관리', '소모품 수불관리', '소모품 폐기'],
- '7': ['부적합관리', '리퍼브/폐기','리포팅'],
+//  '7': ['부적합관리', '리퍼브/폐기','리포팅'],
+ '7': ['부적합관리','리포팅'],
  '8': ['게시판']
 };
 
@@ -900,7 +823,7 @@ const subMenuDetails = {
     '소모품 수불관리': [],
     '소모품 폐기': [],
     '부적합관리': [],
-    '리퍼브/폐기': [],
+//     '리퍼브/폐기': [],
     '리포팅': ['경영리포팅','생산리포팅','불량률'],
     '게시판': []
 };
@@ -938,10 +861,10 @@ const subMenuFileMap = {
 
  // ----- 품질관리 -----
  '부적합관리': 'defect',
- '리퍼브/폐기': 'disable',
- '경영리포팅':'report/page',
- '생산리포팅':'report/production/page',
- '불량률':'report/defect/page',
+//  '리퍼브/폐기': 'disable',
+ '경영리포팅':'report',
+ '생산리포팅':'report/production_page',
+ '불량률':'report/defect_page',
 
  // ----- 커뮤니티 -----
  '게시판': 'board',
@@ -970,19 +893,89 @@ function goMenuPage(menuName) {
 //3. 메뉴 이벤트 리스너 재설정
 //===================================================
 document.addEventListener('DOMContentLoaded', function () {
- // 메인 메뉴 클릭 이벤트
- document.querySelectorAll('.menu_item').forEach(item => {
-     item.addEventListener('click', function() {
-         const menuId = this.getAttribute('data-menu');
-         handleMainMenuClick(this, menuId);
-         
-         // 서브메뉴 유지시키는 코드
-         localStorage.setItem('activeMainMenu', menuId);
-         localStorage.removeItem('activeSubMenu'); // 메인 메뉴 바뀌면 서브메뉴 초기화
-     });
- });
+	
+	const logoLink = document.getElementById('logo-link');
+	  if (logoLink) {
+	    logoLink.addEventListener('click', function() {
+	      localStorage.removeItem('activeMainMenu');
+	      localStorage.removeItem('activeSubMenu');
+	      localStorage.removeItem('activeDetailMenu');
+	      // 필요하다면 localStorage.clear()로 전체 초기화도 가능
+	    });
+	  }
+    // [1] 메인 메뉴 클릭 이벤트 설정
+    document.querySelectorAll('.menu_item').forEach(item => {
+        item.addEventListener('click', function() {
+            const menuId = this.getAttribute('data-menu');
+            handleMainMenuClick(this, menuId);
+            localStorage.setItem('activeMainMenu', menuId);
+            localStorage.removeItem('activeSubMenu'); // 메인 변경 시 서브 초기화
+            localStorage.removeItem('activeDetailMenu'); // 추가: 상세도 초기화
+        });
+    });
 
+    // [2] URL 직접 접근 처리 (최우선)
+    const currentPath = window.location.pathname.split('/').pop();
+    const matchedSubMenu = Object.entries(subMenuFileMap).find(
+        ([_, page]) => page === currentPath
+    );
+    if (matchedSubMenu) {
+        const [subMenuName] = matchedSubMenu;
+        const mainMenuId = findParentMenuId(subMenuName);
+        if (mainMenuId) {
+            const mainMenuItem = document.querySelector(`[data-menu="\${mainMenuId}"]`);
+            handleMainMenuClick(mainMenuItem, mainMenuId);
+            document.querySelectorAll('.sub_item').forEach(item => {
+                if (item.textContent === subMenuName) {
+                    item.classList.add('active');
+                }
+            });
+        }
+    }
+
+    // [3] 메인 → 서브 → 상세 순차적 복원 (핵심 수정)
+    const restoreMenuState = () => {
+        // 3-1. 메인 메뉴 복원
+        const savedMainMenuId = localStorage.getItem('activeMainMenu');
+        if (savedMainMenuId) {
+            const mainMenuItem = document.querySelector(`[data-menu="\${savedMainMenuId}"]`);
+            if (mainMenuItem) {
+                handleMainMenuClick(mainMenuItem, savedMainMenuId);
+                
+                // 3-2. 서브 메뉴 복원 (메인 복원 후 실행)
+                const savedSubMenu = localStorage.getItem('activeSubMenu');
+                if (savedSubMenu) {
+                    setTimeout(() => { // DOM 업데이트 대기
+                        document.querySelectorAll('.sub_item').forEach(item => {
+                            if (item.textContent === savedSubMenu) {
+                                item.classList.add('active');
+                                
+                                // 3-3. 상세 메뉴 복원 (서브 복원 후 실행)
+                                const savedDetailMenu = localStorage.getItem('activeDetailMenu');
+                                const detailItems = subMenuDetails[savedSubMenu];
+                                if (detailItems?.length > 0 && savedDetailMenu) {
+                                    const detailDiv = item.nextElementSibling;
+                                    if (detailDiv?.classList.contains('detail-menu')) {
+                                        detailDiv.querySelectorAll('.detail-item').forEach(detailItem => {
+                                            if (detailItem.textContent === savedDetailMenu) {
+                                                detailItem.classList.add('active');
+                                                // 부모 서브 메뉴 강제 활성화
+                                                const parentSub = detailItem.closest('.sub_item');
+                                                if(parentSub) parentSub.classList.add('active');
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                        });
+                    }, 50); // DOM 렌더링 지연 처리
+                }
+            }
+        }
+    };
+    restoreMenuState();
 });
+
 
 //서브메뉴 클릭 이벤트 리스너 수정
 document.addEventListener('click', function(e) {
@@ -1007,22 +1000,29 @@ document.addEventListener('click', function(e) {
             ).join('');
             e.target.insertAdjacentElement('afterend', detailDiv);
 
-            // 상세 항목 클릭 이벤트
-         // 상세 항목 클릭 이벤트
+         // 상세 메뉴 클릭 이벤트 핸들러
             detailDiv.querySelectorAll('.detail-item').forEach(item => {
                 item.addEventListener('click', function(e) {
                     e.stopPropagation();
+                    
+                    // [추가] 상위 메뉴 정보 정확히 추출
+                    const mainMenuItem = document.querySelector('.menu_item.active');
+                    const parentSubItem = this.closest('.sub_item') || 
+                                        this.parentElement.previousElementSibling;
 
-                    // [추가] 상세 메뉴 활성화 정보 저장
-                    const mainMenuId = document.querySelector('.menu_item.active').getAttribute('data-menu');
-                    localStorage.setItem('activeMainMenu', mainMenuId); // 메인 메뉴
-                    localStorage.setItem('activeSubMenu', menuName);    // 1차(리포팅)
-                    localStorage.setItem('activeDetailMenu', this.getAttribute('data-detail')); // 2차(경영리포팅 등)
+                    if (!mainMenuItem || !parentSubItem) {
+                        console.error('메뉴 구조 오류');
+                        return;
+                    }
 
-                    goMenuPage(this.getAttribute('data-detail'));
+                    // [수정] localStorage에 3단계 정보 저장
+                    localStorage.setItem('activeMainMenu', mainMenuItem.dataset.menu);
+                    localStorage.setItem('activeSubMenu', parentSubItem.textContent.trim());
+                    localStorage.setItem('activeDetailMenu', this.textContent.trim());
+                    
+                    goMenuPage(this.dataset.detail);
                 });
             });
-
         } else {
             // 상세 항목 없으면 바로 이동
             goMenuPage(menuName);
@@ -1041,70 +1041,7 @@ document.addEventListener('click', function(e) {
      return null;
  }
  
- document.addEventListener('DOMContentLoaded', function () {
-	    setTimeout(() => {
-	        // URL에서 직접 접근한 경우 처리
-	        const currentPath = window.location.pathname.split('/').pop();
-	        const matchedSubMenu = Object.entries(subMenuFileMap).find(
-	            ([_, page]) => page === currentPath
-	        );
-	        
-	        if (matchedSubMenu) {
-	            const [subMenuName] = matchedSubMenu;
-	            const mainMenuId = findParentMenuId(subMenuName);
-	            if (mainMenuId) {
-	                const mainMenuItem = document.querySelector(`[data-menu="\${mainMenuId}"]`);
-	                handleMainMenuClick(mainMenuItem, mainMenuId);
-	                document.querySelectorAll('.sub_item').forEach(item => {
-	                    if (item.textContent === subMenuName) {
-	                        item.classList.add('active');
-	                    }
-	                });
-	            }
-	        }
-	    }, /*300*/);
-	    
-	 // 상세 메뉴(2차 메뉴) 복원
-	    const savedMainMenuId = localStorage.getItem('activeMainMenu');
-	    const savedSubMenu = localStorage.getItem('activeSubMenu');
-	    const savedDetailMenu = localStorage.getItem('activeDetailMenu');
 
-	    if (savedMainMenuId) {
-	        const mainMenuItem = document.querySelector(`[data-menu="${savedMainMenuId}"]`);
-	        if (mainMenuItem) {
-	            handleMainMenuClick(mainMenuItem, savedMainMenuId);
-	        }
-	    }
-
-	    // 1차(서브) 메뉴 복원
-	    if (savedSubMenu) {
-	        document.querySelectorAll('.sub_item').forEach(item => {
-	            if (item.textContent === savedSubMenu) {
-	                item.classList.add('active');
-
-	                // [추가] 상세 메뉴가 있을 때만 상세 메뉴를 동적으로 생성
-	                const detailItems = subMenuDetails[savedSubMenu];
-	                if (detailItems && detailItems.length > 0) {
-	                    const detailDiv = document.createElement('div');
-	                    detailDiv.className = 'detail-menu';
-	                    detailDiv.innerHTML = detailItems.map(
-	                        item => `<div class="detail-item" data-detail="${item}">${item}</div>`
-	                    ).join('');
-	                    item.insertAdjacentElement('afterend', detailDiv);
-
-	                    // 2차(상세) 메뉴 복원
-	                    if (savedDetailMenu) {
-	                        detailDiv.querySelectorAll('.detail-item').forEach(detailItem => {
-	                            if (detailItem.textContent === savedDetailMenu) {
-	                                detailItem.classList.add('active');
-	                            }
-	                        });
-	                    }
-	                }
-	            }
-	        });
-	    }
-	});
 
 
 //===================================================
@@ -1185,7 +1122,7 @@ function handleMainMenuClick(clickedItem, menuId) {
  
 	// ------------------------- 로그아웃 -------------------------
  document.querySelector("#logout_button").addEventListener("click", function () {
- window.location.href = "logout"; // LogoutServlet으로 요청 보내기
+ window.location.href = "/GKBM/logout"; // LogoutServlet으로 요청 보내기
 	});
 
 //===================================================

@@ -317,7 +317,7 @@ select option, input[type='number'], input[type=text]:hover {
 			
 			<% Integer Begin = (int) request.getAttribute("begin"); %>
 
-			<%= "Begin의 값은:" + Begin %>
+<%-- 			<%= "Begin의 값은:" + Begin %> --%>
 
 			<!-- << 첫 페이지 -->
 			<c:url var="firstUrl" value="defect">

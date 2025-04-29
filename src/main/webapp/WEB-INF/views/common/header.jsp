@@ -19,8 +19,8 @@
 			<div class="menu_item" data-menu="5">설비관리</div>
 			<c:if test="${user.grade == 1}">
 				<div class="menu_item" data-menu="6">소모품관리</div>
+				<div class="menu_item" data-menu="7">품질관리</div>
 			</c:if>
-			<div class="menu_item" data-menu="7">품질관리</div>
 			<div class="menu_item" data-menu="8">커뮤니티</div>
 		</div>
 
